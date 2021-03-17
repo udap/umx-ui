@@ -33,6 +33,11 @@ export default defineConfig({
           component: '@/pages/Profile',
           title: '作者主页',
         },
+        {
+          path: '/mine',
+          component: '@/pages/Mine',
+          title: '我的',
+        },
       ],
     },
   ],

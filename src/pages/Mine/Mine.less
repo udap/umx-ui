@@ -1,0 +1,122 @@
+.top {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  .topLogo {
+    width: 150px;
+    height: 150px;
+  }
+
+  .topTitle {
+    font-size: 28px;
+    font-weight: 500;
+    padding: 12px 0 6px;
+  }
+}
+
+.status {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 24px 0;
+
+  .statusContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0 12px;
+
+    .contentAmount {
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .contentTitle {
+      font-size: 12px;
+      color: #555555;
+    }
+  }
+}
+
+.record {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 58px;
+
+  .recordContent {
+    box-shadow: 0px 0px 4px -1px #888888;
+    padding: 0 12px;
+    border-radius: 8px;
+
+    :global {
+      .ant-card-body {
+        padding: 0;
+      }
+    }
+
+    .cardExtra {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      .account {
+        font-weight: 500;
+      }
+
+      .withdraw {
+        border: none;
+        background-color: #000;
+        color: #fff;
+        padding: 0 14px;
+        border-radius: 12px;
+        margin-left: 12px;
+      }
+    }
+
+    .panelHeader {
+      font-size: 20px;
+      font-weight: 500;
+    }
+
+    .panelSubtitle {
+      display: flex;
+      flex-direction: row;
+
+      .subtitleRight {
+        padding-left: 8px;
+      }
+    }
+
+    .panelContent {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding-bottom: 20px;
+
+      .contentLeft {
+        .leftOrder {
+          font-size: 12px;
+        }
+
+        .leftTitle {
+          font-weight: 500;
+        }
+
+        .leftDate {
+          font-size: 12px;
+          font-weight: 500;
+          color: #999999;
+        }
+      }
+
+      .contentRight {
+        .rightPrice {
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}
