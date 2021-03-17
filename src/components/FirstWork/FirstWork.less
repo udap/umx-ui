@@ -1,0 +1,100 @@
+.listItem {
+  display: flex;
+  justify-content: center;
+  box-shadow: 0px 0px 5px 0px #888888;
+  border-radius: 12px;
+
+  .item {
+    border-radius: 12px;
+    -webkit-transform: translateZ(0);
+    -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
+    position: relative;
+    margin-bottom: 60px;
+
+    .logo {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+    }
+
+    .itemImage {
+      width: 100%;
+    }
+
+    .itemContent {
+      padding: 12px;
+
+      .avatarContent {
+        display: flex;
+        align-items: center;
+
+        .avatarName {
+          padding-left: 4px;
+          font-size: 14px;
+        }
+      }
+
+      .title {
+        font-size: 16px;
+        font-weight: 500;
+        padding: 8px 0 4px;
+      }
+
+      .code {
+        font-size: 12px;
+      }
+
+      .des {
+        font-size: 12px;
+        color: #555;
+        font-weight: 300;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+      }
+
+      .circulation {
+        padding-top: 4px;
+        font-size: 12px;
+        font-weight: 300;
+      }
+    }
+
+    .price {
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 16px;
+
+      .priceLeft {
+        .leftTitle {
+          font-size: 12px;
+          font-weight: 500;
+        }
+
+        .leftAmount {
+          font-size: 20px;
+          font-weight: 500;
+        }
+      }
+
+      .priceRight {
+        text-align: right;
+
+        .rightTitle {
+          font-size: 14px;
+          font-weight: 500;
+        }
+
+        .rightTime {
+          font-size: 18px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,77 @@
+.noticeList {
+  position: relative;
+
+  .noticeItem {
+    display: flex;
+    flex-direction: row;
+    margin-top: 26px;
+
+    .listLeft {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+
+      .leftContent {
+        text-align: right;
+
+        .contentTitle {
+          font-size: 24px;
+          font-weight: 500;
+        }
+
+        .contentDes {
+          font-weight: 300;
+          color: #999999;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 2;
+        }
+
+        .contentDate {
+          font-size: 16px;
+          font-weight: 300;
+        }
+
+        .contentAmount {
+          font-size: 16px;
+          font-weight: 300;
+        }
+      }
+    }
+
+    .listRight {
+      padding: 0 20px;
+
+      .rightImg {
+        border-radius: 12px;
+        width: 500px;
+        height: 500px;
+      }
+    }
+  }
+
+  .noticeAuth {
+    position: absolute;
+    top: 0;
+    width: 270px;
+
+    .authName {
+      font-size: 48px;
+      font-weight: 500;
+    }
+
+    .authKey {
+      font-size: 10px;
+      font-weight: 300;
+      color: #8c8c8c;
+    }
+
+    .authDes {
+      font-size: 16px;
+      font-weight: 400;
+    }
+  }
+}
