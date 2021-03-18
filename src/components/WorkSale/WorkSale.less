@@ -1,0 +1,164 @@
+.container {
+  padding: 30px;
+  position: relative;
+  border-radius: 8px;
+  box-shadow: 0px 0px 5px 0px #888888;
+
+  .code {
+    font-weight: 500;
+    padding: 4px 12px;
+    position: absolute;
+    top: 0;
+    right: 18px;
+    background-color: #f2f2f2;
+    border-radius: 0px 0px 8px 8px;
+  }
+
+  .content {
+    display: flex;
+    flex-direction: row;
+
+    .contentLeft {
+      .leftImg {
+        width: 472px;
+        height: 472px;
+      }
+
+      .desContent {
+        display: flex;
+        align-items: center;
+
+        .desTitle {
+          font-size: 12px;
+          font-weight: 500;
+        }
+
+        .desCode {
+          padding-left: 6px;
+          font-size: 12px;
+          color: #999;
+        }
+      }
+    }
+
+    .contentRight {
+      padding-left: 40px;
+      flex: 1;
+
+      .avatar {
+        display: -webkit-inline-box;
+
+        .avatarContent {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          align-items: center;
+          padding: 8px 18px;
+          border-radius: 30px;
+          box-shadow: 0px 0px 3px 0px #888888;
+
+          .avatarName {
+            font-size: 18px;
+            font-weight: 500;
+            padding-left: 10px;
+          }
+        }
+      }
+
+      .center {
+        padding-top: 24px;
+
+        .centerTitle {
+          font-size: 20px;
+          font-weight: 500;
+        }
+
+        .centerDes {
+          font-size: 12px;
+          font-weight: 300;
+          padding: 8px 0 4px;
+        }
+      }
+
+      .auctionInfo {
+        display: flex;
+        padding: 60px 0;
+
+        .infoLeft {
+          border-right: 1px solid #e0e1e8;
+          flex: 1;
+
+          .leftReservePrice {
+            font-size: 24px;
+            font-weight: 500;
+          }
+
+          .leftReserve {
+            .reserveAmount {
+              font-size: 18px;
+              font-weight: 500;
+            }
+          }
+
+          .auth {
+            text-decoration: underline;
+            font-size: 12px;
+            font-weight: 500;
+            padding-top: 8px;
+            cursor: pointer;
+          }
+        }
+
+        .infoRight {
+          flex: 1;
+          padding-left: 12px;
+
+          .rightAuctionTitle {
+            font-size: 14px;
+            font-weight: 500;
+          }
+
+          .rightAuctionDate {
+            display: flex;
+            align-items: center;
+
+            .rightAuctionDateTitle {
+              font-size: 12px;
+            }
+
+            .rightAuctionTime {
+              font-size: 24px;
+              font-weight: 500;
+              padding-left: 8px;
+            }
+          }
+
+          .rightAuctionDes {
+            font-size: 12px;
+            color: #555;
+          }
+        }
+      }
+
+      .bottom {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+
+        .btn {
+          border: none;
+          background-color: #000;
+          color: #fff;
+          padding: 6px 132px;
+          border-radius: 20px;
+        }
+
+        .bottomTips {
+          font-size: 12px;
+          text-align: center;
+          padding-top: 6px;
+        }
+      }
+    }
+  }
+}

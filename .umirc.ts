@@ -38,6 +38,11 @@ export default defineConfig({
           component: '@/pages/Mine',
           title: '我的',
         },
+        {
+          path: '/auction',
+          component: '@/pages/Auction',
+          title: '拍卖',
+        },
       ],
     },
   ],
