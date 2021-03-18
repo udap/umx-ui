@@ -3,6 +3,47 @@ import { Card, Collapse } from 'antd';
 import styles from './Mine.less';
 import { UMedia } from '@/images';
 
+const list = [
+  {
+    year: '2020年',
+    expenditure: 299_910,
+    income: 9_910,
+    orderList: [
+      {
+        order: '28387477711',
+        title: '购买《某某某》',
+        date: '2020年2月12日 12:00',
+        price: '-¥200',
+      },
+      {
+        order: '28387477711',
+        title: '张三购买《某某某》',
+        date: '2020年2月12日 12:00',
+        price: '¥200',
+      },
+    ],
+  },
+  {
+    year: '2019年',
+    expenditure: 299_910,
+    income: 9_910,
+    orderList: [
+      {
+        order: '28387477711',
+        title: '购买《某某某》',
+        date: '2020年2月12日 12:00',
+        price: '-¥200',
+      },
+      {
+        order: '28387477711',
+        title: '张三购买《某某某》',
+        date: '2020年2月12日 12:00',
+        price: '¥200',
+      },
+    ],
+  },
+];
+
 const Mine = () => {
   return (
     <>
@@ -37,41 +78,50 @@ const Mine = () => {
               </div>
             }
           >
-            <Collapse defaultActiveKey={['1']} ghost expandIconPosition="right">
-              <Collapse.Panel
-                header={
-                  <div>
-                    <div className={styles.panelHeader}>2020年</div>
-                    <div className={styles.panelSubtitle}>
-                      <div>支出 ¥299,910</div>
-                      <div className={styles.subtitleRight}>收入 ¥9,910</div>
-                    </div>
-                  </div>
-                }
-                key="1"
-              >
-                <div className={styles.panelContent}>
-                  <div className={styles.contentLeft}>
-                    <div className={styles.leftOrder}>订单号 28387477711</div>
-                    <div className={styles.leftTitle}>购买《某某某》</div>
-                    <div className={styles.leftDate}>2020年2月12日 12:00</div>
-                  </div>
-                  <div className={styles.contentRight}>
-                    <div className={styles.rightPrice}>-¥200</div>
-                  </div>
-                </div>
-
-                <div className={styles.panelContent}>
-                  <div className={styles.contentLeft}>
-                    <div className={styles.leftOrder}>订单号 28387477711</div>
-                    <div className={styles.leftTitle}>购买《某某某》</div>
-                    <div className={styles.leftDate}>2020年2月12日 12:00</div>
-                  </div>
-                  <div className={styles.contentRight}>
-                    <div className={styles.rightPrice}>-¥200</div>
-                  </div>
-                </div>
-              </Collapse.Panel>
+            <Collapse defaultActiveKey={['0']} ghost expandIconPosition="right">
+              {list &&
+                list.map((item, index) => {
+                  return (
+                    <Collapse.Panel
+                      header={
+                        <div>
+                          <div className={styles.panelHeader}>{item.year}</div>
+                          <div className={styles.panelSubtitle}>
+                            <div>支出 ¥{item.expenditure}</div>
+                            <div className={styles.subtitleRight}>
+                              收入 ¥{item.income}
+                            </div>
+                          </div>
+                        </div>
+                      }
+                      key={index}
+                    >
+                      {item.orderList &&
+                        item.orderList.map((itemOrder, i) => {
+                          return (
+                            <div className={styles.panelContent} key={i}>
+                              <div className={styles.contentLeft}>
+                                <div className={styles.leftOrder}>
+                                  订单号 {itemOrder.order}
+                                </div>
+                                <div className={styles.leftTitle}>
+                                  {itemOrder.title}
+                                </div>
+                                <div className={styles.leftDate}>
+                                  {itemOrder.date}
+                                </div>
+                              </div>
+                              <div className={styles.contentRight}>
+                                <div className={styles.rightPrice}>
+                                  {itemOrder.price}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                    </Collapse.Panel>
+                  );
+                })}
             </Collapse>
           </Card>
         </div>
