@@ -1,12 +1,17 @@
 import styles from './Auction.less';
-import { WorkSale } from '@/components';
+import { WorkSale, AuthorAbout, TransactionList } from '@/components';
 
 const Auction = () => {
   return (
-    <div>
-      <WorkSale />
-      <div>Auction</div>
-    </div>
+    <>
+      <div className={styles.container}>
+        <WorkSale />
+        <TransactionList />
+      </div>
+      <div className={styles.profile}>
+        <AuthorAbout />
+      </div>
+    </>
   );
 };
 

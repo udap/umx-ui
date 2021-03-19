@@ -5,7 +5,7 @@ import { laugh, avatarY, etherscan } from '@/images';
 
 const WorkSale = () => {
   return (
-    <div className={styles.container}>
+    <>
       <div className={styles.code}>代码 A29387</div>
       <div className={styles.content}>
         <div className={styles.contentLeft}>
@@ -55,16 +55,18 @@ const WorkSale = () => {
             </div>
           </div>
           <div className={styles.bottom}>
-            <button type="button" className={styles.btn}>
-              拍卖出价
-            </button>
+            <div className={styles.bottomBtn}>
+              <button type="button" className={styles.btn}>
+                拍卖出价
+              </button>
+            </div>
             <div className={styles.bottomTips}>
               拍卖结束后，创作者会根据出价签发作品发送给你。
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,8 +1,8 @@
 import { Button } from 'antd';
-import { FacebookFilled, TwitterOutlined } from '@ant-design/icons';
 
 import styles from './ProfileContent.less';
 import { profileImg } from '@/images';
+import { ShareButton } from '@/components';
 
 const ProfileContent = () => {
   return (
@@ -17,24 +17,7 @@ const ProfileContent = () => {
           current situation and future of the world, then this artist is the one
           who depicts China," Time magazine said of Yue Minjun.
         </div>
-        <div className={styles.leftBtn}>
-          <button
-            type="button"
-            className={styles.facebookBtn}
-            style={{ backgroundColor: '#2e75f2' }}
-          >
-            <FacebookFilled />
-            <div className={styles.btnTitle}>Share on Facebook</div>
-          </button>
-          <button
-            type="button"
-            className={styles.facebookBtn}
-            style={{ backgroundColor: '#4ba0eb', marginLeft: '16px' }}
-          >
-            <TwitterOutlined />
-            <div className={styles.btnTitle}>Share on Twitter</div>
-          </button>
-        </div>
+        <ShareButton />
       </div>
       <div className={styles.profileRight}>
         <img src={profileImg} alt="profileImg" />

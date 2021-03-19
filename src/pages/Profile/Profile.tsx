@@ -1,6 +1,6 @@
 import styles from './Profile.less';
-import { NoticeList } from './components';
-import { ProfileContent, FirstWork, MarketPlaceList } from '@/components';
+import { NoticeList, ProfileContent } from './components';
+import { FirstWork, MarketPlaceList } from '@/components';
 import { laugh, avatarY } from '@/images';
 
 const arr = [
@@ -106,7 +106,7 @@ const Profile = () => {
         <MarketPlaceList
           data={marketPlaceData}
           onLoadMore={onMarketPlaceListLoadMore}
-          grid={{ gutter: 96, column: 4 }}
+          grid={{ gutter: 24, column: 4 }}
         />
       </div>
     </>

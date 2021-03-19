@@ -1,0 +1,37 @@
+.transactionList {
+  .title {
+    padding: 28px 0 12px;
+    font-weight: 500;
+  }
+
+  .amount {
+    font-size: 12px;
+    padding-bottom: 16px;
+  }
+
+  :global {
+    .ant-table {
+      .ant-table-thead > tr > th {
+        background: transparent;
+        border: none;
+        font-size: 12px;
+        color: #999;
+      }
+      .ant-table-tbody > tr > td {
+        border: none;
+        font-size: 14px;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .columnContent {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    .contentLeft {
+      margin-right: 6px;
+    }
+  }
+}
