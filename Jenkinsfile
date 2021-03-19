@@ -46,7 +46,7 @@
             agent { label 'master'}
             steps {
                  echo 'start to npm build'
-                 sh "docker run -i --rm -v ${env.WORKSPACE}:/usr/src/workspace -w /usr/src/workspace reg.iclass.cn/iclass.cn/node:latest npm build "
+                 sh "docker run -i --rm -v ${env.WORKSPACE}:/usr/src/workspace -w /usr/src/workspace reg.iclass.cn/iclass.cn/node:latest yarn build "
             }
         }
 
