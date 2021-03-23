@@ -38,30 +38,12 @@ const Layouts = (props: { children: any }) => {
           <div className={styles.headerRightMenu}>
             <>
               <ul>
-                {list.map((item, index) => (
+                {list.map((item) => (
                   <li
                     key={item.key}
                     onClick={() => handleClick(item.key)}
                     className={item.key === current ? styles.active : ''}
                   >
-                    {/* {item === '登录' ? (
-                      <Dropdown
-                        overlay={
-                          <div style={{ border: '1px solid red' }}>
-                            <div>1</div>
-                            <div>2</div>
-                            <div>3</div>
-                            <div>4</div>
-                          </div>
-                        }
-                        trigger={['click']}
-                        placement="bottomCenter"
-                      >
-                        <div onClick={(e) => e.preventDefault()}>{item}</div>
-                      </Dropdown>
-                    ) : (
-                      item
-                    )} */}
                     {item.title}
                   </li>
                 ))}

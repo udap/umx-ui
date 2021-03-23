@@ -1,6 +1,8 @@
 import { extend } from 'umi-request';
 import { notification } from 'antd';
 
+const prodURL = 'https://api.umx.art/';
+
 const whiteRequestList = ['/user/searchQrCodeInfo/'];
 
 const codeMessage: any = {
@@ -62,6 +64,11 @@ const extendRequest = extend({
 });
 
 export default async function request(url: string, options: any) {
-  const response = await extendRequest(url, options);
+  let tempURL = url;
+  if (process.env.NODE_ENV === 'production') {
+    tempURL = `${prodURL}${url.substr(5)}`;
+  }
+
+  const response = await extendRequest(tempURL, options);
   return { data: response };
 }

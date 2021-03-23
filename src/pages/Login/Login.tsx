@@ -21,7 +21,7 @@ const Login = () => {
         setInterval(null);
         notification.success({ message: '登录成功' });
         sessionStorage.setItem('login', JSON.stringify(result.data));
-        history.replace('/collections');
+        history.goBack();
       }
     } catch (error) {
       console.log(error);

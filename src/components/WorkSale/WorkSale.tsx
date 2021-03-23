@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { Avatar } from 'antd';
+import { useCountDown } from 'ahooks';
 
 import styles from './WorkSale.less';
 import { laugh, avatarY, etherscan } from '@/images';
@@ -11,12 +12,14 @@ const methodArr = [
     desc:
       '售卖结束后，可在二级市场交易 同时原创作者会在7日内签发，如没有签发成功钱自动原路返还',
     buttonText: '立即购买',
+    buttonEnd: '首发结束',
   },
   {
     method: 'auction',
     title: '拍卖底价',
     desc: '在最后15分钟内进行的任何投标都将将拍卖再延长15分钟。',
     buttonText: '拍卖出价',
+    buttonEnd: '首发结束',
   },
 ];
 
@@ -25,21 +28,15 @@ type WorkSaleType = {
 };
 
 const WorkSale = (props: WorkSaleType) => {
-  const [timerID, setTimerID] = useState(null);
-  const [counter, setCounter] = useState(5);
+  const onEnd = () => {
+    console.log('onEnd of the time');
+  };
+
+  const [countdown, setTargetDate] = useCountDown({ onEnd });
 
   useEffect(() => {
-    if (counter > 0) {
-      let timer = setTimeout(() => {
-        setCounter(counter - 1);
-      }, 1000);
-      setTimerID(timer);
-    }
-
-    return () => {
-      setTimerID(null);
-    };
-  }, [counter]);
+    setTargetDate(Date.now() + 10000);
+  }, []);
 
   return (
     <>
@@ -90,10 +87,16 @@ const WorkSale = (props: WorkSaleType) => {
             <div className={styles.infoRight}>
               <div className={styles.rightAuctionTitle}>3月20日12:00发行</div>
               <div className={styles.rightAuctionDate}>
-                <div className={styles.rightAuctionDateTitle}>剩余</div>
-                <div className={styles.rightAuctionTime}>
-                  {counter || '已结束'}
-                </div>
+                {countdown ? (
+                  <>
+                    <div className={styles.rightAuctionDateTitle}>剩余</div>
+                    <div className={styles.rightAuctionTime}>
+                      {Math.round(countdown / 1000)}
+                    </div>
+                  </>
+                ) : (
+                  <div className={styles.rightAuctionTime}>已结束</div>
+                )}
               </div>
               <div className={styles.rightAuctionDes}>
                 {methodArr.map((item) => {
@@ -106,10 +109,14 @@ const WorkSale = (props: WorkSaleType) => {
           </div>
           <div className={styles.bottom}>
             <div className={styles.bottomBtn}>
-              <button type="button" className={styles.btn}>
+              <button
+                type="button"
+                className={styles.btn}
+                style={{ backgroundColor: countdown ? '#000' : '#555' }}
+              >
                 {methodArr.map((item) => {
                   if (item.method === props.sellingMethod) {
-                    return item.buttonText;
+                    return countdown ? item.buttonText : item.buttonEnd;
                   }
                 })}
               </button>
