@@ -1,4 +1,5 @@
 import { List, Avatar } from 'antd';
+import NumberFormat from 'react-number-format';
 
 import styles from './MarketPlaceList.less';
 import { ReactComponent as RateRise } from '@/images/rateRise.svg';
@@ -39,7 +40,11 @@ const MarketPlaceList = (props: MarketPlaceListType) => {
             </div>
             <div className={styles.itemContent}>
               <div className={styles.avatarContent}>
-                <Avatar src={item.avatarImg} size={32} />
+                <Avatar
+                  src={item.avatarImg}
+                  size={32}
+                  style={{ boxShadow: '0px 0px 12px 5px rgba(0, 0, 0, 0.65)' }}
+                />
                 <div className={styles.avatarName}>{item.avatarName}</div>
               </div>
               <div className={styles.title}>{item.title}</div>
@@ -51,10 +56,24 @@ const MarketPlaceList = (props: MarketPlaceListType) => {
             </div>
             <div className={styles.rate}>
               <div className={styles.priceRange}>
-                ¥{item.lowPrice}～¥{item.heightPrice}
+                <NumberFormat
+                  value={item.lowPrice}
+                  thousandSeparator={true}
+                  fixedDecimalScale={true}
+                  displayType={'text'}
+                  prefix={'¥'}
+                  suffix={'~'}
+                />
+                <NumberFormat
+                  value={item.heightPrice}
+                  thousandSeparator={true}
+                  fixedDecimalScale={true}
+                  displayType={'text'}
+                  prefix={'¥'}
+                />
               </div>
               <div className={styles.rateTrend}>
-                <RateRise width={32} height={24} />
+                <RateRise width={24} height={20} />
               </div>
             </div>
           </div>

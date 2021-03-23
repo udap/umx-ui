@@ -1,8 +1,9 @@
-import { Table, Tag, Space } from 'antd';
+import { Table } from 'antd';
 
 import styles from './TransactionList.less';
 import { ReactComponent as Issue } from '@/images/issue.svg';
 import { ReactComponent as Buy } from '@/images/buy.svg';
+import { ReactComponent as RateRise } from '@/images/rateRise.svg';
 
 const { Column } = Table;
 const data = [
@@ -49,7 +50,10 @@ const TransactionList = () => {
   return (
     <div className={styles.transactionList}>
       <div className={styles.title}>交易历史</div>
-      <div className={styles.amount}>最后交易金额 ¥21,890</div>
+      <div className={styles.amount}>
+        <div className={styles.amountText}>最后交易金额 ¥21,890</div>
+        <RateRise width={24} height={20} />
+      </div>
       <Table dataSource={data} pagination={false} size="small">
         <Column title="编号" dataIndex="number" key="number" />
         <Column title="购买人" dataIndex="purchaser" key="purchaser" />

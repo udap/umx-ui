@@ -6,6 +6,7 @@ import WorkSale from './WorkSale';
 import AuthorAbout from './AuthorAbout';
 import ShareButton from './ShareButton';
 import TransactionList from './TransactionList';
+import ShareBlock from './ShareBlock';
 
 export {
   LoadMore,
@@ -16,4 +17,5 @@ export {
   WorkSale,
   AuthorAbout,
   TransactionList,
+  ShareBlock,
 };

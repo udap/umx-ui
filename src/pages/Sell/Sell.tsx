@@ -1,4 +1,5 @@
-import styles from './Auction.less';
+import styles from './Sell.less';
+
 import {
   WorkSale,
   AuthorAbout,
@@ -6,11 +7,11 @@ import {
   ShareBlock,
 } from '@/components';
 
-const Auction = () => {
+const Sell = () => {
   return (
     <>
       <div className={styles.container}>
-        <WorkSale sellingMethod="auction" />
+        <WorkSale sellingMethod="sell" />
         <TransactionList />
       </div>
       <div className={styles.profile}>
@@ -23,4 +24,4 @@ const Auction = () => {
   );
 };
 
-export default Auction;
+export default Sell;

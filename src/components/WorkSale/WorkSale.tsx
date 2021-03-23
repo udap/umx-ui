@@ -1,9 +1,46 @@
+import { useState, useEffect } from 'react';
 import { Avatar } from 'antd';
 
 import styles from './WorkSale.less';
 import { laugh, avatarY, etherscan } from '@/images';
 
-const WorkSale = () => {
+const methodArr = [
+  {
+    method: 'sell',
+    title: '首发售价',
+    desc:
+      '售卖结束后，可在二级市场交易 同时原创作者会在7日内签发，如没有签发成功钱自动原路返还',
+    buttonText: '立即购买',
+  },
+  {
+    method: 'auction',
+    title: '拍卖底价',
+    desc: '在最后15分钟内进行的任何投标都将将拍卖再延长15分钟。',
+    buttonText: '拍卖出价',
+  },
+];
+
+type WorkSaleType = {
+  sellingMethod: string;
+};
+
+const WorkSale = (props: WorkSaleType) => {
+  const [timerID, setTimerID] = useState(null);
+  const [counter, setCounter] = useState(5);
+
+  useEffect(() => {
+    if (counter > 0) {
+      let timer = setTimeout(() => {
+        setCounter(counter - 1);
+      }, 1000);
+      setTimerID(timer);
+    }
+
+    return () => {
+      setTimerID(null);
+    };
+  }, [counter]);
+
   return (
     <>
       <div className={styles.code}>代码 A29387</div>
@@ -36,33 +73,52 @@ const WorkSale = () => {
 
           <div className={styles.auctionInfo}>
             <div className={styles.infoLeft}>
-              <div className={styles.leftReserveTitle}>拍卖底价</div>
+              <div className={styles.leftReserveTitle}>
+                {methodArr.map((item) => {
+                  if (item.method === props.sellingMethod) {
+                    return item.title;
+                  }
+                })}
+              </div>
               <div className={styles.leftReservePrice}>¥10,000</div>
               <div className={styles.leftReserve}>
                 发行 <span className={styles.reserveAmount}>900</span> 份
               </div>
+              {props.sellingMethod === 'sell' && <div>已售10份</div>}
               <div className={styles.auth}>用户购买权限说明</div>
             </div>
             <div className={styles.infoRight}>
               <div className={styles.rightAuctionTitle}>3月20日12:00发行</div>
               <div className={styles.rightAuctionDate}>
                 <div className={styles.rightAuctionDateTitle}>剩余</div>
-                <div className={styles.rightAuctionTime}>20:00</div>
+                <div className={styles.rightAuctionTime}>
+                  {counter || '已结束'}
+                </div>
               </div>
               <div className={styles.rightAuctionDes}>
-                在最后15分钟内进行的任何投标都将将拍卖再延长15分钟。
+                {methodArr.map((item) => {
+                  if (item.method === props.sellingMethod) {
+                    return item.desc;
+                  }
+                })}
               </div>
             </div>
           </div>
           <div className={styles.bottom}>
             <div className={styles.bottomBtn}>
               <button type="button" className={styles.btn}>
-                拍卖出价
+                {methodArr.map((item) => {
+                  if (item.method === props.sellingMethod) {
+                    return item.buttonText;
+                  }
+                })}
               </button>
             </div>
-            <div className={styles.bottomTips}>
-              拍卖结束后，创作者会根据出价签发作品发送给你。
-            </div>
+            {props.sellingMethod === 'auction' && (
+              <div className={styles.bottomTips}>
+                拍卖结束后，创作者会根据出价签发作品发送给你。
+              </div>
+            )}
           </div>
         </div>
       </div>

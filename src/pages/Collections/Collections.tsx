@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { Carousel, List, Avatar } from 'antd';
+import { useState, useEffect } from 'react';
+import { Carousel, List, Avatar, Skeleton } from 'antd';
 
 import styles from './Collections.less';
-import { swiperImg, avatarY, laugh } from '@/images';
+import { avatarY, laugh } from '@/images';
 import { NoticeList } from './components';
 import { LoadMore, FirstWork, FilterSelect } from '@/components';
+import { getCarousels } from '@/services';
 
 const workObj = {
   img: laugh,
@@ -21,91 +22,104 @@ const workObj = {
   countdown: '20:00',
 };
 
+const arr = [
+  {
+    date: '3月20日 星期五',
+    list: [
+      {
+        auth: {
+          avatar: avatarY,
+          name: '岳敏君',
+          code: '0x 3f13 3816 f817 8b93 ac99 1a2c 3eed db8f 947a f0cb',
+          des:
+            'Independent artist "If you think that China is closely related to the current situation and future of the world, then this artist is the one who depicts China," Time magazine said of Yue Minjun.',
+        },
+        works: [
+          {
+            name: '快乐图',
+            code: 'A29387',
+            des:
+              '那时已经有一些艺术家开始做失落感觉的作品了,他们给我一些启发,我开始做一排排的人,一排排的我开始做一排排的人,一排排的',
+            date: '3月20日 12:00',
+            amount: '1000',
+            img: laugh,
+          },
+          {
+            name: '快乐图',
+            code: 'A29387',
+            des:
+              '那时已经有一些艺术家开始做失落感觉的作品了,他们给我一些启发,我开始做一排排的人,一排排的我开始做一排排的人,一排排的',
+            date: '3月20日 12:00',
+            amount: '1000',
+            img: laugh,
+          },
+        ],
+      },
+      {
+        auth: {
+          avatar: avatarY,
+          name: '张三',
+          code: '0x 3f13 3816 f817 8b93 ac99 1a2c 3eed db8f 947a f0cb',
+          des:
+            'Independent artist "If you think that China is closely related to the current situation and future of the world, then this artist is the one who depicts China," Time magazine said of Yue Minjun.',
+        },
+        works: [
+          {
+            name: '快乐图',
+            code: 'A29387',
+            des:
+              '那时已经有一些艺术家开始做失落感觉的作品了,他们给我一些启发,我开始做一排排的人,一排排的我开始做一排排的人,一排排的',
+            date: '3月20日 12:00',
+            amount: '1000',
+            img: laugh,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    date: '3月22日 星期日',
+    list: [
+      {
+        auth: {
+          avatar: avatarY,
+          name: '李四',
+          code: '0x 3f13 3816 f817 8b93 ac99 1a2c 3eed db8f 947a f0cb',
+          des:
+            'Independent artist "If you think that China is closely related to the current situation and future of the world, then this artist is the one who depicts China," Time magazine said of Yue Minjun.',
+        },
+        works: [
+          {
+            name: '快乐图',
+            code: 'A29387',
+            des:
+              '那时已经有一些艺术家开始做失落感觉的作品了,他们给我一些启发,我开始做一排排的人,一排排的我开始做一排排的人,一排排的',
+            date: '3月20日 12:00',
+            amount: '1000',
+            img: laugh,
+          },
+        ],
+      },
+    ],
+  },
+];
+
+const filterList = ['发行时间', '售价', '倒计时', '直卖', '拍卖'];
+
+type CarouselArrType = {
+  createdDate: number;
+  displayUrl: string;
+  effective: string;
+  expiry: any;
+  id: string;
+  lastModifiedDate: number;
+  linkUrl: string;
+  new: boolean;
+};
+
 const Collections = () => {
   const [curFilter, setCurFilter] = useState(0);
-  const arr = [
-    {
-      date: '3月20日 星期五',
-      list: [
-        {
-          auth: {
-            avatar: avatarY,
-            name: '岳敏君',
-            code: '0x 3f13 3816 f817 8b93 ac99 1a2c 3eed db8f 947a f0cb',
-            des:
-              'Independent artist "If you think that China is closely related to the current situation and future of the world, then this artist is the one who depicts China," Time magazine said of Yue Minjun.',
-          },
-          works: [
-            {
-              name: '快乐图',
-              code: 'A29387',
-              des:
-                '那时已经有一些艺术家开始做失落感觉的作品了,他们给我一些启发,我开始做一排排的人,一排排的我开始做一排排的人,一排排的',
-              date: '3月20日 12:00',
-              amount: '1000',
-              img: laugh,
-            },
-            {
-              name: '快乐图',
-              code: 'A29387',
-              des:
-                '那时已经有一些艺术家开始做失落感觉的作品了,他们给我一些启发,我开始做一排排的人,一排排的我开始做一排排的人,一排排的',
-              date: '3月20日 12:00',
-              amount: '1000',
-              img: laugh,
-            },
-          ],
-        },
-        {
-          auth: {
-            avatar: avatarY,
-            name: '张三',
-            code: '0x 3f13 3816 f817 8b93 ac99 1a2c 3eed db8f 947a f0cb',
-            des:
-              'Independent artist "If you think that China is closely related to the current situation and future of the world, then this artist is the one who depicts China," Time magazine said of Yue Minjun.',
-          },
-          works: [
-            {
-              name: '快乐图',
-              code: 'A29387',
-              des:
-                '那时已经有一些艺术家开始做失落感觉的作品了,他们给我一些启发,我开始做一排排的人,一排排的我开始做一排排的人,一排排的',
-              date: '3月20日 12:00',
-              amount: '1000',
-              img: laugh,
-            },
-          ],
-        },
-      ],
-    },
-    {
-      date: '3月22日 星期日',
-      list: [
-        {
-          auth: {
-            avatar: avatarY,
-            name: '李四',
-            code: '0x 3f13 3816 f817 8b93 ac99 1a2c 3eed db8f 947a f0cb',
-            des:
-              'Independent artist "If you think that China is closely related to the current situation and future of the world, then this artist is the one who depicts China," Time magazine said of Yue Minjun.',
-          },
-          works: [
-            {
-              name: '快乐图',
-              code: 'A29387',
-              des:
-                '那时已经有一些艺术家开始做失落感觉的作品了,他们给我一些启发,我开始做一排排的人,一排排的我开始做一排排的人,一排排的',
-              date: '3月20日 12:00',
-              amount: '1000',
-              img: laugh,
-            },
-          ],
-        },
-      ],
-    },
-  ];
-
-  const filterList = ['发行时间', '售价', '倒计时', '直卖', '拍卖'];
+  const [carouselArr, setCarouselArr] = useState<CarouselArrType[]>([]);
 
   const filterClick = (e: number) => {
     console.log('filterClick');
@@ -121,42 +135,39 @@ const Collections = () => {
     data.push(workObj);
   }
 
+  const fetchData = async () => {
+    try {
+      const result = await getCarousels();
+      if (result?.data) {
+        setCarouselArr([...result?.data]);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   return (
     <div className={styles.container}>
-      <Carousel>
-        <div>
-          <img
-            className={styles.carouselItem}
-            src={swiperImg}
-            alt="swiper"
-            width="100%"
-          />
-        </div>
-        <div>
-          <img
-            className={styles.carouselItem}
-            src={swiperImg}
-            alt="swiper"
-            width="100%"
-          />
-        </div>
-        <div>
-          <img
-            className={styles.carouselItem}
-            src={swiperImg}
-            alt="swiper"
-            width="100%"
-          />
-        </div>
-        <div>
-          <img
-            className={styles.carouselItem}
-            src={swiperImg}
-            alt="swiper"
-            width="100%"
-          />
-        </div>
-      </Carousel>
+      <div className={styles.carousel}>
+        <Carousel>
+          {carouselArr.map((item, index) => {
+            return (
+              <div key={index}>
+                <img
+                  className={styles.carouselItem}
+                  src={item.displayUrl}
+                  alt="swiper"
+                  width="100%"
+                />
+              </div>
+            );
+          })}
+        </Carousel>
+      </div>
       <div className={styles.title}>
         <div className={styles.titleText}>首发市场</div>
         <div className={styles.titleDes}>

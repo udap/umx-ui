@@ -43,8 +43,20 @@ export default defineConfig({
           component: '@/pages/Auction',
           title: '拍卖',
         },
+        {
+          path: '/sell',
+          component: '@/pages/Sell',
+          title: '直卖',
+        },
       ],
     },
   ],
   fastRefresh: {},
+  proxy: {
+    '/api': {
+      target: 'https://api.umx.art/',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
+    },
+  },
 });

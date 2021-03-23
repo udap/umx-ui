@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { history } from 'umi';
-import { Layout, Space, Dropdown } from 'antd';
+import { Layout, Space } from 'antd';
 
 import styles from './Layouts.less';
 import { ReactComponent as Logo } from '@/images/logo.svg';
@@ -8,31 +8,25 @@ import { ReactComponent as Fill } from '@/images/fill.svg';
 
 const { Header, Content, Footer } = Layout;
 
-const list = ['首发市场', '二级市场', '关于我们', '登录'];
+const list = [
+  { key: 'collections', title: '首发市场' },
+  { key: 'marketplace', title: '二级市场' },
+  { key: 'about', title: '关于我们' },
+  { key: 'login', title: '登录' },
+];
 
 const Layouts = (props: { children: any }) => {
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(list[0].key);
 
-  const handleClick = (e: number) => {
-    setCurrent(e);
-    console.log(e);
-    switch (e) {
-      case 0:
-        history.push('/collections');
-        break;
-      case 1:
-        history.push('/marketplace');
-        break;
-      case 2:
-        break;
-      case 3:
-        history.push('/login');
-        break;
-
-      default:
-        break;
-    }
+  const handleClick = (element: string) => {
+    setCurrent(element);
+    history.push(`/${element}`);
   };
+
+  useEffect(() => {
+    const { location } = history;
+    setCurrent(location?.pathname?.substring(1));
+  });
 
   return (
     <Layout>
@@ -46,9 +40,9 @@ const Layouts = (props: { children: any }) => {
               <ul>
                 {list.map((item, index) => (
                   <li
-                    key={item}
-                    onClick={() => handleClick(index)}
-                    className={index === current ? styles.active : ''}
+                    key={item.key}
+                    onClick={() => handleClick(item.key)}
+                    className={item.key === current ? styles.active : ''}
                   >
                     {/* {item === '登录' ? (
                       <Dropdown
@@ -68,7 +62,7 @@ const Layouts = (props: { children: any }) => {
                     ) : (
                       item
                     )} */}
-                    {item}
+                    {item.title}
                   </li>
                 ))}
               </ul>
