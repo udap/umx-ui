@@ -1,22 +1,24 @@
 import { Avatar } from 'antd';
+import dayjs from 'dayjs';
 
 import styles from './NoticeList.less';
 
 type WorksType = {
   name: string;
   code: string;
-  des: string;
-  date: string;
-  amount: string;
-  img: string;
+  summary: string;
+  publishDate: string;
+  copies: string;
+  image: string;
 };
 
 type NoticeDataType = {
   auth: {
-    avatar: string;
+    headImage: string;
     name: string;
-    code: string;
-    des: string;
+    address: string;
+    // desTips: string;
+    myintro: string;
   };
   works: WorksType[];
 };
@@ -39,20 +41,23 @@ const NoticeList = (props: { data: NoticeDataType[] }) => {
                           </div>
                           <div>代码 {itemWork.code}</div>
                           <div className={styles.contentDes}>
-                            {itemWork.des}
+                            {itemWork.summary}
                           </div>
                           <div className={styles.contentDate}>
-                            发行时间 {itemWork.date}
+                            发行时间{' '}
+                            {dayjs(itemWork.publishDate).format(
+                              'MM月DD日 HH:mm',
+                            )}
                           </div>
                           <div className={styles.contentAmount}>
-                            预发行量{itemWork.amount}
+                            预发行量{itemWork.copies}
                           </div>
                         </div>
                       </div>
                       <div className={styles.listRight}>
                         <img
                           className={styles.rightImg}
-                          src={itemWork.img}
+                          src={itemWork.image}
                           alt="img"
                         />
                       </div>
@@ -61,10 +66,15 @@ const NoticeList = (props: { data: NoticeDataType[] }) => {
                 })}
               {item.auth && (
                 <div className={styles.noticeAuth}>
-                  <Avatar src={item.auth?.avatar} size={100} />
+                  {item.auth?.headImage ? (
+                    <Avatar src={item.auth?.headImage} size={100} />
+                  ) : (
+                    <Avatar size={100}>{item.auth?.address?.substr(-2)}</Avatar>
+                  )}
                   <div className={styles.authName}>{item.auth?.name}</div>
-                  <div className={styles.authKey}>{item.auth?.code}</div>
-                  <div className={styles.authDes}>{item.auth?.des}</div>
+                  <div className={styles.authKey}>{item.auth?.address}</div>
+                  {/* <div className={styles.authDes}>{item.auth?.desTips}</div> */}
+                  <div className={styles.authDes}>{item.auth?.myintro}</div>
                 </div>
               )}
             </div>

@@ -23,6 +23,7 @@
     "@ant-design/pro-layout": "^6.5.0",
     "@umijs/preset-react": "1.x",
     "ahooks": "^2.10.0",
+    "dayjs": "^1.10.4",
     "lodash": "^4.17.21",
     "qrcode.react": "^1.0.1",
     "react-number-format": "^4.5.1",

@@ -29,7 +29,7 @@ const Layouts = (props: { children: any }) => {
   });
 
   return (
-    <Layout>
+    <Layout className={styles.layout}>
       <Header className={styles.header}>
         <div className={styles.headerLeft}>
           <Logo width={24} height={24} />
@@ -54,16 +54,8 @@ const Layouts = (props: { children: any }) => {
       </Header>
       <Content className={styles.content}>{props.children}</Content>
       <Footer className={styles.footer}>
-        <div className={styles.footerLeft}>
-          <Logo width={24} height={24} />
-          <Fill width={24} height={24} className={styles.fill} />
-          <div className={styles.aboutUDAP}>关于UDAP</div>
-        </div>
-        <Space size="large">
-          <div>服务条款</div>
-          <div>隐私</div>
-          <div>帮助</div>
-        </Space>
+        <Logo width={24} height={24} />
+        <Fill width={24} height={24} className={styles.fill} />
       </Footer>
     </Layout>
   );

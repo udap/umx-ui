@@ -7,6 +7,7 @@ import etherscan from './etherscan.png';
 import like from './like.png';
 import watch from './watch.png';
 import share from './share.png';
+import background from './background.png';
 
 export {
   laugh,
@@ -18,4 +19,5 @@ export {
   like,
   watch,
   share,
+  background,
 };

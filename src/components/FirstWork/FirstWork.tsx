@@ -1,21 +1,27 @@
 import { List, Avatar } from 'antd';
+import dayjs from 'dayjs';
+import NumberFormat from 'react-number-format';
 
 import styles from './FirstWork.less';
 import { LoadMore } from '@/components';
 import { ReactComponent as Logo } from '@/images/logo.svg';
 
 type DataType = {
-  img: string;
-  avatarImg: string;
-  avatarName: string;
-  title: string;
-  des: string;
-  code: string;
-  circulation: number;
-  date: string;
-  sold: number;
-  lowAuctionPrice: number;
-  countdown: string;
+  product: {
+    image: string;
+    code: string;
+    name: string;
+    summary: string;
+    publishDate: string;
+    copies: string;
+    soldAmount: string;
+    price: string;
+  };
+  user: {
+    headImage: string;
+    address: string;
+    name: string;
+  };
 };
 
 type FirstWorkType = {
@@ -37,28 +43,41 @@ const FirstWork = (props: FirstWorkType) => {
         <List.Item className={styles.listItem}>
           <div className={styles.item}>
             <div className={styles.itemImage}>
-              <img src={item.img} alt="laugh" width="100%" />
+              <img src={item.product?.image} alt="laugh" width="100%" />
             </div>
             <div className={styles.itemContent}>
               <div className={styles.avatarContent}>
-                <Avatar src={item.avatarImg} size={32} />
-                <div className={styles.avatarName}>{item.avatarName}</div>
+                {item.user?.headImage ? (
+                  <Avatar src={item.user?.headImage} size={32} />
+                ) : (
+                  <Avatar size={32}>{item.user?.address?.substr(-2)}</Avatar>
+                )}
+                <div className={styles.avatarName}>{item.user?.name}</div>
               </div>
-              <div className={styles.title}>{item.title}</div>
-              <div className={styles.code}>代码 {item.code}</div>
-              <div className={styles.des}>{item.des}</div>
+              <div className={styles.title}>{item.product.name}</div>
+              <div className={styles.code}>代码 {item.product?.code}</div>
+              <div className={styles.des}>{item.product?.summary}</div>
               <div className={styles.circulation}>
-                {item.date}，发行量{item.circulation}/已售{item.sold}
+                {dayjs(item.product?.publishDate).format('MM月DD日')}，发行量
+                {item.product?.copies}/已售{item.product?.soldAmount}
               </div>
             </div>
             <div className={styles.price}>
               <div className={styles.priceLeft}>
-                <div className={styles.leftTitle}>拍卖低价</div>
-                <div className={styles.leftAmount}>¥{item.lowAuctionPrice}</div>
+                <div className={styles.leftTitle}>售价</div>
+                <div className={styles.leftAmount}>
+                  <NumberFormat
+                    value={item.product?.price}
+                    thousandSeparator={true}
+                    fixedDecimalScale={true}
+                    displayType={'text'}
+                    prefix={'¥'}
+                  />
+                </div>
               </div>
               <div className={styles.priceRight}>
                 <div className={styles.rightTitle}>售卖倒计时</div>
-                <div className={styles.rightTime}>{item.countdown}</div>
+                <div className={styles.rightTime}>20:00</div>
               </div>
             </div>
             <div className={styles.logo}>

@@ -1,6 +1,10 @@
 .container {
+  display: flex;
+  flex-direction: column;
+
   .carousel {
     height: 320px;
+    width: 100%;
 
     .carouselItem {
       border-radius: 12px;
@@ -8,254 +12,259 @@
     }
   }
 
-  .title {
-    padding: 36px 0;
+  .content {
+    width: 1135px;
+    align-self: center;
 
-    .titleText {
-      font-size: 16px;
-      font-weight: bold;
+    .title {
+      padding: 36px 0;
+
+      .titleText {
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .titleDes {
+        padding-top: 6px;
+        color: #818181;
+      }
     }
 
-    .titleDes {
-      padding-top: 6px;
-      color: #818181;
-    }
-  }
-
-  .notice {
-    .thisWeek {
-      font-size: 24px;
-      font-weight: 200;
-    }
-
-    .noticeDate {
-      font-size: 40px;
-      font-weight: 300;
-      padding: 12px 0;
-    }
-  }
-
-  .firstWorks {
-    padding-top: 66px;
-
-    .worksTop {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      padding-bottom: 24px;
-
-      .topTitle {
+    .notice {
+      .thisWeek {
         font-size: 24px;
         font-weight: 200;
       }
 
-      .topFilter {
-        align-self: flex-end;
-
-        ul {
-          list-style: none;
-          padding: 0;
-          margin: 0;
-        }
-
-        li {
-          display: inline;
-          line-height: 28px;
-          float: left;
-          padding: 0 6px;
-        }
-
-        .active {
-          font-weight: bold;
-        }
+      .noticeDate {
+        font-size: 40px;
+        font-weight: 300;
+        padding: 12px 0;
       }
     }
 
-    .worksContent {
-      padding-top: 24px;
+    .firstWorks {
+      padding-top: 66px;
 
-      .listItem {
+      .worksTop {
         display: flex;
-        justify-content: center;
-        box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.08);
-        border-radius: 12px;
-        margin-bottom: 60px;
+        flex-direction: row;
+        justify-content: space-between;
+        padding-bottom: 24px;
 
-        .item {
-          border-radius: 12px;
-          -webkit-transform: translateZ(0);
-          -webkit-mask-image: -webkit-radial-gradient(
-            circle,
-            white 100%,
-            black 100%
-          );
-          position: relative;
+        .topTitle {
+          font-size: 24px;
+          font-weight: 200;
+        }
 
-          .logo {
-            position: absolute;
-            top: 6px;
-            left: 6px;
+        .topFilter {
+          align-self: flex-end;
+
+          ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
           }
 
-          .itemImage {
-            width: 100%;
+          li {
+            display: inline;
+            line-height: 28px;
+            float: left;
+            padding: 0 6px;
           }
 
-          .itemContent {
-            padding: 12px;
-
-            .avatarContent {
-              display: flex;
-              align-items: center;
-
-              .avatarName {
-                padding-left: 4px;
-                font-size: 14px;
-              }
-            }
-
-            .title {
-              font-size: 16px;
-              font-weight: 500;
-              padding: 8px 0 4px;
-            }
-
-            .code {
-              font-size: 12px;
-            }
-
-            .des {
-              font-size: 12px;
-              color: #555;
-              font-weight: 300;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              display: -webkit-box;
-              -webkit-box-orient: vertical;
-              -webkit-line-clamp: 2;
-            }
-
-            .circulation {
-              padding-top: 4px;
-              font-size: 12px;
-              font-weight: 300;
-            }
-          }
-
-          .price {
-            background-color: #000;
-            color: #fff;
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            padding: 16px;
-
-            .priceLeft {
-              .leftTitle {
-                font-size: 12px;
-                font-weight: 500;
-              }
-
-              .leftAmount {
-                font-size: 20px;
-                font-weight: 500;
-              }
-            }
-
-            .priceRight {
-              text-align: right;
-
-              .rightTitle {
-                font-size: 14px;
-                font-weight: 500;
-              }
-
-              .rightTime {
-                font-size: 18px;
-                font-weight: 500;
-              }
-            }
+          .active {
+            font-weight: bold;
           }
         }
       }
-    }
-  }
 
-  .creator {
-    margin: 24px 0 60px;
+      .worksContent {
+        padding-top: 24px;
 
-    .creatorTitle {
-      font-size: 24px;
-      font-weight: 200;
-    }
-
-    .creatorDes {
-      font-size: 12px;
-      font-weight: 300;
-      color: #777;
-    }
-
-    .creatorContent {
-      padding-top: 32px;
-
-      .listItem {
-        display: flex;
-        justify-content: flex-start;
-        padding-bottom: 54px;
-
-        .itemLeft {
-          width: 110px;
-          border-radius: 50%;
+        .listItem {
           display: flex;
-          align-items: center;
-        }
+          justify-content: center;
+          box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.08);
+          border-radius: 12px;
+          margin-bottom: 60px;
 
-        .itemRight {
-          flex: 1;
-          padding-left: 20px;
+          .item {
+            border-radius: 12px;
+            -webkit-transform: translateZ(0);
+            -webkit-mask-image: -webkit-radial-gradient(
+              circle,
+              white 100%,
+              black 100%
+            );
+            position: relative;
 
-          .rightName {
-            font-size: 28px;
-            font-weight: 500;
-          }
+            .logo {
+              position: absolute;
+              top: 6px;
+              left: 6px;
+            }
 
-          .rightDes {
-            font-weight: 400;
-            color: #555;
-            line-height: 18px;
-          }
+            .itemImage {
+              width: 100%;
+            }
 
-          .rightCount {
-            padding-top: 6px;
-            line-height: 20px;
-            color: #555;
+            .itemContent {
+              padding: 12px;
+
+              .avatarContent {
+                display: flex;
+                align-items: center;
+
+                .avatarName {
+                  padding-left: 4px;
+                  font-size: 14px;
+                }
+              }
+
+              .title {
+                font-size: 16px;
+                font-weight: 500;
+                padding: 8px 0 4px;
+              }
+
+              .code {
+                font-size: 12px;
+              }
+
+              .des {
+                font-size: 12px;
+                color: #555;
+                font-weight: 300;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+              }
+
+              .circulation {
+                padding-top: 4px;
+                font-size: 12px;
+                font-weight: 300;
+              }
+            }
+
+            .price {
+              background-color: #000;
+              color: #fff;
+              display: flex;
+              flex-direction: row;
+              justify-content: space-between;
+              padding: 16px;
+
+              .priceLeft {
+                .leftTitle {
+                  font-size: 12px;
+                  font-weight: 500;
+                }
+
+                .leftAmount {
+                  font-size: 20px;
+                  font-weight: 500;
+                }
+              }
+
+              .priceRight {
+                text-align: right;
+
+                .rightTitle {
+                  font-size: 14px;
+                  font-weight: 500;
+                }
+
+                .rightTime {
+                  font-size: 18px;
+                  font-weight: 500;
+                }
+              }
+            }
           }
         }
       }
     }
-  }
 
-  .bottom {
-    background-color: #f2f2f2;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 90px 0;
+    .creator {
+      margin: 24px 0 60px;
 
-    .bottomTitle {
-      font-size: 70px;
-      font-weight: 100;
-      line-height: 110px;
+      .creatorTitle {
+        font-size: 24px;
+        font-weight: 200;
+      }
+
+      .creatorDes {
+        font-size: 12px;
+        font-weight: 300;
+        color: #777;
+      }
+
+      .creatorContent {
+        padding-top: 32px;
+
+        .listItem {
+          display: flex;
+          justify-content: flex-start;
+          padding-bottom: 54px;
+
+          .itemLeft {
+            width: 110px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+          }
+
+          .itemRight {
+            flex: 1;
+            padding-left: 20px;
+
+            .rightName {
+              font-size: 28px;
+              font-weight: 500;
+            }
+
+            .rightDes {
+              font-weight: 400;
+              color: #555;
+              line-height: 18px;
+            }
+
+            .rightCount {
+              padding-top: 6px;
+              line-height: 20px;
+              color: #555;
+            }
+          }
+        }
+      }
     }
 
-    .bottomDes {
-      padding-top: 14px;
-      font-size: 16px;
-      font-weight: 200;
-      color: #818181;
-      letter-spacing: 3px;
-      line-height: 24px;
+    .bottom {
+      background-color: #f2f2f2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 90px 0;
+
+      .bottomTitle {
+        font-size: 70px;
+        font-weight: 100;
+        line-height: 110px;
+      }
+
+      .bottomDes {
+        padding-top: 14px;
+        font-size: 16px;
+        font-weight: 200;
+        color: #818181;
+        letter-spacing: 3px;
+        line-height: 24px;
+      }
     }
   }
 }

@@ -36,10 +36,6 @@ const Login = () => {
     { immediate: true },
   );
 
-  const downloadQrCode = () => {
-    console.log('downloadQrCode');
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.title}>请用UMedia App扫码登录</div>
@@ -48,7 +44,6 @@ const Login = () => {
           id="qrcode"
           value={`UMedia://login?key=${randomKeys}`}
           renderAs={'svg'}
-          onClick={downloadQrCode}
           size={240}
           level={'H'}
           imageSettings={{

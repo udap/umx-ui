@@ -32,22 +32,22 @@ const errorHandler = (error: { data?: any; response?: any }) => {
     return;
   }
 
-  if (error.data.message) {
-    notification.error({
-      message: `请求错误`,
-      description: error.data.message,
-    });
+  if (error?.data?.message) {
+    // notification.error({
+    //   message: `请求错误`,
+    //   description: error.data.message,
+    // });
   } else {
     const { response } = error;
     if (typeof response.status == 'number') {
       if (response && response.status) {
-        const errorText = codeMessage[response.status] || response.statusText;
-        const { status, url } = response;
-        notification.error({
-          message: `请求错误 ${status}: ${url}`,
-          description: errorText,
-          duration: 0,
-        });
+        // const errorText = codeMessage[response.status] || response.statusText;
+        // const { status, url } = response;
+        // notification.error({
+        //   message: `请求错误 ${status}: ${url}`,
+        //   description: errorText,
+        //   duration: 0,
+        // });
         return;
       }
     }
