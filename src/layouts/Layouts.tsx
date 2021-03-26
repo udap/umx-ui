@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { history } from 'umi';
-import { Layout, Space } from 'antd';
+import { Layout } from 'antd';
+import dayjs from 'dayjs';
 
 import styles from './Layouts.less';
-import { ReactComponent as Logo } from '@/images/logo.svg';
-import { ReactComponent as Fill } from '@/images/fill.svg';
+import { logo, logoLeft, udapLogo } from '@/images';
 
 const { Header, Content, Footer } = Layout;
 
@@ -32,7 +32,7 @@ const Layouts = (props: { children: any }) => {
     <Layout className={styles.layout}>
       <Header className={styles.header}>
         <div className={styles.headerLeft}>
-          <Logo width={24} height={24} />
+          <img src={logoLeft} alt="logo" className={styles.leftLogo} />
         </div>
         <div className={styles.headerRight}>
           <div className={styles.headerRightMenu}>
@@ -54,8 +54,13 @@ const Layouts = (props: { children: any }) => {
       </Header>
       <Content className={styles.content}>{props.children}</Content>
       <Footer className={styles.footer}>
-        <Logo width={24} height={24} />
-        <Fill width={24} height={24} className={styles.fill} />
+        <div className={styles.footerTop}>
+          <img src={logo} alt="logo" className={styles.topLogo} />
+          <img src={udapLogo} alt="udapLogo" className={styles.topUdapLogo} />
+        </div>
+        <div className={styles.footerBottom}>
+          <div>© umx {dayjs().year()}</div>
+        </div>
       </Footer>
     </Layout>
   );

@@ -3,27 +3,7 @@ import dayjs from 'dayjs';
 
 import styles from './NoticeList.less';
 
-type WorksType = {
-  name: string;
-  code: string;
-  summary: string;
-  publishDate: string;
-  copies: string;
-  image: string;
-};
-
-type NoticeDataType = {
-  auth: {
-    headImage: string;
-    name: string;
-    address: string;
-    // desTips: string;
-    myintro: string;
-  };
-  works: WorksType[];
-};
-
-const NoticeList = (props: { data: NoticeDataType[] }) => {
+const NoticeList = (props: { data: API.NoticeListType[] }) => {
   return (
     <>
       {props.data &&

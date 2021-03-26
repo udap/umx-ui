@@ -4,7 +4,7 @@ import NumberFormat from 'react-number-format';
 
 import styles from './FirstWork.less';
 import { LoadMore } from '@/components';
-import { ReactComponent as Logo } from '@/images/logo.svg';
+import { logo } from '@/images';
 
 type DataType = {
   product: {
@@ -81,7 +81,7 @@ const FirstWork = (props: FirstWorkType) => {
               </div>
             </div>
             <div className={styles.logo}>
-              <Logo width={34} height={34} />
+              <img src={logo} alt="logo" width={34} height={34} />
             </div>
           </div>
         </List.Item>

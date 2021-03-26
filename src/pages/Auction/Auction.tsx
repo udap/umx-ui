@@ -8,7 +8,7 @@ import {
 
 const Auction = () => {
   return (
-    <>
+    <div>
       <div className={styles.container}>
         <WorkSale sellingMethod="auction" />
         <TransactionList />
@@ -19,7 +19,7 @@ const Auction = () => {
       <div className={styles.shareBlock}>
         <ShareBlock />
       </div>
-    </>
+    </div>
   );
 };
 

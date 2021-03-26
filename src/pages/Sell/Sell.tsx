@@ -9,7 +9,7 @@ import {
 
 const Sell = () => {
   return (
-    <>
+    <div>
       <div className={styles.container}>
         <WorkSale sellingMethod="sell" />
         <TransactionList />
@@ -20,7 +20,7 @@ const Sell = () => {
       <div className={styles.shareBlock}>
         <ShareBlock />
       </div>
-    </>
+    </div>
   );
 };
 

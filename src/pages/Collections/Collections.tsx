@@ -37,24 +37,68 @@ type CarouselArrType = {
   new: boolean;
 };
 
+type NoticeListObjType = {
+  date: string;
+  list: API.NoticeListType[];
+};
+
 const Collections = () => {
-  const defaultPageSize = 1;
+  const defaultPageSize = 6;
+  const defaultPageIndex = 0;
+  const defaultWorksFilterObj = { orderBy: 'publishDate', direction: 'DESC' };
   const [curFilter, setCurFilter] = useState(0);
   const [carouselArr, setCarouselArr] = useState<CarouselArrType[]>([]);
-  const [noticeArr, setNoticeArr] = useState<any[]>([]);
+  const [noticeArr, setNoticeArr] = useState<NoticeListObjType[]>([]);
   const [noticeAmount, setNoticeAmount] = useState(0);
-  const [worksArr, setWorksArr] = useState<any[]>([]);
+  const [worksArr, setWorksArr] = useState<API.FirstWorksType[]>([]);
   const [worksAmount, setWorksAmount] = useState(0);
-  const [page, setPage] = useState(0);
+  const [worksFilterObj, setWorksFilterObj] = useState<API.InitialOfferingType>(
+    defaultWorksFilterObj,
+  );
+
+  const [page, setPage] = useState(defaultPageIndex);
   const [totalPages, setTotalPages] = useState(0);
 
-  const filterClick = (e: number) => {
-    console.log('filterClick');
-    setCurFilter(e);
+  const filterClick = (element: number) => {
+    setCurFilter(element);
+    const filterObj: API.InitialOfferingType = {};
+    switch (element) {
+      case 0:
+        filterObj.orderBy = 'publishDate';
+        filterObj.direction = 'DESC';
+        break;
+      case 1:
+        filterObj.orderBy = 'price';
+        filterObj.direction = 'DESC';
+        break;
+      case 2:
+        filterObj.orderBy = 'publishDate';
+        filterObj.direction = 'DESC';
+        break;
+      case 3:
+        filterObj.sellMethod = 'direct';
+        filterObj.direction = 'DESC';
+        break;
+      case 4:
+        filterObj.sellMethod = 'auction';
+        filterObj.direction = 'DESC';
+        break;
+
+      default:
+        break;
+    }
+    fetchInitialOffering({
+      obj: { page: defaultPageIndex, ...filterObj },
+      status: 'filter',
+    });
+    setWorksFilterObj({ ...filterObj });
   };
 
   const onLoadMore = () => {
-    fetchInitialOffering();
+    fetchInitialOffering({
+      obj: { page: page + 1, ...worksFilterObj },
+      status: 'more',
+    });
   };
 
   const data = [];
@@ -62,6 +106,7 @@ const Collections = () => {
     data.push(workObj);
   }
 
+  // 轮播图
   const fetchCarousels = async () => {
     try {
       const result = await getCarousels();
@@ -73,6 +118,7 @@ const Collections = () => {
     }
   };
 
+  // 本周预告
   const fetchMarkets = async () => {
     try {
       const params = {
@@ -136,23 +182,33 @@ const Collections = () => {
     }
   };
 
-  const fetchInitialOffering = async () => {
+  // 首发作品
+  const fetchInitialOffering = async (elements: {
+    obj?: API.InitialOfferingType;
+    status?: string;
+  }) => {
     try {
-      console.log(page);
       const params = {
-        // orderBy: 'publishDate',
-        // direction: 'DESC',
-        // sellMethod: '',
-        pageIndex: page,
-        pageSize: defaultPageSize,
+        page: page,
+        size: defaultPageSize,
+        ...elements.obj,
       };
-      console.log(params);
       const result = await initialOffering(params);
       if (result?.data && result.data instanceof Object) {
-        setWorksAmount(result.data?.content?.length);
-        setWorksArr([...worksArr, ...result.data.content]);
+        let tempArr: API.FirstWorksType[] = [];
+        switch (elements.status) {
+          case 'filter':
+            tempArr = [...result.data.content];
+            break;
+          case 'more':
+          default:
+            tempArr = [...worksArr, ...result.data.content];
+            break;
+        }
+        setWorksArr(tempArr);
+        setWorksAmount(result.data.total);
         setTotalPages(result.data.totalPages);
-        setPage(page + 1);
+        setPage(result.data.page);
       }
     } catch (error) {
       console.log(error);
@@ -162,10 +218,8 @@ const Collections = () => {
   useEffect(() => {
     fetchCarousels();
     fetchMarkets();
-    fetchInitialOffering();
+    fetchInitialOffering({ obj: { ...worksFilterObj } });
   }, []);
-
-  // console.log(totalPages, page, totalPages > page);
 
   return (
     <div className={styles.container}>
@@ -192,6 +246,7 @@ const Collections = () => {
             首发由创建者直接销售，你可以在它们发行7日内售罄之前在这里购买它们，或者从二级市场上的其他用户那里购买它们
           </div>
         </div>
+
         <div className={styles.notice}>
           <div className={styles.thisWeek}>本周预告 {noticeAmount}</div>
           {noticeArr &&
@@ -222,7 +277,7 @@ const Collections = () => {
           <FirstWork
             data={worksArr}
             onLoadMore={onLoadMore}
-            hasLoadMore={totalPages > page}
+            hasLoadMore={totalPages - 1 > page}
           />
         </div>
 
@@ -262,14 +317,13 @@ const Collections = () => {
             />
           </div>
         </div>
-        <div className={styles.bottom}>
-          <div className={styles.bottomTitle}>全新的创意商品的</div>
-          <div className={styles.bottomTitle}>贸易社区。</div>
-          <div className={styles.bottomDes}>
-            我们将数字创作者、加密本地人和收藏家聚集在一起，
-          </div>
-          <div className={styles.bottomDes}>推动文化向前发展。</div>
+      </div>
+      <div className={styles.bottom}>
+        <div className={styles.bottomTitle}>传承有序，价值永存</div>
+        <div className={styles.bottomDes}>
+          我们将数字创作者、加密本地人和收藏家聚集在一起，
         </div>
+        <div className={styles.bottomDes}>推动文化向前发展。</div>
       </div>
     </div>
   );

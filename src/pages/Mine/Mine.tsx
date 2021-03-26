@@ -46,7 +46,7 @@ const list = [
 
 const Mine = () => {
   return (
-    <>
+    <div>
       <div className={styles.top}>
         <img src={UMedia} alt="UMedia" className={styles.topLogo} />
         <div className={styles.topTitle}>UMedia</div>
@@ -126,7 +126,7 @@ const Mine = () => {
           </Card>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

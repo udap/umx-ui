@@ -8,6 +8,10 @@ import like from './like.png';
 import watch from './watch.png';
 import share from './share.png';
 import background from './background.png';
+import aboutHeader from './aboutHeader.png';
+import logo from './logo.png';
+import logoLeft from './logoLeft.png';
+import udapLogo from './udapLogo.png';
 
 export {
   laugh,
@@ -20,4 +24,8 @@ export {
   watch,
   share,
   background,
+  aboutHeader,
+  logo,
+  logoLeft,
+  udapLogo,
 };

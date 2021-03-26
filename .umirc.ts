@@ -48,6 +48,11 @@ export default defineConfig({
           component: '@/pages/Sell',
           title: '直卖',
         },
+        {
+          path: '/about',
+          component: '@/pages/About',
+          title: '关于我们',
+        },
       ],
     },
   ],
