@@ -46,7 +46,12 @@ type ColumnType = {
   marketPrice: string;
 };
 
-const TransactionList = () => {
+type TransactionListType = {
+  tradeHistory: any[];
+};
+
+const TransactionList = (props: TransactionListType) => {
+  // console.log('TransactionList', props);
   return (
     <div className={styles.transactionList}>
       <div className={styles.title}>交易历史</div>
@@ -54,7 +59,7 @@ const TransactionList = () => {
         <div className={styles.amountText}>最后交易金额 ¥21,890</div>
         <RateRise width={24} height={20} />
       </div>
-      <Table dataSource={data} pagination={false} size="small">
+      <Table dataSource={props.tradeHistory} pagination={false} size="small">
         <Column title="编号" dataIndex="number" key="number" />
         <Column title="购买人" dataIndex="purchaser" key="purchaser" />
         <Column title="买入价" dataIndex="buyingPrice" key="buyingPrice" />

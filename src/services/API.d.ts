@@ -22,22 +22,35 @@ declare namespace API {
     size?: number;
   };
 
+  export type AuthorObjType = {
+    address: string;
+    followers: number;
+    following: number;
+    headImage: string;
+    id: string;
+    myintro: string;
+    name: string;
+    nickName: string;
+  };
+
+  export type ProductObjType = {
+    code: string;
+    contractaddress: string;
+    copies: number;
+    id: string;
+    image: string;
+    name: string;
+    price: number;
+    publishDate: number;
+    purchaseAgreement: string;
+    saleEndTime: string;
+    soldAmount: number;
+    summary: string;
+  };
+
   export type FirstWorksType = {
-    product: {
-      image: string;
-      code: string;
-      name: string;
-      summary: string;
-      publishDate: string;
-      copies: string;
-      soldAmount: string;
-      price: string;
-    };
-    user: {
-      headImage: string;
-      address: string;
-      name: string;
-    };
+    product: ProductObjType;
+    user: AuthorObjType;
   };
   export type NoticeListType = {
     auth: {

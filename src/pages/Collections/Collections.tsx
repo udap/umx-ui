@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Carousel, List, Avatar } from 'antd';
 import dayjs from 'dayjs';
+import { history } from 'umi';
 
 import styles from './Collections.less';
 import { avatarY, laugh } from '@/images';
@@ -55,6 +56,8 @@ const Collections = () => {
   const [worksFilterObj, setWorksFilterObj] = useState<API.InitialOfferingType>(
     defaultWorksFilterObj,
   );
+
+  console.log('worksArr', worksArr);
 
   const [page, setPage] = useState(defaultPageIndex);
   const [totalPages, setTotalPages] = useState(0);
@@ -221,6 +224,14 @@ const Collections = () => {
     fetchInitialOffering({ obj: { ...worksFilterObj } });
   }, []);
 
+  const handleFirstWorkClick = (elements: API.FirstWorksType) => {
+    if (elements) {
+      sessionStorage.setItem('authorsId', elements.user?.id || '');
+      sessionStorage.setItem('productId', elements.product?.id || '');
+      history.push('/sell');
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.carousel}>
@@ -278,6 +289,7 @@ const Collections = () => {
             data={worksArr}
             onLoadMore={onLoadMore}
             hasLoadMore={totalPages - 1 > page}
+            onItemClick={handleFirstWorkClick}
           />
         </div>
 

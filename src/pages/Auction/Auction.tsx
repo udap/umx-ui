@@ -3,13 +3,14 @@ import {
   WorkSale,
   AuthorAbout,
   TransactionList,
-  ShareBlock,
+  // ShareBlock,
 } from '@/components';
 
 const Auction = () => {
   return (
     <div>
-      <div className={styles.container}>
+      Auction
+      {/* <div className={styles.container}>
         <WorkSale sellingMethod="auction" />
         <TransactionList />
       </div>
@@ -18,7 +19,7 @@ const Auction = () => {
       </div>
       <div className={styles.shareBlock}>
         <ShareBlock />
-      </div>
+      </div> */}
     </div>
   );
 };

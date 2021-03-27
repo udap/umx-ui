@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
 import { Avatar } from 'antd';
 import { useCountDown } from 'ahooks';
+import NumberFormat from 'react-number-format';
+import dayjs from 'dayjs';
 
 import styles from './WorkSale.less';
-import { laugh, avatarY, etherscan } from '@/images';
+import { etherscan } from '@/images';
 
 const methodArr = [
   {
@@ -25,46 +27,57 @@ const methodArr = [
 
 type WorkSaleType = {
   sellingMethod: string;
+  marketsProduct: API.ProductObjType;
+  authorObj: API.AuthorObjType;
+  sellBtnClick: () => void;
 };
 
 const WorkSale = (props: WorkSaleType) => {
-  const onEnd = () => {
-    console.log('onEnd of the time');
-  };
-
-  const [countdown, setTargetDate] = useCountDown({ onEnd });
+  const [countdown, setTargetDate, formattedRes] = useCountDown();
+  const { days, hours, minutes, seconds } = formattedRes;
 
   useEffect(() => {
-    setTargetDate(Date.now() + 10000);
-  }, []);
+    setTargetDate(dayjs(props.marketsProduct.saleEndTime).valueOf());
+  }, [props.marketsProduct]);
 
   return (
     <>
-      <div className={styles.code}>代码 A29387</div>
+      <div className={styles.code}>代码 {props.marketsProduct?.code}</div>
       <div className={styles.content}>
         <div className={styles.contentLeft}>
-          <img src={laugh} alt="laugh" className={styles.leftImg} />
+          <img
+            src={props.marketsProduct?.image}
+            alt="image"
+            className={styles.leftImg}
+          />
           <div className={styles.desContent}>
             <Avatar src={etherscan} size={12} />
             <div className={styles.desTitle}>Etherscan</div>
             <div className={styles.desCode}>
-              0x 3f13 3816 f817 8b93 ac99 1a2c 3eed db8f 947a f0cb
+              {props.marketsProduct?.contractaddress}
             </div>
           </div>
         </div>
         <div className={styles.contentRight}>
           <div className={styles.avatar}>
             <div className={styles.avatarContent}>
-              <Avatar src={avatarY} size={44} />
-              <div className={styles.avatarName}>岳敏君</div>
+              {props.authorObj?.headImage ? (
+                <Avatar src={props.authorObj?.headImage} size={44} />
+              ) : (
+                <Avatar size={44}>
+                  {props.authorObj?.address?.substr(-2)}
+                </Avatar>
+              )}
+              <div className={styles.avatarName}>{props.authorObj?.name}</div>
             </div>
           </div>
 
           <div className={styles.center}>
-            <div className={styles.centerTitle}>快乐图</div>
+            <div className={styles.centerTitle}>
+              {props.marketsProduct?.name}
+            </div>
             <div className={styles.centerDes}>
-              那时已经有一些艺术家开始做失落感觉的作品了,他们给我一些启发,
-              我开始做一排排的人,一排排的人有一点力量感,也有一种嘲笑。
+              {props.marketsProduct?.summary}
             </div>
           </div>
 
@@ -77,21 +90,37 @@ const WorkSale = (props: WorkSaleType) => {
                   }
                 })}
               </div>
-              <div className={styles.leftReservePrice}>¥10,000</div>
-              <div className={styles.leftReserve}>
-                发行 <span className={styles.reserveAmount}>900</span> 份
+              <div className={styles.leftReservePrice}>
+                <NumberFormat
+                  value={props.marketsProduct?.price}
+                  thousandSeparator={true}
+                  fixedDecimalScale={true}
+                  displayType={'text'}
+                  prefix={'¥'}
+                />
               </div>
-              {props.sellingMethod === 'sell' && <div>已售10份</div>}
+              <div className={styles.leftReserve}>
+                上限{' '}
+                <span className={styles.reserveAmount}>
+                  {props.marketsProduct?.copies}
+                </span>{' '}
+                份
+              </div>
               <div className={styles.auth}>用户购买权限说明</div>
             </div>
             <div className={styles.infoRight}>
-              <div className={styles.rightAuctionTitle}>3月20日12:00发行</div>
+              <div className={styles.rightAuctionTitle}>
+                {dayjs(props.marketsProduct?.publishDate).format(
+                  'MM月DD日 HH:mm',
+                )}{' '}
+                发行
+              </div>
               <div className={styles.rightAuctionDate}>
                 {countdown ? (
                   <>
-                    <div className={styles.rightAuctionDateTitle}>剩余</div>
+                    <div className={styles.rightAuctionDateTitle}>距结束</div>
                     <div className={styles.rightAuctionTime}>
-                      {Math.round(countdown / 1000)}
+                      {days}:{hours}:{minutes}:{seconds}
                     </div>
                   </>
                 ) : (
@@ -113,6 +142,8 @@ const WorkSale = (props: WorkSaleType) => {
                 type="button"
                 className={styles.btn}
                 style={{ backgroundColor: countdown ? '#000' : '#555' }}
+                disabled={countdown === 0}
+                onClick={props.sellBtnClick}
               >
                 {methodArr.map((item) => {
                   if (item.method === props.sellingMethod) {
