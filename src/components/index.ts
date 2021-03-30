@@ -9,6 +9,7 @@ import TransactionList from './TransactionList';
 import ShareBlock from './ShareBlock';
 import ThirdPayment from './ThirdPayment';
 import SignQRCode from './SignQRCode';
+import MyModal from './MyModal';
 
 export {
   LoadMore,
@@ -22,4 +23,5 @@ export {
   ShareBlock,
   ThirdPayment,
   SignQRCode,
+  MyModal,
 };

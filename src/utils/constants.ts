@@ -4,3 +4,14 @@ export const PAYMENT_METHOD = {
   WeChatPay: '微信支付',
   AliPay: '支付宝支付',
 };
+
+export const LOGIN_LIST = [
+  {
+    label: '我的',
+    value: 'mine',
+  },
+  {
+    label: '退出',
+    value: 'signOut',
+  },
+];

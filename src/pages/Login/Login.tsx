@@ -1,7 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import QRCode from 'qrcode.react';
 import { useInterval } from 'ahooks';
-import { notification } from 'antd';
 import { history } from 'umi';
 
 import styles from './Login.less';
@@ -19,9 +18,19 @@ const Login = () => {
       const result = await searchQrCodeInfo(randomKeys);
       if (result.data) {
         setInterval(null);
-        notification.success({ message: '登录成功' });
         sessionStorage.setItem('login', JSON.stringify(result.data));
-        history.goBack();
+        switch (history.action) {
+          case 'POP':
+            history.replace('/mine');
+            break;
+
+          case 'PUSH':
+            history.goBack();
+            break;
+
+          default:
+            break;
+        }
       }
     } catch (error) {
       console.log(error);
@@ -35,6 +44,14 @@ const Login = () => {
     interval,
     { immediate: true },
   );
+
+  useEffect(() => {
+    const loginStr = sessionStorage.getItem('login');
+
+    if (loginStr) {
+      history.replace('/mine');
+    }
+  }, []);
 
   return (
     <div className={styles.container}>

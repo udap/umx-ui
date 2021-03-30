@@ -12,28 +12,42 @@ export default defineConfig({
     baseSeparator: '-',
   },
   hash: true,
-  history: { type: 'hash' },
   routes: [
-    { exact: true, path: '/', redirect: '/collections' },
+    { exact: true, path: '/', redirect: '/coming' },
     {
       path: '/',
       component: '@/layouts',
 
       routes: [
         {
+          path: '/coming',
+          component: '@/pages/Coming',
+          title: '即将发售',
+        },
+        {
           path: '/collections',
           component: '@/pages/Collections',
           title: '首发市场',
         },
         {
-          path: '/login',
-          component: '@/pages/Login',
-          title: '登录',
-        },
-        {
           path: '/marketplace',
           component: '@/pages/MarketPlace',
           title: '二级市场',
+        },
+        {
+          path: '/artists',
+          component: '@/pages/Artists',
+          title: '艺术家',
+        },
+        {
+          path: '/about',
+          component: '@/pages/About',
+          title: '关于我们',
+        },
+        {
+          path: '/wallet',
+          component: '@/pages/Wallet',
+          title: '钱包下载',
         },
         {
           path: '/profile',
@@ -56,9 +70,9 @@ export default defineConfig({
           title: '直卖',
         },
         {
-          path: '/about',
-          component: '@/pages/About',
-          title: '关于我们',
+          path: '/login',
+          component: '@/pages/Login',
+          title: '登录',
         },
       ],
     },

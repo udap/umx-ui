@@ -67,4 +67,15 @@ declare namespace API {
     info: string;
     orderId: string;
   }
+
+  export interface LoginInfoType {
+    address: string;
+    headImage: string;
+    name: string;
+    qrCode: string;
+    udapAccessToken: string;
+    xData: string;
+    xSender: string;
+    xSignature: string;
+  }
 }
