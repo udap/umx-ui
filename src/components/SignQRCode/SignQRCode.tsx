@@ -16,7 +16,7 @@ const SignQRCode = (props: SignQRCodeType) => {
       <div className={styles.qrcode}>
         <QRCode
           id="qrcode"
-          value={`UMedia://signOrder?id=${props.order?.orderId}`}
+          value={`UMedia://webSign?orderId=${props.order?.orderId}`}
           renderAs={'svg'}
           size={200}
           level={'H'}
