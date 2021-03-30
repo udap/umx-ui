@@ -3,7 +3,10 @@ import dayjs from 'dayjs';
 
 import styles from './NoticeList.less';
 
-const NoticeList = (props: { data: API.NoticeListType[] }) => {
+const NoticeList = (props: {
+  data: API.NoticeListType[];
+  onItemClick: (elements: API.FirstWorksType) => void;
+}) => {
   return (
     <>
       {props.data &&
@@ -13,7 +16,16 @@ const NoticeList = (props: { data: API.NoticeListType[] }) => {
               {item.works &&
                 item.works.map((itemWork, i) => {
                   return (
-                    <div className={styles.noticeItem} key={i}>
+                    <div
+                      className={styles.noticeItem}
+                      key={i}
+                      onClick={() =>
+                        props.onItemClick({
+                          product: itemWork,
+                          user: item.auth,
+                        })
+                      }
+                    >
                       <div className={styles.listLeft}>
                         <div className={styles.leftContent}>
                           <div className={styles.contentTitle}>

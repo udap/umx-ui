@@ -8,6 +8,7 @@ import ShareButton from './ShareButton';
 import TransactionList from './TransactionList';
 import ShareBlock from './ShareBlock';
 import ThirdPayment from './ThirdPayment';
+import SignQRCode from './SignQRCode';
 
 export {
   LoadMore,
@@ -20,4 +21,5 @@ export {
   TransactionList,
   ShareBlock,
   ThirdPayment,
+  SignQRCode,
 };

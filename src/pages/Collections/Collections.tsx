@@ -44,20 +44,15 @@ type NoticeListObjType = {
 };
 
 const Collections = () => {
-  const defaultPageSize = 6;
   const defaultPageIndex = 0;
-  const defaultWorksFilterObj = { orderBy: 'publishDate', direction: 'DESC' };
   const [curFilter, setCurFilter] = useState(0);
   const [carouselArr, setCarouselArr] = useState<CarouselArrType[]>([]);
+
   const [noticeArr, setNoticeArr] = useState<NoticeListObjType[]>([]);
   const [noticeAmount, setNoticeAmount] = useState(0);
+
   const [worksArr, setWorksArr] = useState<API.FirstWorksType[]>([]);
   const [worksAmount, setWorksAmount] = useState(0);
-  const [worksFilterObj, setWorksFilterObj] = useState<API.InitialOfferingType>(
-    defaultWorksFilterObj,
-  );
-
-  console.log('worksArr', worksArr);
 
   const [page, setPage] = useState(defaultPageIndex);
   const [totalPages, setTotalPages] = useState(0);
@@ -90,18 +85,14 @@ const Collections = () => {
       default:
         break;
     }
-    fetchInitialOffering({
-      obj: { page: defaultPageIndex, ...filterObj },
-      status: 'filter',
-    });
-    setWorksFilterObj({ ...filterObj });
+
+    console.log(filterObj);
+
+    fetchInitialOffering();
   };
 
   const onLoadMore = () => {
-    fetchInitialOffering({
-      obj: { page: page + 1, ...worksFilterObj },
-      status: 'more',
-    });
+    fetchInitialOffering();
   };
 
   const data = [];
@@ -186,32 +177,11 @@ const Collections = () => {
   };
 
   // 首发作品
-  const fetchInitialOffering = async (elements: {
-    obj?: API.InitialOfferingType;
-    status?: string;
-  }) => {
+  const fetchInitialOffering = async () => {
     try {
-      const params = {
-        page: page,
-        size: defaultPageSize,
-        ...elements.obj,
-      };
-      const result = await initialOffering(params);
+      const result = await initialOffering();
       if (result?.data && result.data instanceof Object) {
-        let tempArr: API.FirstWorksType[] = [];
-        switch (elements.status) {
-          case 'filter':
-            tempArr = [...result.data.content];
-            break;
-          case 'more':
-          default:
-            tempArr = [...worksArr, ...result.data.content];
-            break;
-        }
-        setWorksArr(tempArr);
-        setWorksAmount(result.data.total);
-        setTotalPages(result.data.totalPages);
-        setPage(result.data.page);
+        // setWorksArr(result.data);
       }
     } catch (error) {
       console.log(error);
@@ -221,10 +191,10 @@ const Collections = () => {
   useEffect(() => {
     fetchCarousels();
     fetchMarkets();
-    fetchInitialOffering({ obj: { ...worksFilterObj } });
+    fetchInitialOffering();
   }, []);
 
-  const handleFirstWorkClick = (elements: API.FirstWorksType) => {
+  const handleFirstWorkClick = (elements) => {
     if (elements) {
       sessionStorage.setItem('authorsId', elements.user?.id || '');
       sessionStorage.setItem('productId', elements.product?.id || '');
@@ -268,7 +238,12 @@ const Collections = () => {
                     {dayjs(item.date).format('MM月DD日')} 星期
                     {ZH_DAYS[dayjs(item.date).day()]}
                   </div>
-                  {item.list && <NoticeList data={item.list} />}
+                  {item.list && (
+                    <NoticeList
+                      data={item.list}
+                      onItemClick={handleFirstWorkClick}
+                    />
+                  )}
                 </div>
               );
             })}

@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
 import styles from './Sell.less';
-import { getAuthor, getTradeHistory, getMarketsProduct } from '@/services';
+import {
+  getAuthor,
+  getTradeHistory,
+  getMarketsProduct,
+  getToBuy,
+} from '@/services';
 import { PayModal } from './components';
 
 import {
@@ -43,6 +48,7 @@ const Sell: React.FC = (props) => {
   const [author, setAuthor] = useState<API.AuthorObjType>(defaultAuthor);
   const [tradeHistory, setTradeHistory] = useState<any[]>([]);
   const [marketsProduct, setMarketsProduct] = useState(defaultProduct);
+  const [orderId, setOrderId] = useState('');
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -89,7 +95,7 @@ const Sell: React.FC = (props) => {
     }
   };
 
-  const handleSellBtnClick = () => {
+  const handleSellBtnClick = async () => {
     setIsModalVisible(true);
   };
 

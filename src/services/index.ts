@@ -11,10 +11,8 @@ export async function getMarkets(params: API.GetMarketsType): Promise<any> {
 }
 
 // 查询首发市场
-export async function initialOffering(
-  params: API.InitialOfferingType,
-): Promise<any> {
-  return request('/api/asset/markets/initialOffering', { params });
+export async function initialOffering(): Promise<any> {
+  return request('/api/asset/markets/initialOffering', '');
 }
 
 // 查询首发市场
@@ -32,6 +30,32 @@ export async function getTradeHistory(params: any): Promise<any> {
   return request('/api/market/markets/tradeHistory', {
     params,
   });
+}
+
+// 根据 productId 查询商品的交易历史汇总
+export async function getToBuy(data: any): Promise<any> {
+  return request('/api/business/orders/tobuy', {
+    method: 'post',
+    data,
+  });
+}
+
+// 根据 productId 查询商品的交易历史汇总
+export async function getPayOrder(data: any): Promise<any> {
+  return request('/api/business/orders/payOrder', {
+    method: 'post',
+    data,
+  });
+}
+
+// 检查订单支付状态
+export async function getCheckOrder(id: string): Promise<any> {
+  return request(`/api/business/orders/check/${id}`, '');
+}
+
+// 检查订单支付状态
+export async function getProductNumber(productId: string): Promise<any> {
+  return request(`/api/market/products/number/${productId}`, '');
 }
 
 // pc端查询扫码信息

@@ -69,6 +69,30 @@ export default async function request(url: string, options: any) {
     tempURL = `${prodURL}${url.substr(5)}`;
   }
 
-  const response = await extendRequest(tempURL, options);
+  const isWhite = whiteRequestList.some((item) => tempURL.includes(item));
+
+  const loginObj = sessionStorage.getItem('login');
+  const headers = {
+    'x-data': '',
+    'x-sender': '',
+    'x-signature': '',
+  };
+  if (loginObj) {
+    const login = JSON.parse(loginObj);
+
+    headers['x-data'] = login.xData;
+    headers['x-sender'] = login.xSender;
+    headers['x-signature'] = login.xSignature;
+  }
+
+  let tempOptions = options;
+  if (!isWhite) {
+    tempOptions = {
+      headers,
+      ...options,
+    };
+  }
+
+  const response = await extendRequest(tempURL, tempOptions);
   return { data: response };
 }

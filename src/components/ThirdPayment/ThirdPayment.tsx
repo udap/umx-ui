@@ -3,10 +3,11 @@ import QRCode from 'qrcode.react';
 
 import styles from './ThirdPayment.less';
 import { PAYMENT_METHOD } from '@/utils/constants';
-import { UMedia } from '@/images';
+// import { UMedia } from '@/images';
 
 type ThirdPaymentType = {
   payment: 'WeChatPay' | 'AliPay';
+  order: API.OrderType;
 };
 
 const ThirdPayment = (props: ThirdPaymentType) => {
@@ -26,16 +27,16 @@ const ThirdPayment = (props: ThirdPaymentType) => {
       <div className={styles.qrcode}>
         <QRCode
           id="qrcode"
-          value={`UMedia://login?key=${'pay'}`}
+          value={props.order?.info}
           renderAs={'svg'}
           size={240}
           level={'H'}
-          imageSettings={{
-            src: UMedia,
-            height: 56,
-            width: 56,
-            excavate: true,
-          }}
+          // imageSettings={{
+          //   src: UMedia,
+          //   height: 56,
+          //   width: 56,
+          //   excavate: true,
+          // }}
         />
       </div>
     </div>

@@ -49,7 +49,7 @@ declare namespace API {
   };
 
   export type FirstWorksType = {
-    product: ProductObjType;
+    product: ProductObjType[];
     user: AuthorObjType;
   };
   export type NoticeListType = {
@@ -62,4 +62,9 @@ declare namespace API {
     };
     works: WorksType[];
   };
+  export interface OrderType {
+    id: string;
+    info: string;
+    orderId: string;
+  }
 }
