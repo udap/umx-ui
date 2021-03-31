@@ -26,33 +26,36 @@ const About = () => {
           </div>
         </div>
         <div className={styles.what}>
-          <div className={styles.whatTitle}>umx.art如何运作？</div>
-          <div className={styles.whatTxt}>
-            我们与<strong>顶级艺术家和品牌</strong>
-            合作创建限量版、高质量的NFT收藏，这些收藏在我们的平台上
-            <strong>独家提供。</strong>
-            <small>
-              <strong>
-                联系我们{' '}
-                <a href="mailto:umx@udap.io" className={styles.contact}>
-                  umx@udap.io
-                </a>{' '}
-                <a href="mailto:umx@udap.io" className={styles.contact}>
-                  info@udap.io
-                </a>{' '}
-              </strong>
-            </small>
-          </div>
-          <div className={styles.whatTxt}>
-            我们<strong>每周大约有一次新的投放</strong>
-            ，某个收藏的首发投放结束或者售罄后，您只能在
-            <strong>二级市场</strong>上从该收藏中获取NFT。
-            <br />
-          </div>
-          <div className={styles.whatTxt}>
-            平台采用基于<strong>人名币交易</strong>，并且可以
-            <strong>提取到外部钱包中或将NFT从外部钱包中存入您的收藏中</strong>。
-            <br />
+          <div className={styles.whatContent}>
+            <div className={styles.whatTitle}>umx.art如何运作？</div>
+            <div className={styles.whatTxt}>
+              我们与<strong>顶级艺术家和品牌</strong>
+              合作创建限量版、高质量的NFT收藏，这些收藏在我们的平台上
+              <strong>独家提供。</strong>
+              <small>
+                <strong>
+                  联系我们{' '}
+                  <a href="mailto:umx@udap.io" className={styles.contact}>
+                    umx@udap.io
+                  </a>{' '}
+                  <a href="mailto:umx@udap.io" className={styles.contact}>
+                    info@udap.io
+                  </a>{' '}
+                </strong>
+              </small>
+            </div>
+            <div className={styles.whatTxt}>
+              我们<strong>每周大约有一次新的投放</strong>
+              ，某个收藏的首发投放结束或者售罄后，您只能在
+              <strong>二级市场</strong>上从该收藏中获取NFT。
+              <br />
+            </div>
+            <div className={styles.whatTxt}>
+              平台采用基于<strong>人名币交易</strong>，并且可以
+              <strong>提取到外部钱包中或将NFT从外部钱包中存入您的收藏中</strong>
+              。
+              <br />
+            </div>
           </div>
         </div>
       </div>

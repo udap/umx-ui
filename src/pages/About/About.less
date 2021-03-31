@@ -1,5 +1,7 @@
 .container {
   .header {
+    width: 100vw;
+
     .headerImg {
       width: 100%;
     }
@@ -8,48 +10,67 @@
   .content {
     .aboutMe {
       text-align: center;
-      padding: 50px;
+      padding: 60px 0 132px;
+
       .title {
-        font-size: 45px;
-        font-weight: bold;
+        font-size: 44px;
+        font-family: STSongti-SC-Black, STSongti-SC;
+        font-weight: 900;
+        color: #000000;
+        line-height: 62px;
       }
+
       .txt {
-        margin: 40px;
-        font-size: 30px;
-        line-height: 70px;
-        color: #555555;
+        font-size: 36px;
+        font-family: STSongti-SC-Light, STSongti-SC;
         font-weight: 300;
+        color: #555555;
+        line-height: 72px;
+        padding-top: 27px;
       }
     }
-    .what {
-      padding: 50px;
-      text-align: left;
 
-      .whatTitle {
-        text-align: center;
-        font-size: 45px;
-        font-weight: bold;
-      }
-      .whatTxt {
-        margin: 40px;
-        font-size: 30px;
-        line-height: 70px;
-        color: #555555;
-        font-weight: 300;
-        max-width: 1080px;
-        margin-left: auto;
-        margin-right: auto;
-        .contact {
-          // text-decoration-line:underline;
-          border-bottom: 1px solid #000000;
+    .what {
+      display: flex;
+      justify-content: center;
+
+      .whatContent {
+        width: 1106px;
+
+        .whatTitle {
+          font-size: 44px;
+          font-family: STSongti-SC-Black, STSongti-SC;
+          font-weight: 900;
+          color: #000000;
+          line-height: 42px;
+          text-align: center;
+          padding-bottom: 42px;
+        }
+
+        .whatTxt {
+          padding: 14px 0;
+          font-size: 36px;
+          font-family: Helvetica;
+          color: #555555;
+          line-height: 72px;
+
+          .contact {
+            border-bottom: 1px solid #000000;
+            font-size: 20px;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: #000000;
+            line-height: 70px;
+          }
+        }
+
+        strong {
           color: #000000;
         }
-      }
-      strong {
-        color: #000000;
-      }
-      small {
-        font-size: 20px;
+
+        small {
+          font-size: 20px;
+        }
       }
     }
   }
