@@ -171,11 +171,13 @@ const Layouts = (props: { children: any }) => {
           </div>
         </Footer>
       </Layout>
-      <MyModal
-        visible={isSignOutVisible}
-        onCancel={onSignOutCancel}
-        onBtnClick={onBtnClick}
-      />
+      {isSignOutVisible && (
+        <MyModal
+          visible={isSignOutVisible}
+          onCancel={onSignOutCancel}
+          onBtnClick={onBtnClick}
+        />
+      )}
     </>
   );
 };
