@@ -66,6 +66,7 @@ declare namespace API {
     id: string;
     info: string;
     orderId: string;
+    charge: number;
   }
 
   export interface LoginInfoType {

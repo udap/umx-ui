@@ -10,6 +10,8 @@ import ShareBlock from './ShareBlock';
 import ThirdPayment from './ThirdPayment';
 import SignQRCode from './SignQRCode';
 import MyModal from './MyModal';
+import Loading from './Loading';
+import PayModal from './PayModal';
 
 export {
   LoadMore,
@@ -24,4 +26,6 @@ export {
   ThirdPayment,
   SignQRCode,
   MyModal,
+  Loading,
+  PayModal,
 };

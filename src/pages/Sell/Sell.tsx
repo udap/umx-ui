@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { history } from 'umi';
+import { useInterval } from 'ahooks';
 
 import styles from './Sell.less';
 import {
@@ -6,8 +8,11 @@ import {
   getTradeHistory,
   getMarketsProduct,
   getToBuy,
+  getCheckOrder,
+  getPayOrder,
 } from '@/services';
-import { PayModal } from './components';
+import { checkHasLogin } from '@/utils/common';
+import { ThirdPayment, SignQRCode, PayModal } from '@/components';
 
 import {
   WorkSale,
@@ -20,7 +25,7 @@ export type PaymentType = {
   payment: 'WeChatPay' | 'AliPay';
 };
 
-const Sell: React.FC = (props) => {
+const Sell: React.FC = () => {
   const defaultAuthor = {
     address: '',
     followers: 0,
@@ -45,12 +50,31 @@ const Sell: React.FC = (props) => {
     soldAmount: 0,
     summary: '',
   };
+  const defaultPay = 'WeChatPay';
+  const defaultOrder = {
+    id: '',
+    info: '',
+    orderId: '',
+    charge: 0,
+  };
+
   const [author, setAuthor] = useState<API.AuthorObjType>(defaultAuthor);
   const [tradeHistory, setTradeHistory] = useState<any[]>([]);
   const [marketsProduct, setMarketsProduct] = useState(defaultProduct);
-  const [orderId, setOrderId] = useState('');
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [hasPayModal, setHasPayModal] = useState(false);
+  const [hasPayOrder, setHasPayOrder] = useState(false);
+
+  const [hasPayment, setHasPayment] = useState(false);
+  const [payment, setPayment] = useState<'WeChatPay' | 'AliPay'>(defaultPay);
+
+  const [order, setOrder] = useState<API.OrderType>(defaultOrder);
+
+  const [hasSign, setHasSign] = useState(false);
+
+  const [interval, setInterval] = useState<number | null>(null);
+
+  const [hasSellBtnLoading, setHasSellBtnLoading] = useState(false);
 
   const fetchAuthor = async (element: string) => {
     try {
@@ -96,11 +120,18 @@ const Sell: React.FC = (props) => {
   };
 
   const handleSellBtnClick = async () => {
-    setIsModalVisible(true);
+    const login = await checkHasLogin();
+
+    if (!login) {
+      history.push('/login');
+      return;
+    }
+
+    setHasPayModal(true);
   };
 
   const handleCancel = () => {
-    setIsModalVisible(false);
+    setHasPayModal(false);
   };
 
   useEffect(() => {
@@ -112,6 +143,110 @@ const Sell: React.FC = (props) => {
     fetchMarketsProduct(productId || '');
   }, []);
 
+  const onCancel = () => {
+    setHasPayment(false);
+    setHasSign(false);
+
+    setInterval(null);
+
+    setHasSellBtnLoading(false);
+  };
+
+  const handleCheckOrder = async () => {
+    try {
+      const result = await getCheckOrder(order?.orderId);
+      // 购买流程：待支付 => 已支付 => 已签字
+      if (result?.data) {
+        switch (result?.data) {
+          // 待支付
+          case 'pendingPayment':
+            setHasPayment(true);
+            break;
+
+          // 已支付
+          case 'payed':
+            // 关闭支付二维码
+            setHasPayment(false);
+
+            // 打开签字二维码
+            setHasSign(true);
+            break;
+
+          // 已签字
+          case 'signed':
+            onCancel();
+            break;
+
+          default:
+            break;
+        }
+      }
+    } catch (error) {}
+  };
+
+  useInterval(() => {
+    handleCheckOrder();
+  }, interval);
+
+  const onThirdPaymentCancel = () => {
+    setHasPayment(false);
+    setInterval(null);
+
+    setHasSellBtnLoading(false);
+  };
+
+  const fetchToBuy = async (marketId: string) => {
+    const login = await checkHasLogin();
+
+    const data = {
+      marketId,
+      userAddress: login.xSender,
+    };
+
+    try {
+      const result = await getToBuy(data);
+      if (result?.data && result.data instanceof Object) {
+        return result?.data?.id;
+      }
+    } catch (error) {}
+  };
+
+  const handlePayBtn = async (element: {
+    marketId: string;
+    buyMessage: string;
+    method: 'WeChatPay' | 'AliPay';
+  }) => {
+    setPayment(element.method);
+
+    const orderId = await fetchToBuy(element.marketId);
+
+    setHasPayOrder(true);
+    try {
+      const result = await getPayOrder({
+        buyMessage: element.buyMessage,
+        orderId,
+      });
+
+      if (result?.data && result.data instanceof Object) {
+        setHasPayModal(false);
+
+        setOrder(result.data);
+
+        setInterval(1000);
+
+        setHasSellBtnLoading(true);
+      }
+    } catch (error) {}
+    setHasPayOrder(false);
+  };
+
+  const onSignQRCancel = () => {
+    setHasSign(false);
+    setInterval(null);
+
+    setHasSellBtnLoading(false);
+  };
+
   return (
     <>
       <div>
@@ -121,6 +256,7 @@ const Sell: React.FC = (props) => {
             marketsProduct={marketsProduct}
             authorObj={author}
             sellBtnClick={handleSellBtnClick}
+            hasSellBtnLoading={hasSellBtnLoading}
           />
           <TransactionList tradeHistory={tradeHistory} />
         </div>
@@ -131,11 +267,26 @@ const Sell: React.FC = (props) => {
           <ShareBlock />
         </div> */}
       </div>
-      <PayModal
-        visible={isModalVisible}
-        handleCancel={handleCancel}
-        marketsProduct={marketsProduct}
-      />
+      {hasPayModal && (
+        <PayModal
+          visible={hasPayModal}
+          onCancel={handleCancel}
+          marketsProduct={marketsProduct}
+          handlePayBtn={handlePayBtn}
+          hasPayOrder={hasPayOrder}
+        />
+      )}
+      {hasPayment && (
+        <ThirdPayment
+          payment={payment}
+          order={order}
+          visible={hasPayment}
+          onCancel={onThirdPaymentCancel}
+        />
+      )}
+      {hasSign && (
+        <SignQRCode visible={hasSign} onCancel={onSignQRCancel} order={order} />
+      )}
     </>
   );
 };

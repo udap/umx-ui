@@ -9,3 +9,14 @@ export const randomString = (len = 32) => {
 
   return _pwd;
 };
+
+export const checkHasLogin = () => {
+  const loginObj = sessionStorage.getItem('login');
+
+  let login;
+  if (loginObj) {
+    login = JSON.parse(loginObj);
+  }
+
+  return login;
+};

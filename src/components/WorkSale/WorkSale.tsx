@@ -3,6 +3,7 @@ import { Avatar } from 'antd';
 import { useCountDown } from 'ahooks';
 import NumberFormat from 'react-number-format';
 import dayjs from 'dayjs';
+import { LoadingOutlined } from '@ant-design/icons';
 
 import styles from './WorkSale.less';
 import { etherscan } from '@/images';
@@ -30,6 +31,7 @@ type WorkSaleType = {
   marketsProduct: API.ProductObjType;
   authorObj: API.AuthorObjType;
   sellBtnClick: () => void;
+  hasSellBtnLoading: boolean;
 };
 
 const WorkSale = (props: WorkSaleType) => {
@@ -149,7 +151,8 @@ const WorkSale = (props: WorkSaleType) => {
                   if (item.method === props.sellingMethod) {
                     return countdown ? item.buttonText : item.buttonEnd;
                   }
-                })}
+                })}{' '}
+                {props.hasSellBtnLoading && <LoadingOutlined />}
               </button>
             </div>
             {props.sellingMethod === 'auction' && (
