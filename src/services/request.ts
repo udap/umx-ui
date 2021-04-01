@@ -1,5 +1,5 @@
 import { extend } from 'umi-request';
-import { notification } from 'antd';
+// import { notification } from 'antd';
 
 const prodURL = 'https://api.umx.art/';
 

@@ -12,6 +12,7 @@ import aboutHeader from './aboutHeader.png';
 import logo from './logo.png';
 import logoLeft from './logoLeft.png';
 import udapLogo from './udapLogo.png';
+import bgDark from './bgDark.png';
 
 export {
   laugh,
@@ -28,4 +29,5 @@ export {
   logo,
   logoLeft,
   udapLogo,
+  bgDark,
 };

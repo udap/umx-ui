@@ -15,3 +15,5 @@ export const LOGIN_LIST = [
     value: 'signOut',
   },
 ];
+
+export const DARK_PAGE = ['collections', 'auction'];
