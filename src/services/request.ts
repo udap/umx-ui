@@ -1,7 +1,5 @@
 import { extend } from 'umi-request';
-// import { notification } from 'antd';
-
-const prodURL = 'https://api.umx.art/';
+import { PROD_URL } from '@/utils/constants';
 
 const whiteRequestList = ['/user/searchQrCodeInfo/'];
 
@@ -66,7 +64,7 @@ const extendRequest = extend({
 export default async function request(url: string, options: any) {
   let tempURL = url;
   if (process.env.NODE_ENV === 'production') {
-    tempURL = `${prodURL}${url.substr(5)}`;
+    tempURL = `${PROD_URL}${url.substr(5)}`;
   }
 
   const isWhite = whiteRequestList.some((item) => tempURL.includes(item));

@@ -17,15 +17,18 @@ button {
   cursor: pointer;
 }
 
-.layout {
+.container {
   display: flex;
+  min-height: 100vh;
   flex-direction: column;
-  min-height: 100%;
+  background: url(~@/images/bg.png) repeat;
 
-  .header {
-    height: 128px;
+  header {
+    min-height: 80px;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
+    padding: 30px 50px;
 
     .headerLeft {
       display: flex;
@@ -130,14 +133,13 @@ button {
     }
   }
 
-  .content {
-    padding: 0 50px;
+  section {
     flex: 1;
     display: flex;
     justify-content: center;
   }
 
-  .footer {
+  footer {
     display: flex;
     justify-content: center;
     flex-direction: column;

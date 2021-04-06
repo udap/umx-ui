@@ -16,4 +16,6 @@ export const LOGIN_LIST = [
   },
 ];
 
-export const DARK_PAGE = ['collections', 'auction'];
+export const PROD_URL = 'https://api.umx.art/';
+
+export const IMG_WIDTH_RATE = 466 / 1280;

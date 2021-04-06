@@ -12,6 +12,7 @@ import SignQRCode from './SignQRCode';
 import MyModal from './MyModal';
 import Loading from './Loading';
 import PayModal from './PayModal';
+import BidGraph from './BidGraph';
 
 export {
   LoadMore,
@@ -28,4 +29,5 @@ export {
   MyModal,
   Loading,
   PayModal,
+  BidGraph,
 };

@@ -1,17 +1,212 @@
 .container {
-  padding: 30px;
-  position: relative;
-  border-radius: 8px;
-  box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.08);
-  background-color: #fff;
-}
+  padding: 0 20px 0 50px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
 
-.profile {
-  padding-top: 32px;
-}
+  .contentLeft {
+    position: relative;
 
-.shareBlock {
-  position: fixed;
-  top: 50%;
-  right: 12px;
+    :global {
+      .ant-skeleton-element .ant-skeleton-image {
+        height: 427px;
+        width: 466px;
+      }
+    }
+
+    .imageShadow {
+      background: #fff;
+      box-shadow: 0px 0px 50px 100px rgba(255, 255, 255, 0.25);
+      border-radius: 213px;
+      filter: blur(50px);
+      margin: 30px;
+    }
+
+    .image {
+      background: #fff;
+      box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.3);
+
+      position: absolute;
+      left: 30px;
+      top: 30px;
+    }
+  }
+
+  .contentCenter {
+    padding-left: 50px;
+    flex: 1;
+
+    .auth {
+      display: flex;
+      flex-direction: row;
+      padding-top: 45px;
+
+      .authAvatar {
+        margin: 6px;
+      }
+
+      .authInfo {
+        padding-left: 14px;
+
+        .authName {
+          font-size: 20px;
+          font-family: PingFangSC-Semibold, PingFang SC;
+          font-weight: 600;
+          color: #000;
+        }
+
+        .authNickName {
+          font-size: 16px;
+          font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;
+          color: #000;
+        }
+      }
+    }
+
+    .works {
+      padding: 20px 0;
+
+      .name {
+        font-size: 32px;
+        font-family: PingFangSC-Semibold, PingFang SC;
+        font-weight: 600;
+        color: #000;
+      }
+
+      .info {
+        display: flex;
+        flex-direction: row;
+
+        .codeAndCopies {
+          font-size: 14px;
+          font-family: PingFangSC-Semibold, PingFang SC;
+          font-weight: 600;
+          color: #000;
+        }
+
+        .infoLink {
+          display: flex;
+          flex-direction: row;
+          font-size: 14px;
+          font-family: PingFangSC-Semibold, PingFang SC;
+          font-weight: 600;
+          color: #000;
+          padding-left: 10px;
+
+          .link {
+            border-bottom: 1px solid #000;
+            cursor: pointer;
+          }
+        }
+      }
+
+      .address {
+        padding-top: 6px;
+        font-size: 12px;
+        font-family: PingFangSC-Semibold, PingFang SC;
+        font-weight: 600;
+        color: #000;
+      }
+    }
+
+    .countdown {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.3);
+      border: 1px solid #fdf4f4;
+      padding: 0 20px;
+
+      .tips {
+        font-size: 20px;
+        font-family: PingFangSC-Semibold, PingFang SC;
+        font-weight: 600;
+        color: #fff;
+      }
+
+      .countdownTime {
+        font-size: 72px;
+        font-family: Helvetica;
+        color: #fff;
+      }
+    }
+
+    .auction {
+      padding: 20px 0;
+
+      .price {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-end;
+
+        .startingPriceContent {
+          display: flex;
+          flex-direction: row;
+          align-items: flex-end;
+
+          .tips {
+            font-size: 12px;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: #000;
+          }
+
+          .startingPrice {
+            font-size: 32px;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: #000;
+            padding-left: 10px;
+          }
+        }
+
+        .singleMarkup {
+          font-size: 12px;
+          font-family: PingFangSC-Semibold, PingFang SC;
+          font-weight: 600;
+          color: #000;
+
+          padding-left: 30px;
+        }
+      }
+
+      .authTips {
+        font-size: 14px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #000;
+
+        padding: 12px 0;
+      }
+    }
+  }
+
+  .contentRight {
+    display: flex;
+    flex-direction: column;
+    padding: 100px 0 0 50px;
+
+    .content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding: 10px 0;
+      cursor: pointer;
+
+      .img {
+        width: 40px;
+        height: 40px;
+      }
+
+      .tips {
+        padding-left: 8px;
+        font-size: 14px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: #000000;
+      }
+    }
+  }
 }

@@ -1,15 +1,20 @@
 import { useEffect, useState } from 'react';
+import { Skeleton, Avatar } from 'antd';
+import NumberFormat from 'react-number-format';
+import { history } from 'umi';
 
 import styles from './Collections.less';
-import { laugh, avatarY } from '@/images';
 import { initialOffering } from '@/services';
+import { IMG_WIDTH_RATE } from '@/utils/constants';
+import useWindowSize from '@/utils/useWindowSize';
 
 const Collections = () => {
-  const curWidth = 1180;
   const [worksArr, setWorksArr] = useState<any[]>([]);
+  const [productLoading, setProductLoading] = useState(false);
+  const windowSize = useWindowSize();
 
   const getImageInfo = (element: any) => {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve) {
       const img = new Image();
       img.src = element.image;
       img.onload = async function () {
@@ -19,6 +24,7 @@ const Collections = () => {
   };
 
   const fetchInitialOffering = async () => {
+    setProductLoading(true);
     try {
       const result = await initialOffering();
       if (result?.data && result.data instanceof Array) {
@@ -40,19 +46,30 @@ const Collections = () => {
     } catch (error) {
       console.log(error);
     }
+    setProductLoading(false);
   };
 
   useEffect(() => {
     fetchInitialOffering();
   }, []);
 
-  const dotsAll = 999;
-  const dotsBlack = 40;
+  console.log(worksArr);
 
-  const dotsArr: number[] = [];
-  for (let index = 0; index < dotsAll; index++) {
-    dotsArr.push(0);
-  }
+  const handleItemClick = (elements: {
+    authorId: string;
+    productId: string;
+    sellMethod: string;
+  }) => {
+    if (elements) {
+      sessionStorage.setItem('authorId', elements.authorId);
+      sessionStorage.setItem('productId', elements.productId);
+      if (elements.sellMethod.includes('AUCTION')) {
+        history.push('/auction');
+        return;
+      }
+      history.push('/sell');
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -60,56 +77,92 @@ const Collections = () => {
         return (
           <div key={index}>
             {item.products?.map((element: any, i: number) => {
-              const imgWidthRate =
-                element.width > curWidth ? 1 : element.width / curWidth;
-              const imgRate = element.width / element.height;
+              const dotsAll = 999;
+
+              const dotsArr: number[] = [];
+              for (let index = 0; index < dotsAll; index++) {
+                dotsArr.push(0);
+              }
               return (
-                <div className={styles.content} key={i}>
+                <div
+                  className={styles.content}
+                  key={i}
+                  onClick={() =>
+                    handleItemClick({
+                      authorId: item.user.id,
+                      productId: element.id,
+                      sellMethod: element.sellMethod,
+                    })
+                  }
+                >
                   <div className={styles.contentLeft}>
-                    <div
-                      className={styles.imageShadow}
-                      style={{
-                        width: imgWidthRate * curWidth,
-                        height: (imgWidthRate * curWidth) / imgRate,
-                      }}
-                    />
-                    <div
-                      className={styles.imageContent}
-                      style={{
-                        width: imgWidthRate * curWidth,
-                        height: (imgWidthRate * curWidth) / imgRate,
-                      }}
-                    >
-                      <img
-                        src={element.image}
-                        alt="image"
-                        className={styles.image}
+                    {productLoading ? (
+                      <Skeleton.Image
+                        style={{
+                          margin: '30px 0 0 30px',
+                          width: IMG_WIDTH_RATE * windowSize.width,
+                        }}
                       />
-                    </div>
+                    ) : (
+                      <>
+                        <div
+                          className={styles.imageShadow}
+                          style={{
+                            width: IMG_WIDTH_RATE * windowSize.width,
+                            height:
+                              (element.height *
+                                IMG_WIDTH_RATE *
+                                windowSize.width) /
+                              element.width,
+                          }}
+                        />
+                        <div className={styles.image}>
+                          <img
+                            src={element.image}
+                            alt="marketsImage"
+                            width={IMG_WIDTH_RATE * windowSize.width}
+                          />
+                        </div>
+                      </>
+                    )}
                   </div>
 
                   <div className={styles.contentRight}>
                     <div className={styles.auth}>
                       <div className={styles.authShadow} />
                       <div className={styles.authContent}>
-                        <img
-                          src={avatarY}
-                          alt="auth"
+                        <Avatar
+                          src={item.user?.headImage}
                           className={styles.authImg}
                         />
-                        <div className={styles.authName}>创作者</div>
+                        <div className={styles.authName}>{item.user?.name}</div>
                       </div>
                     </div>
                     <div className={styles.des}>
                       <div className={styles.title}>{element.name}</div>
                       <div className={styles.codeAmount}>
-                        代码 A29382 发行量100份
+                        代码 {element.code} 发行量{element.copies}份
                       </div>
                       <div className={styles.auctionTitle}>拍卖底价</div>
                       <div className={styles.auctionContent}>
-                        <div className={styles.auctionPrice}>¥20,000</div>
+                        <div className={styles.auctionPrice}>
+                          <NumberFormat
+                            value={element.price}
+                            thousandSeparator={true}
+                            fixedDecimalScale={true}
+                            displayType={'text'}
+                            prefix={'¥'}
+                          />
+                        </div>
                         <div className={styles.auctionTips}>
-                          单次加价幅度¥200
+                          单次加价幅度
+                          <NumberFormat
+                            value={element.price}
+                            thousandSeparator={true}
+                            fixedDecimalScale={true}
+                            displayType={'text'}
+                            prefix={'¥'}
+                          />
                         </div>
                       </div>
                       <div className={styles.dateContent}>
@@ -122,19 +175,27 @@ const Collections = () => {
                           <div className={styles.countdown}>01:20:00</div>
                         </div>
                       </div>
-                      <div className={styles.bid}>已有40份出价</div>
-                      <div className={styles.dots}>
-                        {dotsArr.map((_, index) => (
-                          <div
-                            className={styles.dot}
-                            key={index}
-                            style={{
-                              backgroundColor:
-                                index + 1 > dotsBlack ? 'white' : 'black',
-                            }}
-                          />
-                        ))}
-                      </div>
+                      {element.sellMethod.includes('AUCTION') && (
+                        <>
+                          <div className={styles.bid}>
+                            已有{element.bidderAmount}份出价
+                          </div>
+                          <div className={styles.dots}>
+                            {dotsArr.map((_, index) => (
+                              <div
+                                className={styles.dot}
+                                key={index}
+                                style={{
+                                  backgroundColor:
+                                    index + 1 > element.bidderAmount
+                                      ? 'white'
+                                      : 'black',
+                                }}
+                              />
+                            ))}
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>

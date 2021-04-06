@@ -6,7 +6,7 @@ import NumberFormat from 'react-number-format';
 
 import styles from './FirstWork.less';
 import { LoadMore } from '@/components';
-import { logo } from '@/images';
+import { LOGO } from '@/images';
 
 type ItemContentType = {
   product: API.ProductObjType;
@@ -69,7 +69,7 @@ const ItemContent = (props: ItemContentType) => {
         </div>
       </div>
       <div className={styles.logo}>
-        <img src={logo} alt="logo" width={34} height={34} />
+        <img src={LOGO} alt="LOGO" width={34} height={34} />
       </div>
     </div>
   );

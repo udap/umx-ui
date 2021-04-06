@@ -77,7 +77,7 @@ const Profile = () => {
   };
 
   return (
-    <>
+    <div className={styles.container}>
       <ProfileContent />
 
       <div className={styles.notice}>
@@ -98,7 +98,7 @@ const Profile = () => {
 
       <div className={styles.firstWorks}>
         <div className={styles.worksTitle}>首发在售作品</div>
-        <FirstWork data={data} onLoadMore={onLoadMore} />
+        {/* <FirstWork data={data} onLoadMore={onLoadMore} /> */}
       </div>
 
       <div className={styles.marketPlace}>
@@ -109,7 +109,7 @@ const Profile = () => {
           grid={{ gutter: 24, column: 4 }}
         />
       </div>
-    </>
+    </div>
   );
 };
 

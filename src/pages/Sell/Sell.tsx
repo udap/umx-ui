@@ -135,7 +135,7 @@ const Sell: React.FC = () => {
   };
 
   useEffect(() => {
-    const authorsId = sessionStorage.getItem('authorsId');
+    const authorsId = sessionStorage.getItem('authorId');
     fetchAuthor(authorsId || '');
 
     const productId = sessionStorage.getItem('productId');

@@ -1,14 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, FC } from 'react';
 import { history } from 'umi';
-import { Layout } from 'antd';
 import dayjs from 'dayjs';
 
 import styles from './Layouts.less';
-import { logo, logoLeft, udapLogo, background, bgDark } from '@/images';
-import { LOGIN_LIST, DARK_PAGE } from '@/utils/constants';
+import { LOGO, logoLeft, udapLogo } from '@/images';
+import { LOGIN_LIST } from '@/utils/constants';
 import { MyModal } from '@/components';
-
-const { Header, Content, Footer } = Layout;
 
 const list = [
   { key: 'coming', title: '即将发售' },
@@ -19,7 +16,7 @@ const list = [
   { key: 'wallet', title: '钱包下载' },
 ];
 
-const Layouts = (props: { children: any }) => {
+const Layouts = (props: { children: FC }) => {
   const defaultLoginInfo = {
     address: '',
     headImage: '',
@@ -37,8 +34,6 @@ const Layouts = (props: { children: any }) => {
   const [hasLogin, setHasLogin] = useState(false);
   const [isLoginClick, setIsLoginClick] = useState(false);
   const [isSignOutVisible, setIsSignOutVisible] = useState(false);
-
-  const [hasDarkPage, setHasDarkPage] = useState(false);
 
   const elRef = useRef<HTMLDivElement>(null);
 
@@ -65,12 +60,6 @@ const Layouts = (props: { children: any }) => {
     setCurrent(location?.pathname?.substring(1));
 
     getLoginInfo();
-
-    const isDarkPage = DARK_PAGE.some((item) =>
-      location?.pathname.includes(item),
-    );
-
-    setHasDarkPage(isDarkPage);
   }, [props.children]);
 
   const handleLogin = () => {
@@ -123,13 +112,8 @@ const Layouts = (props: { children: any }) => {
 
   return (
     <>
-      <Layout className={styles.layout}>
-        <Header
-          className={styles.header}
-          style={{
-            background: `url(${hasDarkPage ? bgDark : background}) repeat`,
-          }}
-        >
+      <div className={styles.container}>
+        <header>
           <div className={styles.headerLeft}>
             <img src={logoLeft} alt="logo" className={styles.leftLogo} />
             <div className={styles.slogan}>传承有绪 · 价值永存</div>
@@ -172,30 +156,18 @@ const Layouts = (props: { children: any }) => {
               )}
             </div>
           </div>
-        </Header>
-        <Content
-          className={styles.content}
-          style={{
-            background: `url(${hasDarkPage ? bgDark : background}) repeat`,
-          }}
-        >
-          {props.children}
-        </Content>
-        <Footer
-          className={styles.footer}
-          style={{
-            background: `url(${hasDarkPage ? bgDark : background}) repeat`,
-          }}
-        >
+        </header>
+        <section>{props.children}</section>
+        <footer>
           <div className={styles.footerTop}>
-            <img src={logo} alt="logo" className={styles.topLogo} />
+            <img src={LOGO} alt="LOGO" className={styles.topLogo} />
             <img src={udapLogo} alt="udapLogo" className={styles.topUdapLogo} />
           </div>
           <div className={styles.footerBottom}>
             <div>© umx {dayjs().year()}</div>
           </div>
-        </Footer>
-      </Layout>
+        </footer>
+      </div>
       {isSignOutVisible && (
         <MyModal
           visible={isSignOutVisible}
