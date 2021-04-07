@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Skeleton, Avatar } from 'antd';
+import { Avatar } from 'antd';
 import NumberFormat from 'react-number-format';
 import { history } from 'umi';
+import { LoadingOutlined } from '@ant-design/icons';
 
 import styles from './Collections.less';
 import { initialOffering } from '@/services';
@@ -70,39 +71,36 @@ const Collections = () => {
   };
 
   return (
-    <div className={styles.container}>
-      {worksArr.map((item, index) => {
-        return (
-          <div key={index}>
-            {item.products?.map((element: any, i: number) => {
-              const dotsAll = 999;
+    <>
+      {productLoading ? (
+        <div>
+          <LoadingOutlined style={{ fontSize: 40 }} />
+        </div>
+      ) : (
+        <div className={styles.container}>
+          {worksArr.map((item, index) => {
+            return (
+              <div key={index}>
+                {item.products?.map((element: any, i: number) => {
+                  const dotsAll = 999;
 
-              const dotsArr: number[] = [];
-              for (let index = 0; index < dotsAll; index++) {
-                dotsArr.push(0);
-              }
-              return (
-                <div
-                  className={styles.content}
-                  key={i}
-                  onClick={() =>
-                    handleItemClick({
-                      authorId: item.user.id,
-                      productId: element.id,
-                      sellMethod: element.sellMethod,
-                    })
+                  const dotsArr: number[] = [];
+                  for (let index = 0; index < dotsAll; index++) {
+                    dotsArr.push(0);
                   }
-                >
-                  <div className={styles.contentLeft}>
-                    {productLoading ? (
-                      <Skeleton.Image
-                        style={{
-                          margin: '30px 0 0 30px',
-                          width: IMG_WIDTH_RATE * windowSize.width,
-                        }}
-                      />
-                    ) : (
-                      <>
+                  return (
+                    <div
+                      className={styles.content}
+                      key={i}
+                      onClick={() =>
+                        handleItemClick({
+                          authorId: item.user.id,
+                          productId: element.id,
+                          sellMethod: element.sellMethod,
+                        })
+                      }
+                    >
+                      <div className={styles.contentLeft}>
                         <div
                           className={styles.imageShadow}
                           style={{
@@ -121,88 +119,90 @@ const Collections = () => {
                             width={IMG_WIDTH_RATE * windowSize.width}
                           />
                         </div>
-                      </>
-                    )}
-                  </div>
+                      </div>
 
-                  <div className={styles.contentRight}>
-                    <div className={styles.auth}>
-                      <div className={styles.authShadow} />
-                      <div className={styles.authContent}>
-                        <Avatar
-                          src={item.user?.headImage}
-                          className={styles.authImg}
-                        />
-                        <div className={styles.authName}>{item.user?.name}</div>
-                      </div>
-                    </div>
-                    <div className={styles.des}>
-                      <div className={styles.title}>{element.name}</div>
-                      <div className={styles.codeAmount}>
-                        代码 {element.code} 发行量{element.copies}份
-                      </div>
-                      <div className={styles.auctionTitle}>拍卖底价</div>
-                      <div className={styles.auctionContent}>
-                        <div className={styles.auctionPrice}>
-                          <NumberFormat
-                            value={element.price}
-                            thousandSeparator={true}
-                            fixedDecimalScale={true}
-                            displayType={'text'}
-                            prefix={'¥'}
-                          />
-                        </div>
-                        <div className={styles.auctionTips}>
-                          单次加价幅度
-                          <NumberFormat
-                            value={element.increment}
-                            thousandSeparator={true}
-                            fixedDecimalScale={true}
-                            displayType={'text'}
-                            prefix={'¥'}
-                          />
-                        </div>
-                      </div>
-                      <div className={styles.dateContent}>
-                        <div className={styles.auctionDate}>
-                          <div className={styles.date}>
-                            3.30星期五 15:00 - 4.10星期五 15:00
+                      <div className={styles.contentRight}>
+                        <div className={styles.auth}>
+                          <div className={styles.authShadow} />
+                          <div className={styles.authContent}>
+                            <Avatar
+                              src={item.user?.headImage}
+                              className={styles.authImg}
+                            />
+                            <div className={styles.authName}>
+                              {item.user?.name}
+                            </div>
                           </div>
                         </div>
-                        <div className={styles.auctionTime}>
-                          <div className={styles.countdown}>01:20:00</div>
-                        </div>
-                      </div>
-                      {element.sellMethod.includes('AUCTION') && (
-                        <>
-                          <div className={styles.bid}>
-                            已有{element.bidderAmount}份出价
+                        <div className={styles.des}>
+                          <div className={styles.title}>{element.name}</div>
+                          <div className={styles.codeAmount}>
+                            代码 {element.code} 发行量{element.copies}份
                           </div>
-                          <div className={styles.dots}>
-                            {dotsArr.map((_, index) => (
-                              <div
-                                className={styles.dot}
-                                key={index}
-                                style={{
-                                  backgroundColor:
-                                    index + 1 > element.bidderAmount
-                                      ? 'white'
-                                      : 'black',
-                                }}
+                          <div className={styles.auctionTitle}>拍卖底价</div>
+                          <div className={styles.auctionContent}>
+                            <div className={styles.auctionPrice}>
+                              <NumberFormat
+                                value={element.price}
+                                thousandSeparator={true}
+                                fixedDecimalScale={true}
+                                displayType={'text'}
+                                prefix={'¥'}
                               />
-                            ))}
+                            </div>
+                            <div className={styles.auctionTips}>
+                              单次加价幅度
+                              <NumberFormat
+                                value={element.increment}
+                                thousandSeparator={true}
+                                fixedDecimalScale={true}
+                                displayType={'text'}
+                                prefix={'¥'}
+                              />
+                            </div>
                           </div>
-                        </>
-                      )}
+                          <div className={styles.dateContent}>
+                            <div className={styles.auctionDate}>
+                              <div className={styles.date}>
+                                3.30星期五 15:00 - 4.10星期五 15:00
+                              </div>
+                            </div>
+                            <div className={styles.auctionTime}>
+                              <div className={styles.countdown}>01:20:00</div>
+                            </div>
+                          </div>
+                          {element.sellMethod.includes('AUCTION') && (
+                            <>
+                              <div className={styles.bid}>
+                                已有{element.bidderAmount}份出价
+                              </div>
+                              <div className={styles.dots}>
+                                {dotsArr.map((_, index) => (
+                                  <div
+                                    className={styles.dot}
+                                    key={index}
+                                    style={{
+                                      backgroundColor:
+                                        index + 1 > element.bidderAmount
+                                          ? 'white'
+                                          : 'black',
+                                    }}
+                                  />
+                                ))}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
-    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </>
   );
 };
 

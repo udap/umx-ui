@@ -8,12 +8,12 @@ import { LOGIN_LIST } from '@/utils/constants';
 import { MyModal } from '@/components';
 
 const list = [
-  { key: 'coming', title: '即将发售' },
+  // { key: 'coming', title: '即将发售' },
   { key: 'collections', title: '首发市场' },
-  { key: 'marketplace', title: '二级市场' },
-  { key: 'artists', title: '艺术家' },
+  // { key: 'marketplace', title: '二级市场' },
+  // { key: 'artists', title: '艺术家' },
   { key: 'about', title: '关于我们' },
-  { key: 'wallet', title: '钱包下载' },
+  // { key: 'wallet', title: '钱包下载' },
 ];
 
 const Layouts = (props: { children: FC }) => {

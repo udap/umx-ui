@@ -3,12 +3,14 @@ import { Skeleton, Avatar, Modal } from 'antd';
 import NumberFormat from 'react-number-format';
 import QRCode from 'qrcode.react';
 var Stomp = require('stompjs');
+import dayjs from 'dayjs';
 
 import styles from './Auction.less';
 import { getAuthor, getMarkets, getBidsTops } from '@/services/auction';
 import { BidGraph } from '@/components';
 import { WeChat, TikTok, ViewDetail } from '@/images';
 import { IMG_WIDTH_RATE } from '@/utils/constants';
+import { padLeft } from '@/utils/common';
 import useWindowSize from '@/utils/useWindowSize';
 import { CountDown } from './components';
 
@@ -151,24 +153,26 @@ const Auction = () => {
           '/exchange/udap.sys.notice/auction.price',
           (greeting: { body: string }) => {
             // 订阅成功
-            console.log('接收到信息：[' + greeting.body + ']');
             const greetingBody = JSON.parse(greeting.body);
-            console.log(greetingBody.content);
-            const bidArr: any = [];
-            const hasBider = bidsTops.some(
+
+            const hasBiderArr = bidsTops.filter(
               (item, index) =>
                 item.bidder.id === greetingBody.content?.bidder.id,
             );
-            console.log('hasBider', hasBider);
-            bidsTops.forEach((item, index) => {
-              if (item.bidder.id === greetingBody.content?.bidder.id) {
-                bidArr.push(greetingBody.content);
-                return;
-              }
-              bidArr.push(item);
-            });
-            console.log('bidArr', bidArr);
-            setBidsTops(bidArr);
+
+            let tempArr: any = [];
+            if (hasBiderArr.length) {
+              bidsTops.forEach((item, index) => {
+                if (item.bidder.id === greetingBody.content?.bidder.id) {
+                  tempArr.push(greetingBody.content);
+                  return;
+                }
+                tempArr.push(item);
+              });
+            } else {
+              tempArr = [...bidsTops, greetingBody.content];
+            }
+            setBidsTops(tempArr);
           },
           function (err: any) {
             // 订阅失败
@@ -191,6 +195,19 @@ const Auction = () => {
     setLiveMethod(e);
     setLiveVisible(true);
   };
+
+  useEffect(() => {
+    const compare = (property: string) => {
+      return function (a: { [x: string]: any }, b: { [x: string]: any }) {
+        const value1 = a[property];
+        const value2 = b[property];
+        return value2 - value1;
+      };
+    };
+
+    const sortBidsTops = bidsTops.sort(compare('price'));
+    setBidsTops(sortBidsTops);
+  }, [bidsTops]);
 
   return (
     <>
@@ -259,7 +276,18 @@ const Auction = () => {
                 区块链：{markets.contractaddress}
               </div>
             </div>
-            <CountDown markets={markets} />
+            {(dayjs(new Date()).valueOf() < markets.publishDate ||
+              dayjs(new Date()).valueOf() <
+                dayjs(markets.saleEndTime).valueOf()) && (
+              <CountDown markets={markets} />
+            )}
+            {dayjs(new Date()).valueOf() >
+              dayjs(markets.saleEndTime).valueOf() && (
+              <div className={styles.during}>
+                {dayjs(markets.publishDate).format('MM月DD日 HH:mm')} -{' '}
+                {dayjs(markets.saleEndTime).format('MM月DD日 HH:mm')}
+              </div>
+            )}
             <div className={styles.auction}>
               <div className={styles.price}>
                 <div className={styles.startingPriceContent}>
@@ -287,10 +315,21 @@ const Auction = () => {
               </div>
             </div>
           </div>
-          <div className={styles.authTips}>
-            拍卖首次出价需全款付清，如你中签，加价金额会在拍卖结束后5分钟内付清
-          </div>
-          <BidGraph bidList={bidsTops} copies={markets.copies} />
+          {dayjs(new Date()).valueOf() >= markets.publishDate && (
+            <>
+              <div className={styles.authTips}>
+                {dayjs(new Date()).valueOf() >
+                dayjs(markets.saleEndTime).valueOf()
+                  ? `拍卖结束，中签为下方001${
+                      markets.copies !== 1
+                        ? `-${padLeft(markets.copies, 3)}`
+                        : ''
+                    }用户，请在微信中支付加价的尾款`
+                  : '拍卖首次出价需全款付清，如你中签，加价金额会在拍卖结束后5分钟内付清'}
+              </div>
+              <BidGraph bidList={bidsTops} copies={markets.copies} />
+            </>
+          )}
         </div>
         <div className={styles.contentRight}>
           <div>
