@@ -1,33 +1,31 @@
-import { useEffect, useState, useRef } from 'react';
-import { Skeleton, Avatar } from 'antd';
-import { useCountDown } from 'ahooks';
-import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
+import { Skeleton, Avatar, Modal } from 'antd';
 import NumberFormat from 'react-number-format';
+import QRCode from 'qrcode.react';
+var Stomp = require('stompjs');
 
 import styles from './Auction.less';
 import { getAuthor, getMarkets, getBidsTops } from '@/services/auction';
 import { BidGraph } from '@/components';
-import { WeChat, TikTok } from '@/images';
+import { WeChat, TikTok, ViewDetail } from '@/images';
 import { IMG_WIDTH_RATE } from '@/utils/constants';
 import useWindowSize from '@/utils/useWindowSize';
-
-interface MarketsType {
-  height: number;
-  width: number;
-  image: string;
-  name: string;
-  code: string;
-  copies: number;
-  contractaddress: string;
-  saleEndTime: string;
-  price: number;
-  increment: number;
-}
+import { CountDown } from './components';
 
 interface AuthInfoType {
   headImage: string;
   name: string;
   nickName: string;
+}
+
+interface BidTopsType {
+  bidder: {
+    id: string;
+    name: string;
+  };
+  createdDate: number;
+  id: string;
+  price: number;
 }
 
 const Auction = () => {
@@ -42,29 +40,36 @@ const Auction = () => {
     saleEndTime: '',
     price: 0,
     increment: 0,
+    publishDate: 0,
   };
   const defaultAuthInfo = {
     headImage: '',
     name: '',
     nickName: '',
   };
+  const defaultBidTops = [
+    {
+      bidder: {
+        id: '',
+        name: '',
+      },
+      createdDate: 0,
+      id: '',
+      price: 0,
+    },
+  ];
   const [authorInfo, setAuthorInfo] = useState<AuthInfoType>(defaultAuthInfo);
-  const [markets, setMarkets] = useState<MarketsType>(defaultMarkets);
-  const [bidsTops, setBidsTops] = useState([]);
+  const [markets, setMarkets] = useState<API.MarketsType>(defaultMarkets);
+  const [bidsTops, setBidsTops] = useState<BidTopsType[]>(defaultBidTops);
   const [marketsLoading, setMarketsLoading] = useState(false);
-
-  const [countdown, setTargetDate, formattedRes] = useCountDown();
-  const { days, hours, minutes, seconds } = formattedRes;
+  const [liveVisible, setLiveVisible] = useState(false);
+  const [liveMethod, setLiveMethod] = useState('');
 
   let windowSizeWidth = 1280;
   const windowSize = useWindowSize();
   if (windowSize.width > windowSizeWidth) {
     windowSizeWidth = windowSize.width;
   }
-
-  useEffect(() => {
-    setTargetDate(dayjs(markets.saleEndTime).valueOf());
-  }, [markets.saleEndTime]);
 
   const checkImageInfo = (element: string) => {
     return new Promise<{ height: number; width: number }>((resolve) => {
@@ -133,96 +138,153 @@ const Auction = () => {
     fetchAuthor(authorId || '');
     fetchMarkets(productId || '');
     fetchBidsTops(productId || '');
+
+    let url = 'wss://api.umx.art/message/ws';
+    let stompClient = Stomp.client(url);
+    stompClient.connect(
+      {},
+      (frame: string) => {
+        // 连接成功
+        // setConnected(true);
+        console.log('Connected: ' + frame);
+        stompClient.subscribe(
+          '/exchange/udap.sys.notice/auction.price',
+          (greeting: { body: string }) => {
+            // 订阅成功
+            console.log('接收到信息：[' + greeting.body + ']');
+            const greetingBody = JSON.parse(greeting.body);
+            console.log(greetingBody.content);
+            const bidArr: any = [];
+            const hasBider = bidsTops.some(
+              (item, index) =>
+                item.bidder.id === greetingBody.content?.bidder.id,
+            );
+            console.log('hasBider', hasBider);
+            bidsTops.forEach((item, index) => {
+              if (item.bidder.id === greetingBody.content?.bidder.id) {
+                bidArr.push(greetingBody.content);
+                return;
+              }
+              bidArr.push(item);
+            });
+            console.log('bidArr', bidArr);
+            setBidsTops(bidArr);
+          },
+          function (err: any) {
+            // 订阅失败
+            console.log('err', err);
+          },
+        );
+      },
+      (error: any) => {
+        // 连接失败
+        console.log('connectFail', error);
+      },
+    );
   }, []);
 
+  const onLiveCancel = () => {
+    setLiveVisible(false);
+  };
+
+  const onLiveClick = (e: string) => {
+    setLiveMethod(e);
+    setLiveVisible(true);
+  };
+
   return (
-    <div className={styles.container}>
-      <div className={styles.contentLeft}>
-        {marketsLoading ? (
-          <Skeleton.Image
-            style={{
-              margin: '30px 0 0 30px',
-              width: IMG_WIDTH_RATE * windowSizeWidth,
-            }}
-          />
-        ) : (
-          <>
-            <div
-              className={styles.imageShadow}
+    <>
+      <div className={styles.container}>
+        <div className={styles.contentLeft}>
+          {marketsLoading ? (
+            <Skeleton.Image
               style={{
+                margin: '30px 0 0 30px',
                 width: IMG_WIDTH_RATE * windowSizeWidth,
-                height:
-                  (markets.height * IMG_WIDTH_RATE * windowSizeWidth) /
-                  markets.width,
               }}
             />
-            <div className={styles.image}>
-              <img
-                src={markets.image}
-                alt="marketsImage"
-                width={IMG_WIDTH_RATE * windowSizeWidth}
+          ) : (
+            <div className={styles.leftTop}>
+              <div
+                className={styles.imageShadow}
+                style={{
+                  width: IMG_WIDTH_RATE * windowSizeWidth,
+                  height:
+                    (markets.height * IMG_WIDTH_RATE * windowSizeWidth) /
+                    markets.width,
+                }}
               />
-            </div>
-          </>
-        )}
-      </div>
-      <div className={styles.contentCenter}>
-        <div className={styles.auth}>
-          <Avatar
-            src={authorInfo.headImage}
-            size={48}
-            className={styles.authAvatar}
-          />
-          <div className={styles.authInfo}>
-            <div className={styles.authName}>{authorInfo.name}</div>
-            <div className={styles.authNickName}>{authorInfo.nickName}</div>
-          </div>
-        </div>
-        <div className={styles.works}>
-          <div className={styles.name}>{markets.name}</div>
-          <div className={styles.info}>
-            <div className={styles.codeAndCopies}>
-              序列号 {markets.code} 发行量{markets.copies}份
-            </div>
-            <div className={styles.infoLink}>
-              <div className={styles.link}>作品介绍</div>
-              <div> / </div>
-              <div className={styles.link}>用户购买权限说明</div>
-            </div>
-          </div>
-          <div className={styles.address}>
-            区块链：{markets.contractaddress}
-          </div>
-        </div>
-        <div className={styles.countdown}>
-          <div className={styles.tips}>距结束</div>
-          <div className={styles.countdownTime}>
-            {days}:{hours}:{minutes}:{seconds}
-          </div>
-        </div>
-        <div className={styles.auction}>
-          <div className={styles.price}>
-            <div className={styles.startingPriceContent}>
-              <div className={styles.tips}>起拍价</div>
-              <div className={styles.startingPrice}>
-                <NumberFormat
-                  value={markets.price}
-                  thousandSeparator={true}
-                  fixedDecimalScale={true}
-                  displayType={'text'}
-                  prefix={'¥'}
+              <div className={styles.image}>
+                <img
+                  src={markets.image}
+                  alt="marketsImage"
+                  width={IMG_WIDTH_RATE * windowSizeWidth}
                 />
               </div>
             </div>
-            <div className={styles.singleMarkup}>
-              单次加价
-              <NumberFormat
-                value={markets.increment}
-                thousandSeparator={true}
-                fixedDecimalScale={true}
-                displayType={'text'}
-                prefix={'¥'}
-              />
+          )}
+          <div className={styles.view}>
+            <img src={ViewDetail} alt="ViewDetail" />
+          </div>
+        </div>
+        <div className={styles.contentCenter}>
+          <div className={styles.centerTop}>
+            <div className={styles.modalContent}>
+              <div
+                className={styles.content}
+                onClick={() => onLiveClick('TikTok')}
+              >
+                <div className={styles.title}>直播间</div>
+                <img src={TikTok} alt="TikTok" />
+              </div>
+              <div
+                className={styles.content}
+                onClick={() => onLiveClick('WeChat')}
+              >
+                <div className={styles.title}>微信参与拍卖</div>
+                <img src={WeChat} alt="WeChat" />
+              </div>
+            </div>
+            <div className={styles.works}>
+              <div className={styles.name}>{markets.name}</div>
+              <div className={styles.info}>
+                <div className={styles.codeAndCopies}>
+                  序列号 {markets.code} 发行量{markets.copies}份
+                </div>
+                <div className={styles.infoLink}>
+                  <div className={styles.link}>用户购买权限说明</div>
+                </div>
+              </div>
+              <div className={styles.address}>
+                区块链：{markets.contractaddress}
+              </div>
+            </div>
+            <CountDown markets={markets} />
+            <div className={styles.auction}>
+              <div className={styles.price}>
+                <div className={styles.startingPriceContent}>
+                  <div className={styles.tips}>起拍价</div>
+                  <div className={styles.startingPrice}>
+                    <NumberFormat
+                      value={markets.price}
+                      thousandSeparator={true}
+                      fixedDecimalScale={true}
+                      displayType={'text'}
+                      prefix={'¥'}
+                    />
+                  </div>
+                </div>
+                <div className={styles.singleMarkup}>
+                  单次加价
+                  <NumberFormat
+                    value={markets.increment}
+                    thousandSeparator={true}
+                    fixedDecimalScale={true}
+                    displayType={'text'}
+                    prefix={'¥'}
+                  />
+                </div>
+              </div>
             </div>
           </div>
           <div className={styles.authTips}>
@@ -230,26 +292,44 @@ const Auction = () => {
           </div>
           <BidGraph bidList={bidsTops} copies={markets.copies} />
         </div>
-      </div>
-      <div className={styles.contentRight}>
-        <div>
-          <div className={styles.content}>
-            <img src={TikTok} alt="TikTok" className={styles.img} />
-            <div className={styles.tips}>
-              <div>抖音</div>
-              <div>直播间</div>
-            </div>
-          </div>
-          <div className={styles.content}>
-            <img src={WeChat} alt="WeChat" className={styles.img} />
-            <div className={styles.tips}>
-              <div>微信</div>
-              <div>直播间</div>
+        <div className={styles.contentRight}>
+          <div>
+            <div className={styles.auth}>
+              <Avatar
+                src={authorInfo.headImage}
+                size={48}
+                className={styles.authAvatar}
+              />
+              <div className={styles.authName}>{authorInfo.name}</div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      <Modal
+        title=""
+        visible={liveVisible}
+        onCancel={onLiveCancel}
+        footer={null}
+        width={368}
+        destroyOnClose
+        centered
+        closable={false}
+      >
+        <QRCode
+          id="qrcode"
+          value={`UMedia://webSign?orderId=${liveMethod}`}
+          renderAs={'svg'}
+          size={320}
+          level={'H'}
+          imageSettings={{
+            src: liveMethod === 'WeChat' ? WeChat : TikTok,
+            height: 48,
+            width: 48,
+            excavate: true,
+          }}
+        />
+      </Modal>
+    </>
   );
 };
 

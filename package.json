@@ -26,6 +26,7 @@
     "dayjs": "^1.10.4",
     "qrcode.react": "^1.0.1",
     "react-number-format": "^4.5.1",
+    "stompjs": "^2.3.3",
     "umi": "^3.4.0"
   },
   "devDependencies": {

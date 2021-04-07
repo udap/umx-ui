@@ -79,4 +79,18 @@ declare namespace API {
     xSender: string;
     xSignature: string;
   }
+
+  export interface MarketsType {
+    height: number;
+    width: number;
+    image: string;
+    name: string;
+    code: string;
+    copies: number;
+    contractaddress: string;
+    saleEndTime: string;
+    price: number;
+    increment: number;
+    publishDate: number;
+  }
 }

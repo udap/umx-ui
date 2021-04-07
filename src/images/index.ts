@@ -14,6 +14,7 @@ import udapLogo from './udapLogo.png';
 import TikTok from './TikTok.png';
 import WeChat from './WeChat.png';
 import LOGO from './logo.png';
+import ViewDetail from './viewDetail.png';
 
 export {
   laugh,
@@ -32,4 +33,5 @@ export {
   TikTok,
   WeChat,
   LOGO,
+  ViewDetail,
 };
