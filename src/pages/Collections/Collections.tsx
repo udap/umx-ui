@@ -53,8 +53,6 @@ const Collections = () => {
     fetchInitialOffering();
   }, []);
 
-  console.log(worksArr);
-
   const handleItemClick = (elements: {
     authorId: string;
     productId: string;
@@ -157,7 +155,7 @@ const Collections = () => {
                         <div className={styles.auctionTips}>
                           单次加价幅度
                           <NumberFormat
-                            value={element.price}
+                            value={element.increment}
                             thousandSeparator={true}
                             fixedDecimalScale={true}
                             displayType={'text'}

@@ -20,6 +20,8 @@ interface MarketsType {
   copies: number;
   contractaddress: string;
   saleEndTime: string;
+  price: number;
+  increment: number;
 }
 
 interface AuthInfoType {
@@ -38,6 +40,8 @@ const Auction = () => {
     copies: 0,
     contractaddress: '',
     saleEndTime: '',
+    price: 0,
+    increment: 0,
   };
   const defaultAuthInfo = {
     headImage: '',
@@ -202,7 +206,7 @@ const Auction = () => {
               <div className={styles.tips}>起拍价</div>
               <div className={styles.startingPrice}>
                 <NumberFormat
-                  value={20_000}
+                  value={markets.price}
                   thousandSeparator={true}
                   fixedDecimalScale={true}
                   displayType={'text'}
@@ -213,7 +217,7 @@ const Auction = () => {
             <div className={styles.singleMarkup}>
               单次加价
               <NumberFormat
-                value={200}
+                value={markets.increment}
                 thousandSeparator={true}
                 fixedDecimalScale={true}
                 displayType={'text'}
@@ -224,7 +228,7 @@ const Auction = () => {
           <div className={styles.authTips}>
             拍卖首次出价需全款付清，如你中签，加价金额会在拍卖结束后5分钟内付清
           </div>
-          <BidGraph bidList={bidsTops} />
+          <BidGraph bidList={bidsTops} copies={markets.copies} />
         </div>
       </div>
       <div className={styles.contentRight}>

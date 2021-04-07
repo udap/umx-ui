@@ -20,3 +20,7 @@ export const checkHasLogin = () => {
 
   return login;
 };
+
+export const padLeft = (nr: number | string, n: number, str?: string) => {
+  return Array(n - String(nr).length + 1).join(str || '0') + nr;
+};

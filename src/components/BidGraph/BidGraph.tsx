@@ -1,9 +1,11 @@
 import NumberFormat from 'react-number-format';
 
 import styles from './BidGraph.less';
+import { padLeft } from '@/utils/common';
 
 interface BidGraphType {
   bidList: { id: string; price: number; bidder: { name: string } }[];
+  copies: number;
 }
 
 const BidGraph = (props: BidGraphType) => {
@@ -21,10 +23,14 @@ const BidGraph = (props: BidGraphType) => {
           props.bidList.map((item, index) => {
             return (
               <li key={index}>
-                <span className={styles.title}>{item.id}</span>
+                <span className={styles.title}>{padLeft(index + 1, 3)}</span>
                 <span
                   className={styles.content}
-                  style={{ width: `${(item.price / maxPrice) * 100}%` }}
+                  style={{
+                    width: `${(item.price / maxPrice) * 100}%`,
+                    backgroundColor:
+                      index + 1 > props.copies ? '#555' : '#d3d3d3',
+                  }}
                 >
                   <span className={styles.name}>{item.bidder?.name}</span>
                   <span className={styles.price}>

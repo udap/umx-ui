@@ -13,10 +13,10 @@ export default defineConfig({
   },
   hash: true,
   routes: [
-    { exact: true, path: '/', redirect: '/coming' },
+    { exact: true, path: '/', redirect: '/collections' },
     {
       path: '/',
-      component: '@/layouts',
+      component: '@/components/Layouts',
 
       routes: [
         {
