@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { history } from 'umi';
 import { useInterval } from 'ahooks';
+import NumberFormat from 'react-number-format';
 
 import styles from './Sell.less';
 import {
@@ -12,18 +13,24 @@ import {
   getPayOrder,
 } from '@/services';
 import { checkHasLogin } from '@/utils/common';
-import { ThirdPayment, SignQRCode, PayModal } from '@/components';
-
 import {
+  ThirdPayment,
+  SignQRCode,
+  PayModal,
   WorkSale,
-  AuthorAbout,
-  TransactionList,
-  // ShareBlock,
+  ImageLabel,
+  CountDown,
 } from '@/components';
+import { magnifier, TikTok, WeChat, weibo, avatarY } from '@/images';
 
 export type PaymentType = {
   payment: 'WeChatPay' | 'AliPay';
 };
+
+interface QueryProps {
+  workId: string;
+  authorId: string;
+}
 
 const Sell: React.FC = () => {
   const defaultAuthor = {
@@ -37,6 +44,7 @@ const Sell: React.FC = () => {
     nickName: '',
   };
   const defaultProduct = {
+    increment: 0,
     code: '',
     contractaddress: '',
     copies: 0,
@@ -46,7 +54,7 @@ const Sell: React.FC = () => {
     price: 0,
     publishDate: 0,
     purchaseAgreement: '',
-    saleEndTime: '',
+    saleEndTime: 0,
     soldAmount: 0,
     summary: '',
   };
@@ -60,7 +68,9 @@ const Sell: React.FC = () => {
 
   const [author, setAuthor] = useState<API.AuthorObjType>(defaultAuthor);
   const [tradeHistory, setTradeHistory] = useState<any[]>([]);
-  const [marketsProduct, setMarketsProduct] = useState(defaultProduct);
+  const [marketsProduct, setMarketsProduct] = useState<API.MarketsType>(
+    defaultProduct,
+  );
 
   const [hasPayModal, setHasPayModal] = useState(false);
   const [hasPayOrder, setHasPayOrder] = useState(false);
@@ -75,49 +85,6 @@ const Sell: React.FC = () => {
   const [interval, setInterval] = useState<number | null>(null);
 
   const [hasSellBtnLoading, setHasSellBtnLoading] = useState(false);
-
-  const fetchAuthor = async (element: string) => {
-    try {
-      if (element) {
-        const result = await getAuthor(element);
-        if (result?.data && result.data instanceof Object) {
-          setAuthor(result.data);
-        }
-      }
-    } catch (error) {
-      console.log('fetchAuthor', error);
-    }
-  };
-
-  const fetchTradeHistory = async (element: string) => {
-    try {
-      if (element) {
-        const params = {
-          productId: element,
-          q: 'summary',
-        };
-        const result = await getTradeHistory(params);
-        if (result?.data && result.data instanceof Array) {
-          setTradeHistory(result.data);
-        }
-      }
-    } catch (error) {
-      console.log('fetchTradeHistory', error);
-    }
-  };
-
-  const fetchMarketsProduct = async (element: string) => {
-    try {
-      if (element) {
-        const result = await getMarketsProduct(element);
-        if (result?.data && result.data instanceof Object) {
-          setMarketsProduct(result.data);
-        }
-      }
-    } catch (error) {
-      console.log('fetchMarketsProduct', error);
-    }
-  };
 
   const handleSellBtnClick = async () => {
     const login = await checkHasLogin();
@@ -134,13 +101,29 @@ const Sell: React.FC = () => {
     setHasPayModal(false);
   };
 
-  useEffect(() => {
-    const authorsId = sessionStorage.getItem('authorId');
-    fetchAuthor(authorsId || '');
+  const fetchData = () => {
+    const { workId, authorId } = (history.location
+      .query as unknown) as QueryProps;
 
-    const productId = sessionStorage.getItem('productId');
-    fetchTradeHistory(productId || '');
-    fetchMarketsProduct(productId || '');
+    Promise.all([
+      getMarketsProduct(workId),
+      getAuthor(authorId),
+      getTradeHistory(workId),
+    ]).then((res) => {
+      if (res[0].data) {
+        setMarketsProduct(res[0].data);
+      }
+      if (res[1].data) {
+        setAuthor(res[1].data);
+      }
+      if (res[2].data) {
+        setTradeHistory(res[2].data);
+      }
+    });
+  };
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const onCancel = () => {
@@ -249,8 +232,66 @@ const Sell: React.FC = () => {
 
   return (
     <>
-      <div>
-        <div className={styles.container}>
+      <div className={styles.container}>
+        <div className={styles.contentLeft}>
+          <WorkSale image={marketsProduct.image} />
+          <div className={styles.magnifier}>
+            <img src={magnifier} alt="magnifier" />
+            <div>查看作品介绍详情</div>
+          </div>
+        </div>
+
+        <div className={styles.contentRight}>
+          <div className={styles.rightWork}>
+            <div className={styles.thirdShare}>
+              <ImageLabel image={TikTok} label="直播间" />
+              <ImageLabel
+                image={weibo}
+                label="#La Rue Saint-Rustique à Montmartre#"
+              />
+              <ImageLabel image={WeChat} label="微信主题讨论群" />
+            </div>
+            <div className={styles.info}>
+              <div className={styles.workName}>{marketsProduct.name}</div>
+              <div className={styles.des}>
+                <div className={styles.codeCopies}>
+                  序列号 {marketsProduct.code} 发行量{marketsProduct.copies}份
+                </div>
+                <div className={styles.permissionDes}>用户购买权限说明</div>
+              </div>
+              <div className={styles.address}>
+                区块链：{marketsProduct.contractaddress}
+              </div>
+              <CountDown
+                publishDate={marketsProduct.publishDate}
+                saleEndTime={marketsProduct.saleEndTime}
+              />
+              <div className={styles.priceBox}>
+                <div className={styles.saleBox}>
+                  <div className={styles.saleMethod}>直卖</div>
+                  <div className={styles.salePrice}>售价</div>
+                </div>
+                <div className={styles.price}>
+                  <NumberFormat
+                    value={marketsProduct.price}
+                    thousandSeparator={true}
+                    fixedDecimalScale={true}
+                    displayType={'text'}
+                    prefix={'¥'}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={styles.rightAvatar}>
+            <div className={styles.worker}>
+              <WorkSale image={author.headImage} />
+              <div className={styles.authorName}>{author.name}</div>
+            </div>
+          </div>
+        </div>
+
+        {/* <div className={styles.container}>
           <WorkSale
             sellingMethod="sell"
             marketsProduct={marketsProduct}
@@ -259,12 +300,9 @@ const Sell: React.FC = () => {
             hasSellBtnLoading={hasSellBtnLoading}
           />
           <TransactionList tradeHistory={tradeHistory} />
-        </div>
-        <div className={styles.profile}>
+        </div> */}
+        {/* <div className={styles.profile}>
           <AuthorAbout authorObj={author} />
-        </div>
-        {/* <div className={styles.shareBlock}>
-          <ShareBlock />
         </div> */}
       </div>
       {hasPayModal && (

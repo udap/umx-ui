@@ -11,7 +11,7 @@ type PayModalType = {
   visible: boolean;
   hasPayOrder: boolean;
   onCancel: () => void;
-  marketsProduct: API.ProductObjType;
+  marketsProduct: API.MarketsType;
   handlePayBtn: (element: {
     marketId: string;
     buyMessage: string;

@@ -15,6 +15,8 @@ import TikTok from './TikTok.png';
 import WeChat from './WeChat.png';
 import LOGO from './logo.png';
 import ViewDetail from './viewDetail.png';
+import magnifier from './magnifier.png';
+import weibo from './weibo.png';
 
 export {
   laugh,
@@ -34,4 +36,6 @@ export {
   WeChat,
   LOGO,
   ViewDetail,
+  magnifier,
+  weibo,
 };

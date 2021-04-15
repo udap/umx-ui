@@ -81,14 +81,15 @@ declare namespace API {
   }
 
   export interface MarketsType {
-    height: number;
-    width: number;
+    id: string;
+    height?: number;
+    width?: number;
     image: string;
     name: string;
     code: string;
     copies: number;
     contractaddress: string;
-    saleEndTime: string;
+    saleEndTime: number;
     price: number;
     increment: number;
     publishDate: number;

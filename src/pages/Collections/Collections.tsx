@@ -62,11 +62,30 @@ const Collections = () => {
     if (elements) {
       sessionStorage.setItem('authorId', elements.authorId);
       sessionStorage.setItem('productId', elements.productId);
-      if (elements.sellMethod.includes('AUCTION')) {
-        history.push('/auction');
-        return;
+
+      switch (elements.sellMethod) {
+        case 'DIRECT':
+          history.push({
+            pathname: '/sell',
+            query: {
+              workId: elements.productId,
+              authorId: elements.authorId,
+            },
+          });
+          break;
+        case 'OPEN_AUCTION':
+          history.push({
+            pathname: '/auction',
+            query: {
+              workId: elements.productId,
+              authorId: elements.authorId,
+            },
+          });
+          break;
+
+        default:
+          break;
       }
-      history.push('/sell');
     }
   };
 

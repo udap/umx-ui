@@ -2,7 +2,6 @@ import LoadMore from './LoadMore';
 import FirstWork from './FirstWork';
 import MarketPlaceList from './MarketPlaceList';
 import FilterSelect from './FilterSelect';
-import WorkSale from './WorkSale';
 import AuthorAbout from './AuthorAbout';
 import ShareButton from './ShareButton';
 import TransactionList from './TransactionList';
@@ -13,6 +12,9 @@ import MyModal from './MyModal';
 import Loading from './Loading';
 import PayModal from './PayModal';
 import BidGraph from './BidGraph';
+import WorkSale from './NewWorkSale';
+import ImageLabel from './ImageLabel';
+import CountDown from './CountDown';
 
 export {
   LoadMore,
@@ -30,4 +32,6 @@ export {
   Loading,
   PayModal,
   BidGraph,
+  ImageLabel,
+  CountDown,
 };
