@@ -1,0 +1,149 @@
+.container {
+  padding: 0 50px;
+
+  .workContainer {
+    padding: 50px 0;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    cursor: pointer;
+
+    .contentLeft {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 100%;
+    }
+  }
+
+  .contentRight {
+    z-index: 1;
+    flex: 1;
+    padding: 50px 50px 0;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .rightWork {
+      width: 400px;
+
+      .info {
+        padding-top: 12px;
+
+        .workName {
+          font-size: 32px;
+          font-family: PingFangSC-Semibold, PingFang SC;
+          font-weight: 600;
+        }
+
+        .des {
+          display: flex;
+          flex-direction: row;
+
+          .codeCopies {
+            font-weight: 600;
+            padding-right: 10px;
+          }
+        }
+
+        .priceBox {
+          display: flex;
+          flex-direction: row;
+          padding: 14px 0 9px;
+
+          .saleBox {
+            display: flex;
+            flex-direction: column;
+
+            .saleTitle {
+              font-size: 12px;
+              font-family: PingFangSC-Semibold, PingFang SC;
+              font-weight: 600;
+              color: #000;
+            }
+
+            .salePrice {
+              font-size: 36px;
+              font-family: PingFangSC-Semibold, PingFang SC;
+              font-weight: 600;
+              color: #000;
+            }
+          }
+
+          .makeupBox {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+
+            .makeup {
+              padding: 0 0 7px 10px;
+              align-items: flex-end;
+              font-size: 12px;
+              font-family: PingFangSC-Semibold, PingFang SC;
+              font-weight: 600;
+              color: #000;
+            }
+          }
+        }
+
+        .dateContent {
+          display: flex;
+
+          .auctionDate {
+            display: flex;
+            align-items: center;
+
+            .date {
+              font-size: 16px;
+              font-family: PingFangSC-Semibold, PingFang SC;
+              font-weight: 600;
+              color: #000;
+            }
+          }
+
+          .auctionTime {
+            margin-left: 10px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.52);
+            box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.3);
+
+            .countdown {
+              font-size: 16px;
+              font-family: PingFangSC-Semibold, PingFang SC;
+              font-weight: 600;
+              color: #555555;
+              line-height: 22px;
+
+              padding: 3px 7px;
+            }
+          }
+        }
+      }
+    }
+    .rightAvatar {
+      .worker {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        img {
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
+        }
+
+        .authorName {
+          padding-top: 5px;
+          font-size: 20px;
+          font-family: PingFangSC-Semibold, PingFang SC;
+          font-weight: 600;
+          color: #000;
+        }
+      }
+    }
+  }
+}

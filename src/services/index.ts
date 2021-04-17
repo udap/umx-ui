@@ -11,7 +11,7 @@ export async function getMarkets(params: API.GetMarketsType): Promise<any> {
 }
 
 // 查询首发市场
-export async function initialOffering(): Promise<any> {
+export async function getInitialOffering(): Promise<any> {
   return request('/api/asset/markets/initialOffering', '');
 }
 

@@ -4,6 +4,7 @@ import NumberFormat from 'react-number-format';
 import QRCode from 'qrcode.react';
 var Stomp = require('stompjs');
 import dayjs from 'dayjs';
+import { history } from 'umi';
 
 import styles from './Auction.less';
 import { getAuthor, getMarkets, getBidsTops } from '@/services/auction';
@@ -13,6 +14,11 @@ import { IMG_WIDTH_RATE } from '@/utils/constants';
 import { padLeft } from '@/utils/common';
 import useWindowSize from '@/utils/useWindowSize';
 import { CountDown } from './components';
+
+interface QueryProps {
+  workId: string;
+  authorId: string;
+}
 
 interface AuthInfoType {
   headImage: string;
@@ -34,15 +40,19 @@ const Auction = () => {
   const defaultMarkets = {
     height: 427,
     width: 466,
+    increment: 0,
+    code: '',
+    contractaddress: '',
+    copies: 0,
+    id: '',
     image: '',
     name: '',
-    code: '',
-    copies: 0,
-    contractaddress: '',
-    saleEndTime: '',
     price: 0,
-    increment: 0,
     publishDate: 0,
+    purchaseAgreement: '',
+    saleEndTime: 0,
+    soldAmount: 0,
+    summary: '',
   };
   const defaultAuthInfo = {
     headImage: '',
@@ -60,12 +70,16 @@ const Auction = () => {
       price: 0,
     },
   ];
+  const appid = 'wx15304ffabf5a845d';
+  // const urlState = urlencode('http://umx.iclass.cn/xxxxxxx');
+
   const [authorInfo, setAuthorInfo] = useState<AuthInfoType>(defaultAuthInfo);
   const [markets, setMarkets] = useState<API.MarketsType>(defaultMarkets);
   const [bidsTops, setBidsTops] = useState<BidTopsType[]>(defaultBidTops);
   const [marketsLoading, setMarketsLoading] = useState(false);
   const [liveVisible, setLiveVisible] = useState(false);
   const [liveMethod, setLiveMethod] = useState('');
+  const [wechatUrl, setWechatUrl] = useState('');
 
   let windowSizeWidth = 1280;
   const windowSize = useWindowSize();
@@ -133,13 +147,36 @@ const Auction = () => {
     }
   };
 
+  // const fetchData = () => {
+  //   const { workId, authorId } = (history.location
+  //     .query as unknown) as QueryProps;
+
+  //   Promise.all([
+  //     getMarkets(workId),
+  //     getAuthor(authorId),
+  //     getBidsTops({ productId: workId }),
+  //   ]).then((res) => {
+  //     if (res[0].data) {
+  //       setMarketsProduct(res[0].data);
+  //     }
+  //     if (res[1].data) {
+  //       setAuthor(res[1].data);
+  //     }
+  //     if (res[2].data) {
+  //       setTradeHistory(res[2].data);
+  //     }
+  //   });
+  // };
+
   useEffect(() => {
     const authorId = sessionStorage.getItem('authorId');
-    const productId = sessionStorage.getItem('productId');
+    const productId = sessionStorage.getItem('workId');
 
     fetchAuthor(authorId || '');
     fetchMarkets(productId || '');
     fetchBidsTops(productId || '');
+
+    // fetchData();
 
     let url = 'wss://api.umx.art/message/ws';
     let stompClient = Stomp.client(url);
@@ -192,6 +229,13 @@ const Auction = () => {
   };
 
   const onLiveClick = (e: string) => {
+    const { workId, authorId } = (history.location
+      .query as unknown) as QueryProps;
+    const encodeUrl = encodeURIComponent(
+      `http://umx.iclass.cn/auction?authorId=${authorId}&workId=${workId}`,
+    );
+    setWechatUrl(encodeUrl);
+
     setLiveMethod(e);
     setLiveVisible(true);
   };
@@ -356,7 +400,7 @@ const Auction = () => {
       >
         <QRCode
           id="qrcode"
-          value={`UMedia://webSign?orderId=${liveMethod}`}
+          value={wechatUrl}
           renderAs={'svg'}
           size={320}
           level={'H'}

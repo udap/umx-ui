@@ -62,7 +62,6 @@ const Collections = () => {
     if (elements) {
       sessionStorage.setItem('authorId', elements.authorId);
       sessionStorage.setItem('productId', elements.productId);
-
       switch (elements.sellMethod) {
         case 'DIRECT':
           history.push({

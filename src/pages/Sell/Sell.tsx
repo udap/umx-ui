@@ -233,65 +233,72 @@ const Sell: React.FC = () => {
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.contentLeft}>
-          <WorkSale image={marketsProduct.image} />
-          <div className={styles.magnifier}>
-            <img src={magnifier} alt="magnifier" />
-            <div>查看作品介绍详情</div>
+        <div className={styles.workContainer}>
+          <div className={styles.contentLeft}>
+            <WorkSale image={marketsProduct.image} />
+            <div className={styles.magnifier}>
+              <img src={magnifier} alt="magnifier" />
+              <div>查看作品介绍详情</div>
+            </div>
           </div>
-        </div>
 
-        <div className={styles.contentRight}>
-          <div className={styles.rightWork}>
-            <div className={styles.thirdShare}>
-              <ImageLabel image={TikTok} label="直播间" />
-              <ImageLabel
-                image={weibo}
-                label="#La Rue Saint-Rustique à Montmartre#"
-              />
-              <ImageLabel image={WeChat} label="微信主题讨论群" />
+          <div className={styles.contentRight}>
+            <div className={styles.rightWork}>
+              <div className={styles.thirdShare}>
+                <ImageLabel image={TikTok} label="直播间" />
+                <ImageLabel
+                  image={weibo}
+                  label="#La Rue Saint-Rustique à Montmartre#"
+                />
+                <ImageLabel image={WeChat} label="微信主题讨论群" />
+              </div>
+              <div className={styles.info}>
+                <div className={styles.workName}>{marketsProduct.name}</div>
+                <div className={styles.des}>
+                  <div className={styles.codeCopies}>
+                    序列号 {marketsProduct.code} 发行量{marketsProduct.copies}份
+                  </div>
+                  <div className={styles.permissionDes}>用户购买权限说明</div>
+                </div>
+                <div className={styles.address}>
+                  区块链：{marketsProduct.contractaddress}
+                </div>
+                <CountDown
+                  publishDate={marketsProduct.publishDate}
+                  saleEndTime={marketsProduct.saleEndTime}
+                />
+                <div className={styles.priceBox}>
+                  <div className={styles.saleBox}>
+                    <div className={styles.saleMethod}>直卖</div>
+                    <div className={styles.salePrice}>售价</div>
+                  </div>
+                  <div className={styles.price}>
+                    <NumberFormat
+                      value={marketsProduct.price}
+                      thousandSeparator={true}
+                      fixedDecimalScale={true}
+                      displayType={'text'}
+                      prefix={'¥'}
+                    />
+                  </div>
+                </div>
+                <ImageLabel
+                  image={WeChat}
+                  label="微信参与购买"
+                  width={41}
+                  height={41}
+                />
+              </div>
             </div>
-            <div className={styles.info}>
-              <div className={styles.workName}>{marketsProduct.name}</div>
-              <div className={styles.des}>
-                <div className={styles.codeCopies}>
-                  序列号 {marketsProduct.code} 发行量{marketsProduct.copies}份
-                </div>
-                <div className={styles.permissionDes}>用户购买权限说明</div>
-              </div>
-              <div className={styles.address}>
-                区块链：{marketsProduct.contractaddress}
-              </div>
-              <CountDown
-                publishDate={marketsProduct.publishDate}
-                saleEndTime={marketsProduct.saleEndTime}
-              />
-              <div className={styles.priceBox}>
-                <div className={styles.saleBox}>
-                  <div className={styles.saleMethod}>直卖</div>
-                  <div className={styles.salePrice}>售价</div>
-                </div>
-                <div className={styles.price}>
-                  <NumberFormat
-                    value={marketsProduct.price}
-                    thousandSeparator={true}
-                    fixedDecimalScale={true}
-                    displayType={'text'}
-                    prefix={'¥'}
-                  />
-                </div>
+            <div className={styles.rightAvatar}>
+              <div className={styles.worker}>
+                <WorkSale image={author.headImage} />
+                <div className={styles.authorName}>{author.name}</div>
               </div>
             </div>
           </div>
-          <div className={styles.rightAvatar}>
-            <div className={styles.worker}>
-              <WorkSale image={author.headImage} />
-              <div className={styles.authorName}>{author.name}</div>
-            </div>
-          </div>
-        </div>
 
-        {/* <div className={styles.container}>
+          {/* <div className={styles.container}>
           <WorkSale
             sellingMethod="sell"
             marketsProduct={marketsProduct}
@@ -301,9 +308,13 @@ const Sell: React.FC = () => {
           />
           <TransactionList tradeHistory={tradeHistory} />
         </div> */}
-        {/* <div className={styles.profile}>
+          {/* <div className={styles.profile}>
           <AuthorAbout authorObj={author} />
         </div> */}
+        </div>
+        <div className={styles.circulationStatus}>
+          <div className={styles.title}>作品流通状态</div>
+        </div>
       </div>
       {hasPayModal && (
         <PayModal
