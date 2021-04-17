@@ -232,9 +232,12 @@ const Auction = () => {
     const { workId, authorId } = (history.location
       .query as unknown) as QueryProps;
     const encodeUrl = encodeURIComponent(
-      `http://umx.iclass.cn/auction?authorId=${authorId}&workId=${workId}`,
+      `https://h5.umx.art/auction?workId=${workId}`,
     );
-    setWechatUrl(encodeUrl);
+
+    const wechatQR = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=http%3A%2F%2Fumx.iclass.cn%2Fwechat%2Foauth_response&response_type=code&scope=snsapi_userinfo&state=${encodeUrl}#wechat_redirect`;
+
+    setWechatUrl(wechatQR);
 
     setLiveMethod(e);
     setLiveVisible(true);
