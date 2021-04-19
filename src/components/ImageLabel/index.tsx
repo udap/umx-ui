@@ -6,11 +6,12 @@ interface ImageLabelProps {
   label: string;
   width?: number;
   height?: number;
+  onClick?: () => void;
 }
 
 const ImageLabel: FC<ImageLabelProps> = (props) => {
   return (
-    <div className={styles.imageLabel}>
+    <div className={styles.imageLabel} onClick={props.onClick}>
       <img
         src={props.image}
         style={{ width: props.height, height: props.width }}

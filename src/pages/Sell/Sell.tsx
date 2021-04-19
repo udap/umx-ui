@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { history } from 'umi';
 import { useInterval } from 'ahooks';
 import NumberFormat from 'react-number-format';
+import { Avatar } from 'antd';
 
 import styles from './Sell.less';
 import {
@@ -22,6 +23,7 @@ import {
   CountDown,
 } from '@/components';
 import { magnifier, TikTok, WeChat, weibo, avatarY } from '@/images';
+import * as tsDefault from '@/utils/tsDefault';
 
 export type PaymentType = {
   payment: 'WeChatPay' | 'AliPay';
@@ -52,11 +54,12 @@ const Sell: React.FC = () => {
     image: '',
     name: '',
     price: 0,
-    publishDate: 0,
+    saleStartTime: 0,
     purchaseAgreement: '',
     saleEndTime: 0,
     soldAmount: 0,
     summary: '',
+    saleStatus: '',
   };
   const defaultPay = 'WeChatPay';
   const defaultOrder = {
@@ -69,7 +72,7 @@ const Sell: React.FC = () => {
   const [author, setAuthor] = useState<API.AuthorObjType>(defaultAuthor);
   const [tradeHistory, setTradeHistory] = useState<any[]>([]);
   const [marketsProduct, setMarketsProduct] = useState<API.MarketsType>(
-    defaultProduct,
+    tsDefault.DEFAULT_MARKETS,
   );
 
   const [hasPayModal, setHasPayModal] = useState(false);
@@ -235,7 +238,9 @@ const Sell: React.FC = () => {
       <div className={styles.container}>
         <div className={styles.workContainer}>
           <div className={styles.contentLeft}>
-            <WorkSale image={marketsProduct.image} />
+            <WorkSale>
+              <img src={marketsProduct.image} alt="workImg" />
+            </WorkSale>
             <div className={styles.magnifier}>
               <img src={magnifier} alt="magnifier" />
               <div>查看作品介绍详情</div>
@@ -264,7 +269,7 @@ const Sell: React.FC = () => {
                   区块链：{marketsProduct.contractaddress}
                 </div>
                 <CountDown
-                  publishDate={marketsProduct.publishDate}
+                  saleStartTime={marketsProduct.saleStartTime}
                   saleEndTime={marketsProduct.saleEndTime}
                 />
                 <div className={styles.priceBox}>
@@ -292,28 +297,13 @@ const Sell: React.FC = () => {
             </div>
             <div className={styles.rightAvatar}>
               <div className={styles.worker}>
-                <WorkSale image={author.headImage} />
+                <WorkSale>
+                  <Avatar src={author.headImage} size={48} />
+                </WorkSale>
                 <div className={styles.authorName}>{author.name}</div>
               </div>
             </div>
           </div>
-
-          {/* <div className={styles.container}>
-          <WorkSale
-            sellingMethod="sell"
-            marketsProduct={marketsProduct}
-            authorObj={author}
-            sellBtnClick={handleSellBtnClick}
-            hasSellBtnLoading={hasSellBtnLoading}
-          />
-          <TransactionList tradeHistory={tradeHistory} />
-        </div> */}
-          {/* <div className={styles.profile}>
-          <AuthorAbout authorObj={author} />
-        </div> */}
-        </div>
-        <div className={styles.circulationStatus}>
-          <div className={styles.title}>作品流通状态</div>
         </div>
       </div>
       {hasPayModal && (

@@ -112,7 +112,7 @@ const WorkSale = (props: WorkSaleType) => {
             </div>
             <div className={styles.infoRight}>
               <div className={styles.rightAuctionTitle}>
-                {dayjs(props.marketsProduct?.publishDate).format(
+                {dayjs(props.marketsProduct?.saleStartTime).format(
                   'MM月DD日 HH:mm',
                 )}{' '}
                 发行

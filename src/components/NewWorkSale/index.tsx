@@ -2,16 +2,12 @@ import { FC } from 'react';
 
 import styles from './index.less';
 
-interface WorkSaleProps {
-  image: string;
-}
+interface WorkSaleProps {}
 
 const WorkSale: FC<WorkSaleProps> = (props) => {
   return (
     <div className={styles.worksImgBox}>
-      <div className={styles.worksImg}>
-        <img src={props.image} alt="workImg" />
-      </div>
+      <div className={styles.worksImg}>{props.children}</div>
     </div>
   );
 };

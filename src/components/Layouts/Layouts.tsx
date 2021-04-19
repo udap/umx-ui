@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 import styles from './Layouts.less';
 import { LOGO, logoLeft, udapLogo } from '@/images';
-import { LOGIN_LIST } from '@/utils/constants';
+import { LOGIN_LIST, WHITE_ROUTE_LIST } from '@/utils/constants';
 import { MyModal } from '@/components';
 
 const list = [
@@ -113,60 +113,79 @@ const Layouts = (props: { children: FC }) => {
   return (
     <>
       <div className={styles.container}>
-        <header>
-          <div className={styles.headerLeft}>
-            <img src={logoLeft} alt="logo" className={styles.leftLogo} />
-            <div className={styles.slogan}>传承有绪 · 价值永存</div>
-          </div>
-          <div className={styles.headerRight}>
-            <div className={styles.headerRightMenu}>
-              <>
-                <ul>
-                  {list.map((item) => (
-                    <li
-                      key={item.key}
-                      onClick={() => handleClick(item.key)}
-                      className={item.key === current ? styles.active : ''}
-                    >
-                      {item.title}
-                    </li>
-                  ))}
-                </ul>
-              </>
+        {!WHITE_ROUTE_LIST.some((item) =>
+          history.location.pathname.includes(item),
+        ) ? (
+          <header>
+            <div className={styles.headerLeft}>
+              <img src={logoLeft} alt="logo" className={styles.leftLogo} />
+              <div className={styles.slogan}>传承有绪 · 价值永存</div>
             </div>
-            <div className={styles.loginContent} ref={elRef}>
-              <div className={styles.login} onClick={handleLogin}>
-                {hasLogin
-                  ? loginInfo.name.substr(-2) || loginInfo.address.substr(-2)
-                  : '登录'}
-              </div>
-              {isLoginClick && (
-                <ul className={styles.modelSelectOption}>
-                  {LOGIN_LIST.map((item, index) => {
-                    return (
+            <div className={styles.headerRight}>
+              <div className={styles.headerRightMenu}>
+                <>
+                  <ul>
+                    {list.map((item) => (
                       <li
-                        key={index}
-                        onClick={() => handleLoginItem(item.value)}
+                        key={item.key}
+                        onClick={() => handleClick(item.key)}
+                        className={item.key === current ? styles.active : ''}
                       >
-                        {item.label}
+                        {item.title}
                       </li>
-                    );
-                  })}
-                </ul>
-              )}
+                    ))}
+                  </ul>
+                </>
+              </div>
+              <div className={styles.loginContent} ref={elRef}>
+                <div className={styles.login} onClick={handleLogin}>
+                  {hasLogin
+                    ? loginInfo.name.substr(-2) || loginInfo.address.substr(-2)
+                    : '登录'}
+                </div>
+                {isLoginClick && (
+                  <ul className={styles.modelSelectOption}>
+                    {LOGIN_LIST.map((item, index) => {
+                      return (
+                        <li
+                          key={index}
+                          onClick={() => handleLoginItem(item.value)}
+                        >
+                          {item.label}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </div>
             </div>
-          </div>
-        </header>
+          </header>
+        ) : (
+          <header>
+            <div className={styles.headerCenter}>
+              <img src={logoLeft} alt="logo" className={styles.leftLogo} />
+              <div className={styles.slogan}>传承有绪 · 价值永存</div>
+            </div>
+          </header>
+        )}
         <section>{props.children}</section>
-        <footer>
-          <div className={styles.footerTop}>
-            <img src={LOGO} alt="LOGO" className={styles.topLogo} />
-            <img src={udapLogo} alt="udapLogo" className={styles.topUdapLogo} />
-          </div>
-          <div className={styles.footerBottom}>
-            <div>© umx {dayjs().year()}</div>
-          </div>
-        </footer>
+        {!WHITE_ROUTE_LIST.some((item) =>
+          history.location.pathname.includes(item),
+        ) && (
+          <footer>
+            <div className={styles.footerTop}>
+              <img src={LOGO} alt="LOGO" className={styles.topLogo} />
+              <img
+                src={udapLogo}
+                alt="udapLogo"
+                className={styles.topUdapLogo}
+              />
+            </div>
+            <div className={styles.footerBottom}>
+              <div>© umx {dayjs().year()}</div>
+            </div>
+          </footer>
+        )}
       </div>
       {isSignOutVisible && (
         <MyModal

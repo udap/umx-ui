@@ -38,7 +38,7 @@ const ItemContent = (props: ItemContentType) => {
         <div className={styles.code}>代码 {props.product?.code}</div>
         <div className={styles.des}>{props.product?.summary}</div>
         <div className={styles.circulation}>
-          {dayjs(props.product?.publishDate).format('MM月DD日')}，发行量
+          {dayjs(props.product?.saleStartTime).format('MM月DD日')}，发行量
           {props.product?.copies}/已售{props.product?.soldAmount}
         </div>
       </div>

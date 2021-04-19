@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import NumberFormat from 'react-number-format';
 import { history } from 'umi';
 import { LoadingOutlined } from '@ant-design/icons';
+import dayjs from 'dayjs';
+import { Avatar } from 'antd';
 
 import styles from './index.less';
 import { getInitialOffering } from '@/services';
 import { WorkSale, ImageLabel } from '@/components';
-import { TikTok, WeChat, weibo, laugh, avatarY } from '@/images';
-import { BidDots } from './components';
+import { TikTok, WeChat, weibo } from '@/images';
+import { BidDots, CountDown } from './components';
 
 const Collections = () => {
   const [worksArr, setWorksArr] = useState<any[]>([]);
@@ -90,7 +92,9 @@ const Collections = () => {
                     }
                   >
                     <div className={styles.contentLeft}>
-                      <WorkSale image={workItem.image} />
+                      <WorkSale>
+                        <img src={workItem.image} alt="workImg" />
+                      </WorkSale>
                     </div>
 
                     <div className={styles.contentRight}>
@@ -99,7 +103,7 @@ const Collections = () => {
                           <ImageLabel image={TikTok} label="直播间" />
                           <ImageLabel
                             image={weibo}
-                            label="#La Rue Saint-Rustique à Montmartre#"
+                            label="#La Rue Saint-Rust à Montmartre#"
                           />
                           <ImageLabel image={WeChat} label="微信主题讨论群" />
                         </div>
@@ -143,12 +147,15 @@ const Collections = () => {
                           <div className={styles.dateContent}>
                             <div className={styles.auctionDate}>
                               <div className={styles.date}>
-                                3.30星期五 15:00 - 4.10星期五 15:00
+                                {`${dayjs(workItem.saleStartTime).format(
+                                  'MM.DD HH:mm',
+                                )} -
+                                ${dayjs(workItem.saleEndTime).format(
+                                  'MM.DD HH:mm',
+                                )}`}
                               </div>
                             </div>
-                            <div className={styles.auctionTime}>
-                              <div className={styles.countdown}>01:20:00</div>
-                            </div>
+                            <CountDown time={workItem.saleEndTime} />
                           </div>
                           {isAuction && (
                             <BidDots bidderAmount={workItem.bidderAmount} />
@@ -157,7 +164,9 @@ const Collections = () => {
                       </div>
                       <div className={styles.rightAvatar}>
                         <div className={styles.worker}>
-                          <WorkSale image={item.user?.headImage} />
+                          <WorkSale>
+                            <Avatar src={item.user?.headImage} size={48} />
+                          </WorkSale>
                           <div className={styles.authorName}>
                             {item.user?.name}
                           </div>

@@ -1,25 +1,25 @@
-import { useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useCountDown } from 'ahooks';
 import dayjs from 'dayjs';
 
 import styles from './index.less';
 
 interface CountDownType {
-  publishDate: number;
+  saleStartTime: number;
   saleEndTime: number;
 }
 
-const CountDown = (props: CountDownType) => {
+const CountDown: FC<CountDownType> = (props) => {
   const [countdown, setTargetDate, formattedRes] = useCountDown();
   const { days, hours, minutes, seconds } = formattedRes;
   const [isPublishDate, setIsPublishDate] = useState(false);
 
   useEffect(() => {
-    setIsPublishDate(dayjs(new Date()).valueOf() < props.publishDate);
+    setIsPublishDate(dayjs(new Date()).valueOf() < props.saleStartTime);
     setTargetDate(
-      dayjs(isPublishDate ? props.publishDate : props.saleEndTime).valueOf(),
+      dayjs(isPublishDate ? props.saleStartTime : props.saleEndTime).valueOf(),
     );
-  }, [props.saleEndTime, props.publishDate]);
+  }, [props.saleEndTime, props.saleStartTime]);
 
   return (
     <div className={styles.countdown}>

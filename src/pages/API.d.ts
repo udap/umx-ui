@@ -2,7 +2,7 @@ type WorksType = {
   name: string;
   code: string;
   summary: string;
-  publishDate: string;
+  saleStartTime: string;
   copies: string;
   image: string;
 };
@@ -41,7 +41,7 @@ declare namespace API {
     image: string;
     name: string;
     price: number;
-    publishDate: number;
+    saleStartTime: number;
     purchaseAgreement: string;
     saleEndTime: string;
     soldAmount: number;
@@ -92,6 +92,8 @@ declare namespace API {
     saleEndTime: number;
     price: number;
     increment: number;
-    publishDate: number;
+    saleStartTime: number;
+    saleStatus: string;
+    userId: string;
   }
 }

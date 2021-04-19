@@ -19,3 +19,18 @@ export const LOGIN_LIST = [
 export const PROD_URL = 'https://api.umx.art/';
 
 export const IMG_WIDTH_RATE = 466 / 1280;
+
+export const WX_APPID = 'wx15304ffabf5a845d';
+
+export const WHITE_ROUTE_LIST = ['/auction', '/sell'];
+
+export const SALE_STATUS = {
+  // 没有关联售卖
+  NONE: '没有关联售卖',
+  // 未开始
+  PENDING: '未开始',
+  // 进行中
+  ACTIVE: '进行中',
+  //已过期
+  EXPIRED: '已过期',
+};
