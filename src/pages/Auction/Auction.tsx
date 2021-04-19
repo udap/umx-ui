@@ -224,7 +224,7 @@ const Auction = () => {
                   <div className={styles.priceBox}>
                     <div className={styles.saleBox}>
                       <div className={styles.saleMethod}>竞价</div>
-                      <div className={styles.salePrice}>售价</div>
+                      <div className={styles.salePrice}>起拍价</div>
                     </div>
                     <div className={styles.price}>
                       <NumberFormat
@@ -238,7 +238,7 @@ const Auction = () => {
                   </div>
                   <ImageLabel
                     image={WeChat}
-                    label="微信参与购买"
+                    label="微信参与拍卖"
                     width={41}
                     height={41}
                     onClick={() => onLiveClick('WeChat')}
