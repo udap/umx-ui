@@ -38,16 +38,12 @@ const Collections = () => {
     workId: string;
     sellMethod: string;
   }) => {
-    console.log(elements);
-    sessionStorage.setItem('authorId', elements.authorId);
-    sessionStorage.setItem('workId', elements.workId);
     switch (elements.sellMethod) {
       case 'DIRECT':
         history.push({
           pathname: '/sell',
           query: {
             workId: elements.workId,
-            authorId: elements.authorId,
           },
         });
         break;
@@ -56,7 +52,6 @@ const Collections = () => {
           pathname: '/auction',
           query: {
             workId: elements.workId,
-            authorId: elements.authorId,
           },
         });
         break;
