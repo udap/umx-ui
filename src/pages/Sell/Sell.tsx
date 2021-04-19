@@ -70,8 +70,7 @@ const Sell: React.FC = () => {
   };
 
   const [author, setAuthor] = useState<API.AuthorObjType>(defaultAuthor);
-  const [tradeHistory, setTradeHistory] = useState<any[]>([]);
-  const [marketsProduct, setMarketsProduct] = useState<API.MarketsType>(
+  const [markets, setMarketsProduct] = useState<API.MarketsType>(
     tsDefault.DEFAULT_MARKETS,
   );
 
@@ -105,29 +104,35 @@ const Sell: React.FC = () => {
   };
 
   const fetchData = () => {
-    const { workId, authorId } = (history.location
-      .query as unknown) as QueryProps;
+    const { workId } = (history.location.query as unknown) as QueryProps;
 
-    Promise.all([
-      getMarketsProduct(workId),
-      getAuthor(authorId),
-      getTradeHistory(workId),
-    ]).then((res) => {
+    Promise.all([getMarketsProduct(workId)]).then((res) => {
       if (res[0].data) {
         setMarketsProduct(res[0].data);
       }
-      if (res[1].data) {
-        setAuthor(res[1].data);
-      }
-      if (res[2].data) {
-        setTradeHistory(res[2].data);
-      }
     });
+  };
+
+  const fetchAuthor = async () => {
+    try {
+      if (markets.userId) {
+        const result = await getAuthor(markets.userId);
+        if (result?.data && result.data instanceof Object) {
+          setAuthor(result.data);
+        }
+      }
+    } catch (error) {
+      console.log('fetchAuthor', error);
+    }
   };
 
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    fetchAuthor();
+  }, [markets.userId]);
 
   const onCancel = () => {
     setHasPayment(false);
@@ -239,7 +244,7 @@ const Sell: React.FC = () => {
         <div className={styles.workContainer}>
           <div className={styles.contentLeft}>
             <WorkSale>
-              <img src={marketsProduct.image} alt="workImg" />
+              <img src={markets.image} alt="workImg" />
             </WorkSale>
             <div className={styles.magnifier}>
               <img src={magnifier} alt="magnifier" />
@@ -258,19 +263,19 @@ const Sell: React.FC = () => {
                 <ImageLabel image={WeChat} label="微信主题讨论群" />
               </div>
               <div className={styles.info}>
-                <div className={styles.workName}>{marketsProduct.name}</div>
+                <div className={styles.workName}>{markets.name}</div>
                 <div className={styles.des}>
                   <div className={styles.codeCopies}>
-                    序列号 {marketsProduct.code} 发行量{marketsProduct.copies}份
+                    序列号 {markets.code} 发行量{markets.copies}份
                   </div>
                   <div className={styles.permissionDes}>用户购买权限说明</div>
                 </div>
                 <div className={styles.address}>
-                  区块链：{marketsProduct.contractaddress}
+                  区块链：{markets.contractaddress}
                 </div>
                 <CountDown
-                  saleStartTime={marketsProduct.saleStartTime}
-                  saleEndTime={marketsProduct.saleEndTime}
+                  saleStartTime={markets.saleStartTime}
+                  saleEndTime={markets.saleEndTime}
                 />
                 <div className={styles.priceBox}>
                   <div className={styles.saleBox}>
@@ -279,7 +284,7 @@ const Sell: React.FC = () => {
                   </div>
                   <div className={styles.price}>
                     <NumberFormat
-                      value={marketsProduct.price}
+                      value={markets.price}
                       thousandSeparator={true}
                       fixedDecimalScale={true}
                       displayType={'text'}
@@ -310,7 +315,7 @@ const Sell: React.FC = () => {
         <PayModal
           visible={hasPayModal}
           onCancel={handleCancel}
-          marketsProduct={marketsProduct}
+          marketsProduct={markets}
           handlePayBtn={handlePayBtn}
           hasPayOrder={hasPayOrder}
         />

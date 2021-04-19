@@ -141,7 +141,6 @@ const Auction = () => {
   }, []);
 
   useEffect(() => {
-    console.log('userId');
     fetchAuthor();
   }, [markets.userId]);
 
