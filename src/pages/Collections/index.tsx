@@ -19,9 +19,8 @@ const Collections = () => {
     setProductLoading(true);
     try {
       const result = await getInitialOffering();
-      if (result?.data) {
+      if (result?.data && result?.data instanceof Array) {
         setWorksArr(result.data);
-        console.log(result.data);
       }
     } catch (error) {
       console.log('fetchData', error);
