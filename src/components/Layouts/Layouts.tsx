@@ -182,7 +182,14 @@ const Layouts = (props: { children: FC }) => {
               />
             </div>
             <div className={styles.footerBottom}>
-              <div>© umx {dayjs().year()}</div>
+              <div className={styles.copyright}>© umx {dayjs().year()}</div>
+              <a
+                className={styles.record}
+                href="https://beian.miit.gov.cn"
+                target="_blank"
+              >
+                浙ICP备12012819号-7
+              </a>
             </div>
           </footer>
         )}
