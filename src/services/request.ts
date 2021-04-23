@@ -1,5 +1,5 @@
 import { extend } from 'umi-request';
-import { PROD_URL } from '@/utils/constants';
+import { PROD_URL, TEST_URL } from '@/utils/constants';
 
 const whiteRequestList = ['/user/searchQrCodeInfo/'];
 
@@ -30,7 +30,7 @@ const errorHandler = (error: { data?: any; response?: any }) => {
     return;
   }
 
-  if (error?.data?.message) {
+  if (error.data?.message) {
     // notification.error({
     //   message: `请求错误`,
     //   description: error.data.message,
@@ -63,8 +63,17 @@ const extendRequest = extend({
 
 export default async function request(url: string, options: any) {
   let tempURL = url;
-  if (process.env.NODE_ENV === 'production') {
-    tempURL = `${PROD_URL}${url.substr(5)}`;
+
+  switch (process.env.UMI_ENV) {
+    case 'production':
+      tempURL = `${PROD_URL}${url.substr(5)}`;
+      break;
+    case 'test':
+      tempURL = `${TEST_URL}${url.substr(5)}`;
+      break;
+
+    default:
+      break;
   }
 
   const isWhite = whiteRequestList.some((item) => tempURL.includes(item));

@@ -1,21 +1,27 @@
-# umx-web project
+# umx-web
 
 ## Getting Started
 
 Install dependencies,
 
 ```bash
-$ yarn/npm install
+$ yarn
 ```
 
 Start the dev server,
 
 ```bash
-$ yarn start/npm run start
+$ yarn start
 ```
 
-Packaged project,
+Start the test server,
 
 ```bash
-$ yarn build/npm run build
+$ yarn build:test
+```
+
+Start the production server,
+
+```bash
+$ yarn build:prod
 ```

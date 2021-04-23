@@ -17,8 +17,7 @@ export const LOGIN_LIST = [
 ];
 
 export const PROD_URL = 'https://api.umx.art/';
-
-export const IMG_WIDTH_RATE = 466 / 1280;
+export const TEST_URL = 'https://test-api.umx.art/';
 
 export const WX_APPID = 'wx15304ffabf5a845d';
 

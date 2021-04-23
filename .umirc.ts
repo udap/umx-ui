@@ -80,7 +80,7 @@ export default defineConfig({
   fastRefresh: {},
   proxy: {
     '/api': {
-      target: 'https://api.umx.art/',
+      target: 'https://test-api.umx.art/',
       changeOrigin: true,
       pathRewrite: { '^/api': '' },
     },
