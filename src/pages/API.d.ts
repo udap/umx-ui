@@ -95,5 +95,6 @@ declare namespace API {
     saleStartTime: number;
     saleStatus: string;
     userId: string;
+    medias: string;
   }
 }

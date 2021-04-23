@@ -11,7 +11,13 @@ import { getAuthor, getMarkets, getBidsTops } from '@/services/auction';
 import { BidGraph, WorkSale, ImageLabel, CountDown } from '@/components';
 import { WeChat, TikTok, magnifier, weibo } from '@/images';
 import { padLeft } from '@/utils/common';
-import { WX_APPID } from '@/utils/constants';
+import {
+  WX_APPID,
+  TEST_REDIRECT_URL,
+  PROD_REDIRECT_URL,
+  TEST_H5_URL,
+  PROD_H5_URL,
+} from '@/utils/constants';
 import * as tsDefault from '@/utils/tsDefault';
 
 interface QueryProps {
@@ -152,10 +158,26 @@ const Auction = () => {
     switch (ele) {
       case 'WeChat':
         const { workId } = (history.location.query as unknown) as QueryProps;
-        const encodeUrl = encodeURIComponent(
-          `https://h5.umx.art/auction?workId=${workId}`,
-        );
-        const wechatQR = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${WX_APPID}&redirect_uri=http%3A%2F%2Fumx.iclass.cn%2Fwechat%2Foauth_response&response_type=code&scope=snsapi_userinfo&state=${encodeUrl}#wechat_redirect`;
+
+        let [redirectUri, encodeUrl] = ['', ''];
+
+        switch (process.env.UMI_ENV) {
+          case 'production':
+            redirectUri = encodeURIComponent(PROD_REDIRECT_URL);
+            encodeUrl = encodeURIComponent(`${PROD_H5_URL}${workId}`);
+            break;
+
+          case 'test':
+          case 'development':
+            redirectUri = encodeURIComponent(TEST_REDIRECT_URL);
+            encodeUrl = encodeURIComponent(`${TEST_H5_URL}${workId}`);
+            break;
+
+          default:
+            break;
+        }
+
+        const wechatQR = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${WX_APPID}&redirect_uri=${redirectUri}&response_type=code&scope=snsapi_userinfo&state=${encodeUrl}#wechat_redirect`;
 
         setWechatUrl(wechatQR);
 
@@ -181,6 +203,18 @@ const Auction = () => {
     setBidsTops(sortBidsTops);
   }, [bidsTops]);
 
+  console.log(markets);
+
+  let mediasArr: {
+    name: string;
+    url: string;
+    title: string;
+  }[] = [];
+  if (markets?.medias) {
+    const medias = JSON.parse(markets?.medias);
+    mediasArr = [...medias.lives, ...medias.discuss];
+  }
+
   return (
     <>
       <div className={styles.container}>
@@ -198,12 +232,34 @@ const Auction = () => {
             <div className={styles.rightTop}>
               <div className={styles.rightWork}>
                 <div className={styles.thirdShare}>
-                  <ImageLabel image={TikTok} label="直播间" />
-                  <ImageLabel
-                    image={weibo}
-                    label="#La Rue Saint-Rustique à Montmartre#"
-                  />
-                  <ImageLabel image={WeChat} label="微信主题讨论群" />
+                  {mediasArr.map((mediaItem, mediaIndex) => {
+                    let mediaImage = '';
+                    switch (mediaItem.name) {
+                      case 'wechat':
+                        mediaImage = WeChat;
+                        break;
+                      case 'weibo':
+                        mediaImage = weibo;
+                        break;
+                      case 'tiktok':
+                        mediaImage = TikTok;
+                        break;
+
+                      default:
+                        break;
+                    }
+                    return (
+                      <div key={mediaIndex}>
+                        <ImageLabel
+                          image={mediaImage}
+                          label={mediaItem.title}
+                          onClick={(e: { stopPropagation: () => void }) => {
+                            e.stopPropagation();
+                          }}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
                 <div className={styles.info}>
                   <div className={styles.workName}>{markets.name}</div>
@@ -240,7 +296,10 @@ const Auction = () => {
                     label="微信参与拍卖"
                     width={41}
                     height={41}
-                    onClick={() => onLiveClick('WeChat')}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onLiveClick('WeChat');
+                    }}
                   />
                 </div>
               </div>

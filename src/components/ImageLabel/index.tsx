@@ -6,7 +6,7 @@ interface ImageLabelProps {
   label: string;
   width?: number;
   height?: number;
-  onClick?: () => void;
+  onClick?: (e: { stopPropagation: () => void }) => void;
 }
 
 const ImageLabel: FC<ImageLabelProps> = (props) => {

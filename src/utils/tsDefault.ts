@@ -14,4 +14,5 @@ export const DEFAULT_MARKETS = {
   summary: '',
   saleStatus: '',
   userId: '',
+  medias: '',
 };

@@ -19,7 +19,13 @@ export const LOGIN_LIST = [
 export const PROD_URL = 'https://api.umx.art/';
 export const TEST_URL = 'https://test-api.umx.art/';
 
-export const WX_APPID = 'wx15304ffabf5a845d';
+export const WX_APPID = 'wx2f1b6d1d7f5ef6ec';
+
+export const TEST_H5_URL = 'https://test-h5.umx.art/auction?workId=';
+export const PROD_H5_URL = 'https://h5.umx.art/auction?workId=';
+
+export const TEST_REDIRECT_URL = `https://test-api.umx.art/wechat/oauth_response`;
+export const PROD_REDIRECT_URL = `https://api.umx.art/wechat/oauth_response`;
 
 export const WHITE_ROUTE_LIST = ['/auction', '/sell'];
 
