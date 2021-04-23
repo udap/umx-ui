@@ -1,4 +1,4 @@
- pipeline {
+pipeline {
 
     agent none
 
@@ -8,70 +8,70 @@
     }
 
     environment {
-       DOCKER_REGISTRY = "reg.iclass.cn" //镜像上传选地址
-       IMAGE_NAME = "umedia/umx-web"
-       SERVICE_NAME = "umx-web"
-       PORT = "8085"
-       NODE = "node-hw5"
-       PROD_NODE = "node-hw6"
+        DOCKER_REGISTRY = "reg.iclass.cn" //镜像上传选地址
+        IMAGE_NAME = "umedia/umx-web"
+        SERVICE_NAME = "umx-web"
+        PORT = "8085"
+        NODE = "node-hw5"
+        PROD_NODE = "node-hw6"
     }
 
 
     stages {
 
 
-      stage('check out') {
+        stage('check out') {
 
-          agent { label 'master'}
+            agent { label 'master' }
 
-          steps {
-
-             checkout scm
-
-             echo "current branch: $BRANCH_NAME"
-
-
-             echo "$BRANCH_NAME"
-          }
-
-      }
-        stage('npm install'){
-            agent { label 'master'}
             steps {
-                 echo 'start to npm install'
-                 sh "docker run -i --rm -v ${env.WORKSPACE}:/usr/src/workspace -w /usr/src/workspace reg.iclass.cn/iclass.cn/node:latest yarn install"
+
+                checkout scm
+
+                echo "current branch: $BRANCH_NAME"
+
+
+                echo "$BRANCH_NAME"
+            }
+
+        }
+        stage('npm install') {
+            agent { label 'master' }
+            steps {
+                echo 'start to npm install'
+                sh "docker run -i --rm -v ${env.WORKSPACE}:/usr/src/workspace -w /usr/src/workspace reg.iclass.cn/iclass.cn/node:latest yarn install"
             }
         }
 
-        stage('npm build'){
-            agent { label 'master'}
+        stage('npm build') {
+            agent { label 'master' }
             steps {
-                 echo 'start to npm build'
-                 sh "docker run -i --rm -v ${env.WORKSPACE}:/usr/src/workspace -w /usr/src/workspace reg.iclass.cn/iclass.cn/node:latest yarn build "
+                echo 'start to npm build'
+                sh "docker run -i --rm -v ${env.WORKSPACE}:/usr/src/workspace -w /usr/src/workspace reg.iclass.cn/iclass.cn/node:latest yarn build "
             }
         }
 
-        stage ('build & push') {
-            agent { label 'master'}
-            steps{
-                 script {
+        stage('build & push') {
+            agent { label 'master' }
+            steps {
+                script {
 
-                     docker.withRegistry('http://${DOCKER_REGISTRY}',"reg.iclass.cn") {
+                    docker.withRegistry('http://${DOCKER_REGISTRY}', "reg.iclass.cn") {
                         def customImage = docker.build('${IMAGE_NAME}:${BRANCH_NAME}')
                         customImage.push()
-                     }
+                    }
                 }
             }
         }
 
-         stage ('master release ') {
+        stage('develop release ') {
 
-            agent { label "$NODE"}
+            agent { label "$NODE" }
 
             environment {
                 NODEIP = sh(
-                    returnStdout: true,
-                    script: 'ip a|grep eth0|grep -w \'inet\'|sed \'s/^.*inet //g\'|sed \'s/\\/[0-9][0-9].*$//g\''
+                        returnStdout: true,
+                        script: 'ip a|grep eth0|grep -w \'inet\'|sed \'s/^.*inet //g\'|sed \'s/\\/[0-9][0-9].*$//g\''
                 ).trim()
             }
 
@@ -79,7 +79,7 @@
                 branch 'develop'
             }
 
-            steps{
+            steps {
                 echo 'stop old container'
 
                 sh '''CID=$(docker ps | grep ${SERVICE_NAME} | awk \'{print $1}\')
@@ -94,16 +94,16 @@
                 echo 'restart'
                 sh 'docker run -d --name ${SERVICE_NAME} -p ${PORT}:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${BRANCH_NAME}'
             }
-         }
-      
-         stage ('master release ') {
+        }
 
-            agent { label "$PROD_NODE"}
+        stage('master release ') {
+
+            agent { label "$PROD_NODE" }
 
             environment {
                 NODEIP = sh(
-                    returnStdout: true,
-                    script: 'ip a|grep eth0|grep -w \'inet\'|sed \'s/^.*inet //g\'|sed \'s/\\/[0-9][0-9].*$//g\''
+                        returnStdout: true,
+                        script: 'ip a|grep eth0|grep -w \'inet\'|sed \'s/^.*inet //g\'|sed \'s/\\/[0-9][0-9].*$//g\''
                 ).trim()
             }
 
@@ -111,7 +111,7 @@
                 branch 'main'
             }
 
-            steps{
+            steps {
                 echo 'stop old container'
 
                 sh '''CID=$(docker ps | grep ${SERVICE_NAME} | awk \'{print $1}\')
@@ -126,6 +126,6 @@
                 echo 'restart'
                 sh 'docker run -d --name ${SERVICE_NAME} -p ${PORT}:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${BRANCH_NAME}'
             }
-         }
+        }
     }
 }
