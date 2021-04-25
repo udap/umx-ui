@@ -14,14 +14,8 @@ Start the dev server,
 $ yarn start
 ```
 
-Start the test server,
-
-```bash
-$ yarn build:test
-```
-
 Start the production server,
 
 ```bash
-$ yarn build:prod
+$ yarn build
 ```
