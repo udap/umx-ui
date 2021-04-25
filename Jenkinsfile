@@ -43,25 +43,11 @@ pipeline {
             }
         }
 
-        stage('npm build test') {
-            agent { label 'master' }
-            when {
-                branch 'develop'
-            }
+        stage('npm build'){
+            agent { label 'master'}
             steps {
                 echo 'start to npm build'
-                sh "docker run -i --rm -v ${env.WORKSPACE}:/usr/src/workspace -w /usr/src/workspace reg.iclass.cn/iclass.cn/node:latest npm run build:test"
-            }
-        }
-
-        stage('npm build prod') {
-            agent { label 'master' }
-            when {
-                branch 'main'
-            }
-            steps {
-                echo 'start to npm build'
-                sh "docker run -i --rm -v ${env.WORKSPACE}:/usr/src/workspace -w /usr/src/workspace reg.iclass.cn/iclass.cn/node:latest npm run build:prod"
+                sh "docker run -i --rm -v ${env.WORKSPACE}:/usr/src/workspace -w /usr/src/workspace reg.iclass.cn/iclass.cn/node:latest npm run build "
             }
         }
 
