@@ -116,7 +116,7 @@ const Layouts = (props: { children: FC }) => {
         {!WHITE_ROUTE_LIST.some((item) =>
           history.location.pathname.includes(item),
         ) ? (
-          <header>
+          <header id="layout-header">
             <div className={styles.headerLeft}>
               <img src={logoLeft} alt="logo" className={styles.leftLogo} />
               <div className={styles.slogan}>传承有绪 · 价值永存</div>
