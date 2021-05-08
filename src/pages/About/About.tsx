@@ -78,7 +78,8 @@ const About = () => {
         <ReactPlayer
           url="/video/umx-about.mp4"
           width="100%"
-          height={1082}
+          style={{ background: '#8f8f8f' }}
+          height={1000}
           controls
         />
         <img
