@@ -11,7 +11,6 @@ interface CountDownType {
 }
 
 const CountDown: FC<CountDownType> = (props) => {
-  console.log(props);
   const [countdown, setTargetDate, formattedRes] = useCountDown();
   const { days, hours, minutes, seconds } = formattedRes;
   // 已开始？

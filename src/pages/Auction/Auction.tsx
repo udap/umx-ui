@@ -17,6 +17,8 @@ import {
   PROD_REDIRECT_URL,
   TEST_H5_URL,
   PROD_H5_URL,
+  PROD_URL,
+  TEST_URL,
 } from '@/utils/constants';
 import * as tsDefault from '@/utils/tsDefault';
 
@@ -83,15 +85,26 @@ const Auction = () => {
       },
     );
   };
+  console.log(markets);
 
   useEffect(() => {
-    const a = '2021-05-12 14:23:12';
-    const b = 1620800592000;
-    console.log(dayjs(a).valueOf());
-    console.log(dayjs(b).valueOf());
     fetchData();
 
-    let url = 'wss://api.umx.art/message/ws';
+    let wsUrl = '';
+    switch (process.env.UMI_ENV) {
+      case 'production':
+        wsUrl = PROD_URL.substr(8);
+        break;
+      case 'test':
+      case 'development':
+        wsUrl = TEST_URL.substr(8);
+        break;
+
+      default:
+        break;
+    }
+
+    let url = `wss://${wsUrl}message/ws`;
     let stompClient = Stomp.client(url);
     stompClient.connect(
       {},
@@ -132,9 +145,13 @@ const Auction = () => {
           // 拍卖师控制时间
           `/exchange/udap.sys.notice/auction.saleTime.${workId}`,
           (greeting: { body: string }) => {
-            console.log(greeting.body);
             // 成功
             const greetingBody = JSON.parse(greeting.body);
+            console.log(greetingBody);
+            console.log(greetingBody.content.productId);
+            console.log(markets.id);
+            console.log(markets);
+            console.log(greetingBody.content.productId === markets.id);
             if (greetingBody.content.productId === markets.id) {
               setMarkets({
                 ...markets,
@@ -212,8 +229,6 @@ const Auction = () => {
     const sortBidsTops = bidsTops.sort(compare('price'));
     setBidsTops(sortBidsTops);
   }, [bidsTops]);
-
-  console.log(markets);
 
   let mediasArr: {
     name: string;

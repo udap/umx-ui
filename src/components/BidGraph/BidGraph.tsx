@@ -17,7 +17,6 @@ const BidGraph = (props: BidGraphType) => {
         }),
       )
     : 0;
-  console.log(props);
 
   return (
     <div className={styles.container}>
