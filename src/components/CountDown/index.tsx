@@ -3,6 +3,7 @@ import { useCountDown } from 'ahooks';
 import dayjs from 'dayjs';
 
 import styles from './index.less';
+import { padLeft } from '@/utils/common';
 
 interface CountDownType {
   saleStartTime: number;
@@ -40,7 +41,8 @@ const CountDown: FC<CountDownType> = (props) => {
         <>
           <div className={styles.tips}>{hasStart ? '距结束' : '距开始'}</div>
           <div className={styles.time}>
-            {days}:{hours}:{minutes}:{seconds}
+            {padLeft(days, 2)}:{padLeft(hours, 2)}:{padLeft(minutes, 2)}:
+            {padLeft(seconds, 2)}
           </div>
         </>
       )}

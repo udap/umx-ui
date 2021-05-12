@@ -1,6 +1,8 @@
 import { FC, useEffect } from 'react';
 import { useCountDown } from 'ahooks';
+
 import styles from './index.less';
+import { padLeft } from '@/utils/common';
 
 interface CountDownProps {
   time: number;
@@ -19,7 +21,8 @@ const CountDown: FC<CountDownProps> = (props) => {
       {days || hours || minutes || seconds ? (
         <div className={styles.auctionTime}>
           <div className={styles.countdown}>
-            {days}:{hours}:{minutes}:{seconds}
+            {padLeft(days, 2)}:{padLeft(hours, 2)}:{padLeft(minutes, 2)}:
+            {padLeft(seconds, 2)}
           </div>
         </div>
       ) : null}
