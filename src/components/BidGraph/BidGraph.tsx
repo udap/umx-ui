@@ -4,17 +4,20 @@ import styles from './BidGraph.less';
 import { padLeft } from '@/utils/common';
 
 interface BidGraphType {
-  bidList: { id: string; price: number; bidder: { name: string } }[];
+  bidList?: { id: string; price: number; bidder: { name: string } }[];
   copies: number;
 }
 
 const BidGraph = (props: BidGraphType) => {
-  const maxPrice = Math.max.apply(
-    Math,
-    props.bidList?.map((item) => {
-      return item.price;
-    }),
-  );
+  const maxPrice = props.bidList
+    ? Math.max.apply(
+        Math,
+        props.bidList?.map((item) => {
+          return item.price;
+        }),
+      )
+    : 0;
+  console.log(props);
 
   return (
     <div className={styles.container}>
@@ -35,7 +38,7 @@ const BidGraph = (props: BidGraphType) => {
                   <span className={styles.name}>{item.bidder?.name}</span>
                   <span className={styles.price}>
                     <NumberFormat
-                      value={item.price}
+                      value={item.price / 100}
                       thousandSeparator={true}
                       fixedDecimalScale={true}
                       displayType={'text'}

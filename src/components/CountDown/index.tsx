@@ -10,23 +10,40 @@ interface CountDownType {
 }
 
 const CountDown: FC<CountDownType> = (props) => {
+  console.log(props);
   const [countdown, setTargetDate, formattedRes] = useCountDown();
   const { days, hours, minutes, seconds } = formattedRes;
-  const [isPublishDate, setIsPublishDate] = useState(false);
+  // 已开始？
+  const [hasStart, setHasStart] = useState(false);
+  // 已结束？
+  const [hasEnd, setHasEnd] = useState(false);
 
   useEffect(() => {
-    setIsPublishDate(dayjs(new Date()).valueOf() < props.saleStartTime);
+    setHasStart(
+      dayjs(new Date()).valueOf() > dayjs(props.saleStartTime).valueOf(),
+    );
+    setHasEnd(dayjs(new Date()).valueOf() > dayjs(props.saleEndTime).valueOf());
     setTargetDate(
-      dayjs(isPublishDate ? props.saleStartTime : props.saleEndTime).valueOf(),
+      dayjs(
+        hasStart
+          ? dayjs(props.saleEndTime).valueOf()
+          : dayjs(props.saleStartTime).valueOf(),
+      ).valueOf(),
     );
   }, [props.saleEndTime, props.saleStartTime]);
 
   return (
     <div className={styles.countdown}>
-      <div className={styles.tips}>{isPublishDate ? '距开始' : '距结束'}</div>
-      <div className={styles.time}>
-        {days}:{hours}:{minutes}:{seconds}
-      </div>
+      {hasEnd ? (
+        <div className={styles.tips}>已结束</div>
+      ) : (
+        <>
+          <div className={styles.tips}>{hasStart ? '距结束' : '距开始'}</div>
+          <div className={styles.time}>
+            {days}:{hours}:{minutes}:{seconds}
+          </div>
+        </>
+      )}
     </div>
   );
 };

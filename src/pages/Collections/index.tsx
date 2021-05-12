@@ -115,7 +115,7 @@ const Collections = () => {
                               </div>
                               <div className={styles.salePrice}>
                                 <NumberFormat
-                                  value={workItem.price}
+                                  value={workItem.price / 100}
                                   thousandSeparator={true}
                                   fixedDecimalScale={true}
                                   displayType={'text'}
@@ -128,7 +128,7 @@ const Collections = () => {
                                 <div className={styles.makeup}>
                                   单次加价幅度
                                   <NumberFormat
-                                    value={workItem.increment}
+                                    value={workItem.increment / 100}
                                     thousandSeparator={true}
                                     fixedDecimalScale={true}
                                     displayType={'text'}
@@ -152,7 +152,10 @@ const Collections = () => {
                             <CountDown time={workItem.saleEndTime} />
                           </div>
                           {isAuction && (
-                            <BidDots bidderAmount={workItem.bidderAmount} />
+                            <BidDots
+                              bidderAmount={workItem.bidderAmount}
+                              dotsAll={workItem.copies}
+                            />
                           )}
                         </div>
                       </div>
