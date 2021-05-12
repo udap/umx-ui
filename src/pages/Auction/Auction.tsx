@@ -224,15 +224,18 @@ const Auction = () => {
   };
 
   useEffect(() => {
-    const compare = (property: string) => {
-      return function (a: { [x: string]: any }, b: { [x: string]: any }) {
-        const value1 = a[property];
-        const value2 = b[property];
-        return value2 - value1;
-      };
+    const compare = (p1: string, p2: string) => (
+      m: { [x: string]: any },
+      n: { [x: string]: any },
+    ) => {
+      if (m[p1] === n[p1]) {
+        return n[p2] - m[p2];
+      } else {
+        return n[p1] - m[p1];
+      }
     };
 
-    const sortBidsTops = bidsTops.sort(compare('price'));
+    const sortBidsTops = bidsTops.sort(compare('price', 'createdDate'));
     setBidsTops(sortBidsTops);
     sessionStorage.setItem('bidsTops', JSON.stringify(sortBidsTops));
   }, [bidsTops]);
