@@ -42,29 +42,18 @@ interface BidTopsType {
 }
 
 const Auction = () => {
+  const { workId } = (history.location.query as unknown) as QueryProps;
   const defaultAuthInfo = {
     headImage: '',
     name: '',
     nickName: '',
   };
 
-  const defaultBidTops = [
-    {
-      bidder: {
-        id: '',
-        name: '',
-      },
-      createdDate: 0,
-      id: '',
-      price: 0,
-    },
-  ];
-
   const [authorInfo, setAuthorInfo] = useState<AuthInfoType>(defaultAuthInfo);
   const [markets, setMarkets] = useState<API.MarketsType>(
     tsDefault.DEFAULT_MARKETS,
   );
-  const [bidsTops, setBidsTops] = useState<BidTopsType[]>(defaultBidTops);
+  const [bidsTops, setBidsTops] = useState<BidTopsType[]>([]);
   const [liveVisible, setLiveVisible] = useState(false);
   const [liveMethod, setLiveMethod] = useState('');
   const [wechatUrl, setWechatUrl] = useState('');
@@ -83,8 +72,6 @@ const Auction = () => {
   };
 
   const fetchData = async () => {
-    const { workId } = (history.location.query as unknown) as QueryProps;
-
     Promise.all([getMarkets(workId), getBidsTops({ productId: workId })]).then(
       (res) => {
         if (res[0].data) {
@@ -98,6 +85,10 @@ const Auction = () => {
   };
 
   useEffect(() => {
+    const a = '2021-05-12 14:23:12';
+    const b = 1620800592000;
+    console.log(dayjs(a).valueOf());
+    console.log(dayjs(b).valueOf());
     fetchData();
 
     let url = 'wss://api.umx.art/message/ws';
@@ -106,35 +97,56 @@ const Auction = () => {
       {},
       (frame: string) => {
         // 连接成功
-        // setConnected(true);
-        console.log('Connected: ' + frame);
         stompClient.subscribe(
-          '/exchange/udap.sys.notice/auction.price',
+          // 用户拍卖出价
+          `/exchange/udap.sys.notice/auction.price.${workId}`,
           (greeting: { body: string }) => {
-            // 订阅成功
+            // 成功
             const greetingBody = JSON.parse(greeting.body);
 
             const hasBiderArr = bidsTops.filter(
-              (item, index) =>
-                item.bidder.id === greetingBody.content?.bidder.id,
+              (item) => item.bidder.id === greetingBody.content?.bid.bidder.id,
             );
 
             let tempArr: any = [];
             if (hasBiderArr.length) {
-              bidsTops.forEach((item, index) => {
-                if (item.bidder.id === greetingBody.content?.bidder.id) {
-                  tempArr.push(greetingBody.content);
-                  return;
+              bidsTops.forEach((item) => {
+                if (item.bidder.id === greetingBody.content?.bid.bidder.id) {
+                  tempArr.push(greetingBody.content.bid);
+                } else {
+                  tempArr.push(item);
                 }
-                tempArr.push(item);
               });
             } else {
-              tempArr = [...bidsTops, greetingBody.content];
+              tempArr = [...bidsTops, greetingBody.content.bid];
             }
+
             setBidsTops(tempArr);
           },
           function (err: any) {
-            // 订阅失败
+            // 失败
+            console.log('err', err);
+          },
+        );
+        stompClient.subscribe(
+          // 拍卖师控制时间
+          `/exchange/udap.sys.notice/auction.saleTime.${workId}`,
+          (greeting: { body: string }) => {
+            console.log(greeting.body);
+            // 成功
+            const greetingBody = JSON.parse(greeting.body);
+            if (greetingBody.content.productId === markets.id) {
+              setMarkets({
+                ...markets,
+                saleStartTime: dayjs(
+                  greetingBody.content.saleStartTime,
+                ).valueOf(),
+                saleEndTime: dayjs(greetingBody.content.saleEndTime).valueOf(),
+              });
+            }
+          },
+          function (err: any) {
+            // 失败
             console.log('err', err);
           },
         );
@@ -157,8 +169,6 @@ const Auction = () => {
   const onLiveClick = (ele: string) => {
     switch (ele) {
       case 'WeChat':
-        const { workId } = (history.location.query as unknown) as QueryProps;
-
         let [redirectUri, encodeUrl] = ['', ''];
 
         switch (process.env.UMI_ENV) {
@@ -283,7 +293,7 @@ const Auction = () => {
                     </div>
                     <div className={styles.price}>
                       <NumberFormat
-                        value={markets.price}
+                        value={markets.price / 100}
                         thousandSeparator={true}
                         fixedDecimalScale={true}
                         displayType={'text'}
