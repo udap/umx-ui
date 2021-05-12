@@ -11,6 +11,7 @@ export default defineConfig({
     baseNavigator: true,
     baseSeparator: '-',
   },
+  favicon: '/favicon.ico',
   hash: true,
   routes: [
     { exact: true, path: '/', redirect: '/collections' },
