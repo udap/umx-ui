@@ -52,9 +52,7 @@ const Auction = () => {
   };
 
   const [authorInfo, setAuthorInfo] = useState<AuthInfoType>(defaultAuthInfo);
-  const [markets, setMarkets] = useState<API.MarketsType>(
-    tsDefault.DEFAULT_MARKETS,
-  );
+  const [markets, setMarkets] = useState<API.MarketsType | null>(null);
   const [bidsTops, setBidsTops] = useState<BidTopsType[]>([]);
   const [liveVisible, setLiveVisible] = useState(false);
   const [liveMethod, setLiveMethod] = useState('');
@@ -62,7 +60,7 @@ const Auction = () => {
 
   const fetchAuthor = async () => {
     try {
-      if (markets.userId) {
+      if (markets && markets?.userId) {
         const result = await getAuthor(markets.userId);
         if (result?.data && result.data instanceof Object) {
           setAuthorInfo(result.data);
@@ -78,6 +76,7 @@ const Auction = () => {
       (res) => {
         if (res[0].data) {
           setMarkets(res[0].data);
+          sessionStorage.setItem('markets', JSON.stringify(res[0].data));
         }
         if (res[1].data) {
           setBidsTops(res[1].data);
@@ -85,7 +84,6 @@ const Auction = () => {
       },
     );
   };
-  console.log(markets);
 
   useEffect(() => {
     fetchData();
@@ -117,13 +115,20 @@ const Auction = () => {
             // 成功
             const greetingBody = JSON.parse(greeting.body);
 
-            const hasBiderArr = bidsTops.filter(
-              (item) => item.bidder.id === greetingBody.content?.bid.bidder.id,
+            const tempBidsTops = sessionStorage.getItem('bidsTops');
+            let bidsTopsStorage = [];
+            if (tempBidsTops) {
+              bidsTopsStorage = JSON.parse(tempBidsTops);
+            }
+
+            const hasBiderArr = bidsTopsStorage.filter(
+              (item: { bidder: { id: string } }) =>
+                item.bidder.id === greetingBody.content?.bid.bidder.id,
             );
 
             let tempArr: any = [];
             if (hasBiderArr.length) {
-              bidsTops.forEach((item) => {
+              bidsTopsStorage.forEach((item: { bidder: { id: string } }) => {
                 if (item.bidder.id === greetingBody.content?.bid.bidder.id) {
                   tempArr.push(greetingBody.content.bid);
                 } else {
@@ -131,7 +136,7 @@ const Auction = () => {
                 }
               });
             } else {
-              tempArr = [...bidsTops, greetingBody.content.bid];
+              tempArr = [...bidsTopsStorage, greetingBody.content.bid];
             }
 
             setBidsTops(tempArr);
@@ -147,14 +152,15 @@ const Auction = () => {
           (greeting: { body: string }) => {
             // 成功
             const greetingBody = JSON.parse(greeting.body);
-            console.log(greetingBody);
-            console.log(greetingBody.content.productId);
-            console.log(markets.id);
-            console.log(markets);
-            console.log(greetingBody.content.productId === markets.id);
-            if (greetingBody.content.productId === markets.id) {
+            const tempMarkets = sessionStorage.getItem('markets');
+            let marketsStorage: API.MarketsType = tsDefault.DEFAULT_MARKETS;
+            if (tempMarkets) {
+              marketsStorage = JSON.parse(tempMarkets);
+            }
+
+            if (greetingBody.content.productId === marketsStorage?.id) {
               setMarkets({
-                ...markets,
+                ...marketsStorage,
                 saleStartTime: dayjs(
                   greetingBody.content.saleStartTime,
                 ).valueOf(),
@@ -177,7 +183,7 @@ const Auction = () => {
 
   useEffect(() => {
     fetchAuthor();
-  }, [markets.userId]);
+  }, [markets?.userId]);
 
   const onLiveCancel = () => {
     setLiveVisible(false);
@@ -228,6 +234,7 @@ const Auction = () => {
 
     const sortBidsTops = bidsTops.sort(compare('price'));
     setBidsTops(sortBidsTops);
+    sessionStorage.setItem('bidsTops', JSON.stringify(sortBidsTops));
   }, [bidsTops]);
 
   let mediasArr: {
@@ -246,7 +253,7 @@ const Auction = () => {
         <div className={styles.workContainer}>
           <div className={styles.contentLeft}>
             <WorkSale>
-              <img src={markets.image} alt="workImg" />
+              <img src={markets?.image} alt="workImg" />
             </WorkSale>
             <div className={styles.magnifier}>
               <img src={magnifier} alt="magnifier" />
@@ -287,19 +294,19 @@ const Auction = () => {
                   })}
                 </div>
                 <div className={styles.info}>
-                  <div className={styles.workName}>{markets.name}</div>
+                  <div className={styles.workName}>{markets?.name}</div>
                   <div className={styles.des}>
                     <div className={styles.codeCopies}>
-                      序列号 {markets.code} 发行量{markets.copies}份
+                      序列号 {markets?.code} 发行量{markets?.copies}份
                     </div>
                     <div className={styles.permissionDes}>用户购买权限说明</div>
                   </div>
                   <div className={styles.address}>
-                    区块链：{markets.contractaddress}
+                    区块链：{markets?.contractaddress}
                   </div>
                   <CountDown
-                    saleStartTime={markets.saleStartTime}
-                    saleEndTime={markets.saleEndTime}
+                    saleStartTime={markets?.saleStartTime || 0}
+                    saleEndTime={markets?.saleEndTime || 0}
                   />
                   <div className={styles.priceBox}>
                     <div className={styles.saleBox}>
@@ -308,7 +315,7 @@ const Auction = () => {
                     </div>
                     <div className={styles.price}>
                       <NumberFormat
-                        value={markets.price / 100}
+                        value={(markets?.price || 0) / 100}
                         thousandSeparator={true}
                         fixedDecimalScale={true}
                         displayType={'text'}
@@ -337,7 +344,7 @@ const Auction = () => {
                 </div>
               </div>
             </div>
-            {markets.saleStatus === 'ACTIVE' && (
+            {markets?.saleStatus === 'ACTIVE' && (
               <>
                 <div className={styles.authTips}>
                   {dayjs(new Date()).valueOf() >
@@ -349,7 +356,7 @@ const Auction = () => {
                       }用户，请在微信中支付加价的尾款`
                     : '拍卖首次出价需全款付清，如你中签，加价金额会在拍卖结束后5分钟内付清'}
                 </div>
-                <BidGraph bidList={bidsTops} copies={markets.copies} />
+                <BidGraph bidList={bidsTops} copies={markets?.copies} />
               </>
             )}
           </div>
