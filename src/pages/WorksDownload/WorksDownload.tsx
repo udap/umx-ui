@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button } from 'antd';
+import { Button, notification } from 'antd';
 import { history } from 'umi';
 import QRCode from 'qrcode.react';
 
@@ -19,8 +19,8 @@ const test = [
 
 const randomKeys = randomString(19);
 const WorksDownload = () => {
-  const { workId, assetId } = history.location
-    .query as unknown as API.QueryProps;
+  const { workId, assetId } = (history.location
+    .query as unknown) as API.QueryProps;
   const [loading, setLoading] = useState(false);
 
   const [markets, setMarkets] = useState<API.MarketsType | null>(null);
@@ -55,20 +55,27 @@ const WorksDownload = () => {
     downloadFile({
       method: 'GET',
       params: { assetId: assetId },
-      headers: { 'x-sender': '69b9953b708be1ee01e93bbee1e66534ee12794a' },
+      headers: { 'x-sender': info.xSender },
       responseType: 'blob',
     }).then((res: any) => {
       setLoading(false);
-      const type = res.data.type;
-      let index = type.lastIndexOf('/');
-      const str = type.substring(index + 1, type.length);
-      const blob = new Blob([res.data]);
-      const objectURL = URL.createObjectURL(blob);
-      let btn = document.createElement('a');
-      btn.download = new Date().getTime() + `.${str}`;
-      btn.href = objectURL;
-      btn.click();
-      URL.revokeObjectURL(objectURL);
+      try {
+        const type = res.data.type;
+        let index = type.lastIndexOf('/');
+        const str = type.substring(index + 1, type.length);
+        const blob = new Blob([res.data]);
+        const objectURL = URL.createObjectURL(blob);
+        let btn = document.createElement('a');
+        btn.download = new Date().getTime() + `.${str}`;
+        btn.href = objectURL;
+        btn.click();
+        URL.revokeObjectURL(objectURL);
+      } catch (error) {
+        notification.error({
+          message: '通知',
+          description: '下载失败，请稍后重试',
+        });
+      }
     });
   };
 
