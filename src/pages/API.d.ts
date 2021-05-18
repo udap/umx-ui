@@ -97,4 +97,9 @@ declare namespace API {
     userId: string;
     medias: string;
   }
+
+  export interface QueryProps {
+    workId: string;
+    assetId?: string;
+  }
 }

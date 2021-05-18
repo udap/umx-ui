@@ -16,8 +16,13 @@ export default defineConfig({
   routes: [
     { exact: true, path: '/', redirect: '/collections' },
     {
+      path: '/mine/worksDownload',
+      component: '@/pages/WorksDownload',
+      title: '作品下载',
+    },
+    {
       path: '/',
-      component: '@/components/Layouts',
+      component: '@/layouts',
 
       routes: [
         {
