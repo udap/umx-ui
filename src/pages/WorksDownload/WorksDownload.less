@@ -20,6 +20,7 @@
         width: 330px;
         box-shadow: 0px 0px 17px 0px rgba(255, 255, 255, 0.31);
       }
+
       img {
         width: 100%;
         box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.5);
@@ -35,23 +36,67 @@
           font-size: 18px;
           font-weight: 600;
           color: #000;
+          line-height: 1;
+          margin-bottom: 16px;
         }
 
         .productDetails {
           display: flex;
           font-size: 14px;
           font-weight: 300;
-          padding-bottom: 4px;
+          padding-bottom: 8px;
 
           .label {
             width: 80px;
           }
 
           .value {
-            flex: 1;
+            width: 220px;
+
+            span {
+              margin-right: 5px;
+            }
           }
         }
       }
     }
+  }
+}
+
+.qrCodeWrap {
+  display: flex;
+  flex-direction: row;
+
+  justify-content: flex-start;
+  align-items: flex-end;
+
+  .tips {
+    margin-left: 20px;
+
+    p {
+      font-size: 16px;
+      font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;
+      color: #000000;
+      line-height: 22px;
+      margin: 0;
+    }
+  }
+}
+
+.btn {
+  background: #000000;
+  border-radius: 19px;
+  padding: 0 18px;
+  height: 37px;
+  line-height: 37px;
+  color: #fff;
+  text-align: center;
+  margin-top: 40px;
+  cursor: pointer;
+
+  &:hover,
+  &:active {
+    background: #000000;
   }
 }
