@@ -102,4 +102,12 @@ declare namespace API {
     workId: string;
     assetId?: string;
   }
+
+  export interface UserPropsType {
+    headImageUrl: string;
+    nickname: string;
+    openId: string;
+    privateKey: string;
+    userId: string;
+  }
 }

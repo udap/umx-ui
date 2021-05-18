@@ -1,7 +1,64 @@
-import { extend } from 'umi-request';
-import { PROD_URL, TEST_URL } from '@/utils/constants';
+import { extend, RequestResponse } from 'umi-request';
+import { Modal } from 'antd-mobile';
 
-const whiteRequestList = ['/user/searchQrCodeInfo/'];
+import { PROD_URL, TEST_URL } from '@/utils/constants';
+import { randomString } from '@/utils/common';
+import CryptoJS from 'crypto-js';
+import EthCrypto from 'eth-crypto';
+
+type HeaderKey = 'd' | 'D' | 's' | 'S' | 't' | 'T' | 'a';
+
+const customHeaderEnum: { [key in HeaderKey]: string } = {
+  d: 'x-data',
+  D: 'X-Data',
+  s: 'x-sender',
+  S: 'X-Sender',
+  t: 'x-signature',
+  T: 'X-Signature',
+  a: 'accesstoken',
+};
+
+/**
+ * 获取指定 header key的值
+ * @param key HeaderKey CustomHeaderEnum key
+ * @param value
+ */
+const generateHeaderData = (key: HeaderKey, value?: string) => {
+  const headerKey = customHeaderEnum[key];
+  // user 缓存是sessionStorage
+  const user = (JSON.parse(
+    sessionStorage.getItem('userData') || '{}',
+  ) as unknown) as API.UserPropsType;
+  const xData = randomString();
+  const decrypted = CryptoJS.AES.decrypt(user?.privateKey, value || '');
+  const privateKey = decrypted.toString(CryptoJS.enc.Utf8);
+  switch (key) {
+    case 'd':
+    case 'D':
+      return { [headerKey]: xData };
+    case 's':
+    case 'S':
+      return { [headerKey]: user.userId.toLowerCase() };
+    case 't':
+    case 'T':
+      const signature = EthCrypto.sign(
+        privateKey,
+        EthCrypto.hash.keccak256(xData),
+      );
+      return { [headerKey]: signature.substr(2) };
+    case 'a':
+      const dateTime = `${user.userId};${new Date('2030')
+        .getTime()
+        .toString()}`;
+      const accessToken = EthCrypto.sign(
+        privateKey,
+        EthCrypto.hash.keccak256(dateTime),
+      );
+      return { [headerKey]: `${dateTime};${accessToken.substr(2)}` };
+    default:
+      return false;
+  }
+};
 
 const codeMessage: any = {
   200: '服务器成功返回请求的数据。',
@@ -22,48 +79,32 @@ const codeMessage: any = {
 };
 
 const errorHandler = (error: { data?: any; response?: any }) => {
-  // 请求白名单
-  const isWhite = whiteRequestList.some((item) =>
-    error.response?.url.includes(item),
-  );
-  if (isWhite) {
-    return;
-  }
-
   if (error.data?.message) {
-    // notification.error({
-    //   message: `请求错误`,
-    //   description: error.data.message,
-    // });
+    const { response, data } = error;
+    Modal.alert(`错误${response?.status}`, data.message);
   } else {
     const { response } = error;
     if (typeof response.status == 'number') {
       if (response && response.status) {
-        // const errorText = codeMessage[response.status] || response.statusText;
-        // const { status, url } = response;
-        // notification.error({
-        //   message: `请求错误 ${status}: ${url}`,
-        //   description: errorText,
-        //   duration: 0,
-        // });
-        return;
+        const errorText = codeMessage[response.status] || response.statusText;
+        Modal.alert(`错误${response?.status}`, errorText);
       }
     }
-  } //如果error 中有message 显示message中的错误提示，没有的话用默认的codeMessage错误提示
+  }
 };
 
-/**
- * 配置request请求时的默认参数
- */
+// 配置request请求时的默认参数
 const extendRequest = extend({
   errorHandler,
-  // 默认错误处理
-  // credentials: 'include', // 默认请求是否带上cookie
+  credentials: 'include',
 });
 
-export default async function request(url: string, options: any) {
+export default async function request<D>(
+  url: string,
+  options: any,
+  headers?: string,
+): Promise<RequestResponse<D>> {
   let tempURL = url;
-
   switch (process.env.UMI_ENV) {
     case 'production':
       tempURL = `${PROD_URL}${url.substr(5)}`;
@@ -71,35 +112,42 @@ export default async function request(url: string, options: any) {
     case 'test':
       tempURL = `${TEST_URL}${url.substr(5)}`;
       break;
-
     default:
       break;
   }
-
-  const isWhite = whiteRequestList.some((item) => tempURL.includes(item));
-
-  const loginObj = sessionStorage.getItem('login');
-  const headers = {
-    'x-data': '',
-    'x-sender': '',
-    'x-signature': '',
-  };
-  if (loginObj) {
-    const login = JSON.parse(loginObj);
-
-    headers['x-data'] = login.xData;
-    headers['x-sender'] = login.xSender;
-    headers['x-signature'] = login.xSignature;
+  // 根据headers 生成 相关headers参数
+  const _options = options;
+  const headerKeys = headers?.split('') || [];
+  for (let i in headerKeys) {
+    const _key = headerKeys[i];
+    const userPassword = (sessionStorage.getItem(
+      'registerPwd',
+    ) as unknown) as string;
+    if ((_key === 't' || _key === 'T' || _key === 'a') && !userPassword) {
+      Modal.prompt(
+        '提示',
+        '使用扫码登录、相关操作需你的注册密码',
+        [
+          { text: '取消' },
+          {
+            text: '确认',
+            onPress: (value) => {
+              if (value) {
+                sessionStorage.setItem('registerPwd', value);
+                location.reload();
+              }
+            },
+          },
+        ],
+        'secure-text',
+      );
+    }
+    _options.headers = Object.assign(
+      {},
+      _options.headers || {},
+      generateHeaderData((_key as unknown) as HeaderKey, userPassword),
+    );
   }
-
-  let tempOptions = options;
-  if (!isWhite) {
-    tempOptions = {
-      headers,
-      ...options,
-    };
-  }
-
-  const response = await extendRequest(tempURL, tempOptions);
-  return { data: response };
+  const response = await extendRequest(tempURL, _options);
+  return ({ data: response } as unknown) as RequestResponse;
 }
