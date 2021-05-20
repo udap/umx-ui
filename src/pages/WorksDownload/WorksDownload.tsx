@@ -10,21 +10,13 @@ import { searchQrCodeInfo } from '@/services';
 import { useInterval } from 'ahooks';
 import { downloadFile } from '@/services/download';
 
-const test = [
-  { price: 1, time: 10 },
-  { price: 1, time: 11 },
-  { price: 12, time: 11 },
-  { price: 13, time: 12 },
-];
-
 const randomKeys = randomString(19);
 const WorksDownload = () => {
-  const { workId, assetId } = (history.location
-    .query as unknown) as API.QueryProps;
+  const { workId, assetId } = history.location
+    .query as unknown as API.QueryProps;
   const [loading, setLoading] = useState(false);
 
   const [markets, setMarkets] = useState<API.MarketsType | null>(null);
-  const [contract, setContract] = useState<string[]>([]);
   const [interval, setInterval] = useState<any>(1000);
   const [info, setInfo] = useState<any>(null);
 
@@ -40,7 +32,6 @@ const WorksDownload = () => {
   const fetchData = async () => {
     try {
       const result = await searchQrCodeInfo(randomKeys);
-      console.log(result);
       if (result.data) {
         setInterval(null);
         setInfo(result.data);
@@ -98,11 +89,6 @@ const WorksDownload = () => {
       return _contract;
     })();
   };
-  useEffect(() => {
-    if (markets?.contractaddress) {
-      setContract(subStringContract(markets?.contractaddress));
-    }
-  }, [markets]);
 
   useEffect(() => {
     fetchMarkets();
@@ -124,7 +110,6 @@ const WorksDownload = () => {
         return n.price - m.price;
       }
     };
-    console.log(test.sort(compact));
   }, []);
 
   return (
@@ -143,11 +128,7 @@ const WorksDownload = () => {
             <div className={styles.name}>{markets?.name}</div>
             <div className={styles.productDetails}>
               <div className={styles.label}>合约地址</div>
-              <div className={styles.value}>
-                {contract.map((val, key) => {
-                  return <span key={key}>{val}</span>;
-                })}
-              </div>
+              <div className={styles.value}>{markets?.contractaddress}</div>
             </div>
             <div className={styles.productDetails}>
               <div className={styles.label}>作品代码</div>
