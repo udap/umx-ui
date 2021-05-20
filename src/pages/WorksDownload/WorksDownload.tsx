@@ -12,8 +12,8 @@ import { downloadFile } from '@/services/download';
 
 const randomKeys = randomString(19);
 const WorksDownload = () => {
-  const { workId, assetId } = history.location
-    .query as unknown as API.QueryProps;
+  const { workId, assetId } = (history.location
+    .query as unknown) as API.QueryProps;
   const [loading, setLoading] = useState(false);
 
   const [markets, setMarkets] = useState<API.MarketsType | null>(null);
@@ -41,33 +41,44 @@ const WorksDownload = () => {
     }
   };
 
-  const handleDownLoadFile = () => {
-    setLoading(true);
-    downloadFile({
-      method: 'GET',
-      params: { assetId: assetId },
-      headers: { 'x-sender': info.xSender },
-      responseType: 'blob',
-    }).then((res: any) => {
-      setLoading(false);
-      try {
-        const type = res.data.type;
-        let index = type.lastIndexOf('/');
-        const str = type.substring(index + 1, type.length);
-        const blob = new Blob([res.data]);
-        const objectURL = URL.createObjectURL(blob);
-        let btn = document.createElement('a');
-        btn.download = new Date().getTime() + `.${str}`;
-        btn.href = objectURL;
-        btn.click();
-        URL.revokeObjectURL(objectURL);
-      } catch (error) {
-        notification.error({
-          message: '通知',
-          description: '下载失败，请稍后重试',
-        });
+  const handleDownLoadFile = async () => {
+    try {
+      const data = {
+        method: 'get',
+        params: { assetId: assetId },
+        headers: { 'x-sender': info.xSender },
+      };
+      const result = await downloadFile(data);
+      if (result.data) {
+        window.open((result.data as unknown) as string);
       }
-    });
+    } catch (error) {}
+    // setLoading(true);
+    // downloadFile({
+    //   method: 'GET',
+    //   params: { assetId: assetId },
+    //   headers: { 'x-sender': info.xSender },
+    //   responseType: 'blob',
+    // }).then((res: any) => {
+    //   setLoading(false);
+    //   try {
+    //     const type = res.data.type;
+    //     let index = type.lastIndexOf('/');
+    //     const str = type.substring(index + 1, type.length);
+    //     const blob = new Blob([res.data]);
+    //     const objectURL = URL.createObjectURL(blob);
+    //     let btn = document.createElement('a');
+    //     btn.download = new Date().getTime() + `.${str}`;
+    //     btn.href = objectURL;
+    //     btn.click();
+    //     URL.revokeObjectURL(objectURL);
+    //   } catch (error) {
+    //     notification.error({
+    //       message: '通知',
+    //       description: '下载失败，请稍后重试',
+    //     });
+    //   }
+    // });
   };
 
   const subStringContract = (contractAddress: string) => {
