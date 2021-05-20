@@ -150,7 +150,7 @@ const WorksDownload = () => {
                 level={'H'}
               />
               <div className={styles.tips}>
-                <p>微信扫码确认身份</p>
+                <p>使用umx扫一扫确认身份</p>
                 <p>即可下载作品源文件</p>
               </div>
             </div>
