@@ -5,5 +5,5 @@ import request from '@/services/request';
  * @param params
  */
 export function downloadFile(params: any) {
-  return request('/api/asset/products/video/download', params);
+  return request('/api/asset/products/video/download', { ...params });
 }
