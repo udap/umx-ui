@@ -96,11 +96,13 @@ declare namespace API {
     saleStatus: string;
     userId: string;
     medias: string;
+    purchaseAgreement: string;
   }
 
   export interface QueryProps {
     workId: string;
     assetId?: string;
+    num?: string;
   }
 
   export interface UserPropsType {

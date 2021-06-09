@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, notification } from 'antd';
+import { Button, Avatar, notification } from 'antd';
 import { history } from 'umi';
 import QRCode from 'qrcode.react';
 
@@ -12,7 +12,7 @@ import { downloadFile } from '@/services/download';
 
 const randomKeys = randomString(19);
 const WorksDownload = () => {
-  const { workId, assetId } = (history.location
+  const { workId, assetId, num } = (history.location
     .query as unknown) as API.QueryProps;
   const [loading, setLoading] = useState(false);
 
@@ -49,8 +49,13 @@ const WorksDownload = () => {
         headers: { 'x-sender': info.xSender },
       };
       const result = await downloadFile(data);
-      if (result.data) {
+      if (result.data && typeof result.data === 'string') {
         window.open((result.data as unknown) as string);
+      } else {
+        notification.error({
+          message: '错误',
+          description: JSON.stringify(result.data),
+        });
       }
     } catch (error) {}
     // setLoading(true);
@@ -123,6 +128,10 @@ const WorksDownload = () => {
     };
   }, []);
 
+  const handlePurchaseAgreement = () => {
+    window.open(markets?.purchaseAgreement || '');
+  };
+
   return (
     <div className={styles.container}>
       <header>
@@ -137,6 +146,12 @@ const WorksDownload = () => {
         <div className={styles.sectionRight}>
           <div className={styles.product}>
             <div className={styles.name}>{markets?.name}</div>
+            <div
+              className={styles.purchaseAgreement}
+              onClick={handlePurchaseAgreement}
+            >
+              用户购买权限说明
+            </div>
             <div className={styles.productDetails}>
               <div className={styles.label}>合约地址</div>
               <div className={styles.value}>{markets?.contractaddress}</div>
@@ -161,20 +176,32 @@ const WorksDownload = () => {
                 level={'H'}
               />
               <div className={styles.tips}>
-                <p>使用umx扫一扫确认身份</p>
+                <p style={{ fontWeight: 600 }}>
+                  请用公众号中“我的”里面的“扫一扫”功能扫此二维码
+                </p>
                 <p>即可下载作品源文件</p>
               </div>
             </div>
           ) : (
-            <Button
-              disabled={loading}
-              type="primary"
-              loading={loading}
-              className={styles.btn}
-              onClick={handleDownLoadFile}
-            >
-              下载作品源文件
-            </Button>
+            <>
+              <div className={styles.userInfo}>
+                <Avatar src={info?.headImage} className={styles.avatar} />
+                <div className={styles.avatarName}>{info?.name}</div>
+              </div>
+              <Button
+                disabled={loading}
+                type="primary"
+                loading={loading}
+                className={styles.btn}
+                onClick={handleDownLoadFile}
+              >
+                <span style={{ marginRight: 60 }}>
+                  作品序列号{markets?.code}
+                  {num && `-${num}`}
+                </span>
+                <span>下载作品源文件</span>
+              </Button>
+            </>
           )}
         </div>
       </section>
