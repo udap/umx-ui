@@ -97,6 +97,7 @@ declare namespace API {
     userId: string;
     medias: string;
     purchaseAgreement: string;
+    size: number;
   }
 
   export interface QueryProps {

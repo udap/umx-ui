@@ -52,10 +52,17 @@ const WorksDownload = () => {
       if (result.data && typeof result.data === 'string') {
         window.open((result.data as unknown) as string);
       } else {
-        notification.error({
-          message: '错误',
-          description: JSON.stringify(result.data),
-        });
+        if (result.data.code) {
+          notification.error({
+            message: '错误',
+            description: result.data.message,
+          });
+        } else {
+          notification.error({
+            message: '错误',
+            description: JSON.stringify(result.data),
+          });
+        }
       }
     } catch (error) {}
     // setLoading(true);
@@ -199,7 +206,10 @@ const WorksDownload = () => {
                   作品序列号{markets?.code}
                   {num && `-${num}`}
                 </span>
-                <span>下载作品源文件</span>
+                <span>
+                  下载作品源文件
+                  {markets?.size ? `(${markets?.size / 1024}MB)` : null}
+                </span>
               </Button>
             </>
           )}
