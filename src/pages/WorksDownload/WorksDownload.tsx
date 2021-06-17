@@ -184,7 +184,7 @@ const WorksDownload = () => {
               />
               <div className={styles.tips}>
                 <p style={{ fontWeight: 600 }}>
-                  请用公众号中“我的”里面的“扫一扫”功能扫此二维码
+                  请用公众号中“个人中心”里面的“扫一扫”功能扫此二维码
                 </p>
                 <p>即可下载作品源文件</p>
               </div>
