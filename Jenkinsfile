@@ -1,3 +1,4 @@
+#!/usr/bin/env groovy
 pipeline {
 
     agent none
@@ -12,7 +13,8 @@ pipeline {
         IMAGE_NAME = "umedia/umx-web"
         SERVICE_NAME = "umx-web"
         PORT = "8085"
-        NODE = "node-hw5"
+        DEV_NODE = "node-hw4"
+        TEST_NODE = "node-hw5"
         PROD_NODE = "node-hw6"
     }
 
@@ -95,6 +97,38 @@ pipeline {
                 sh 'docker run -d --name ${SERVICE_NAME} -p ${PORT}:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${BRANCH_NAME}'
             }
         }
+
+         stage('test release ') {
+
+                    agent { label "$TEST_NODE" }
+
+                    environment {
+                        NODEIP = sh(
+                                returnStdout: true,
+                                script: 'ip a|grep eth0|grep -w \'inet\'|sed \'s/^.*inet //g\'|sed \'s/\\/[0-9][0-9].*$//g\''
+                        ).trim()
+                    }
+
+                    when {
+                        branch 'test'
+                    }
+
+                    steps {
+                        echo 'stop old container'
+
+                        sh '''CID=$(docker ps | grep ${SERVICE_NAME} | awk \'{print $1}\')
+                            if [ "$CID" != "" ];then
+                                docker rm -f $CID
+                            fi'''
+
+                        echo 'renew images'
+
+                        sh 'docker pull ${DOCKER_REGISTRY}/${IMAGE_NAME}:${BRANCH_NAME}'
+
+                        echo 'restart'
+                        sh 'docker run -d --name ${SERVICE_NAME} -p ${PORT}:80 ${DOCKER_REGISTRY}/${IMAGE_NAME}:${BRANCH_NAME}'
+                    }
+                }
 
         stage('master release ') {
 
