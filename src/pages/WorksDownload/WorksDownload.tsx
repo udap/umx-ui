@@ -4,8 +4,8 @@ import { history } from 'umi';
 import QRCode from 'qrcode.react';
 
 import styles from './WorksDownload.less';
-import { getAuthor, getMarkets } from '@/services/auction';
-import { randomString } from '@/utils/common';
+import { getMarkets } from '@/services/auction';
+import { randomString, size2Str } from '@/utils/common';
 import { searchQrCodeInfo } from '@/services';
 import { useInterval } from 'ahooks';
 import { downloadFile } from '@/services/download';
@@ -208,7 +208,7 @@ const WorksDownload = () => {
                 </span>
                 <span>
                   下载作品源文件
-                  {markets?.size ? `(${markets?.size / 1024}MB)` : null}
+                  {markets?.size ? `（${size2Str(markets?.size)}）` : null}
                 </span>
               </Button>
             </>
