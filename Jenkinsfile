@@ -68,7 +68,7 @@ pipeline {
 
         stage('develop release ') {
 
-            agent { label "$NODE" }
+            agent { label "$DEV_NODE" }
 
             environment {
                 NODEIP = sh(
