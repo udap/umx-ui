@@ -1,10 +1,11 @@
 import { extend, RequestResponse } from 'umi-request';
-import { Modal } from 'antd-mobile';
+import { notification } from 'antd';
+import CryptoJS from 'crypto-js';
+import EthCrypto from 'eth-crypto';
 
 import { PROD_URL, TEST_URL } from '@/utils/constants';
 import { randomString } from '@/utils/common';
-import CryptoJS from 'crypto-js';
-import EthCrypto from 'eth-crypto';
+import { WHITE_REQUEST } from '@/utils/config';
 
 type HeaderKey = 'd' | 'D' | 's' | 'S' | 't' | 'T' | 'a';
 
@@ -26,9 +27,9 @@ const customHeaderEnum: { [key in HeaderKey]: string } = {
 const generateHeaderData = (key: HeaderKey, value?: string) => {
   const headerKey = customHeaderEnum[key];
   // user 缓存是sessionStorage
-  const user = JSON.parse(
+  const user = (JSON.parse(
     sessionStorage.getItem('userData') || '{}',
-  ) as unknown as API.UserPropsType;
+  ) as unknown) as API.UserPropsType;
   const xData = randomString();
   const decrypted = CryptoJS.AES.decrypt(user?.privateKey, value || '');
   const privateKey = decrypted.toString(CryptoJS.enc.Utf8);
@@ -79,15 +80,24 @@ const codeMessage: any = {
 };
 
 const errorHandler = (error: { data?: any; response?: any }) => {
+  const { data, response } = error;
+
+  const isWhite = WHITE_REQUEST.some((item) => response.url.includes(item));
+  if (isWhite) return;
+
   if (error.data?.message) {
-    const { response, data } = error;
-    // Modal.alert(`错误${response?.status}`, data.message);
+    notification.error({
+      message: '请求错误',
+      description: data.message,
+    });
   } else {
-    const { response } = error;
     if (typeof response.status == 'number') {
       if (response && response.status) {
         const errorText = codeMessage[response.status] || response.statusText;
-        // Modal.alert(`错误${response?.status}`, errorText);
+        notification.error({
+          message: '请求错误',
+          description: errorText,
+        });
       }
     }
   }
@@ -120,34 +130,15 @@ export default async function request<D>(
   const headerKeys = headers?.split('') || [];
   for (let i in headerKeys) {
     const _key = headerKeys[i];
-    const userPassword = sessionStorage.getItem(
+    const userPassword = (sessionStorage.getItem(
       'registerPwd',
-    ) as unknown as string;
-    if ((_key === 't' || _key === 'T' || _key === 'a') && !userPassword) {
-      Modal.prompt(
-        '提示',
-        '使用扫码登录、相关操作需你的注册密码',
-        [
-          { text: '取消' },
-          {
-            text: '确认',
-            onPress: (value) => {
-              if (value) {
-                sessionStorage.setItem('registerPwd', value);
-                location.reload();
-              }
-            },
-          },
-        ],
-        'secure-text',
-      );
-    }
+    ) as unknown) as string;
     _options.headers = Object.assign(
       {},
       _options.headers || {},
-      generateHeaderData(_key as unknown as HeaderKey, userPassword),
+      generateHeaderData((_key as unknown) as HeaderKey, userPassword),
     );
   }
   const response = await extendRequest(tempURL, _options);
-  return { data: response } as unknown as RequestResponse;
+  return ({ data: response } as unknown) as RequestResponse;
 }

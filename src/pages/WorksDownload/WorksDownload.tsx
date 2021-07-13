@@ -5,7 +5,7 @@ import QRCode from 'qrcode.react';
 
 import styles from './WorksDownload.less';
 import { getMarkets } from '@/services/auction';
-import { randomString, size2Str } from '@/utils/common';
+import { randomString, changeByte } from '@/utils/common';
 import { searchQrCodeInfo } from '@/services';
 import { useInterval } from 'ahooks';
 import { downloadFile } from '@/services/download';
@@ -49,21 +49,23 @@ const WorksDownload = () => {
         headers: { 'x-sender': info.xSender },
       };
       const result = await downloadFile(data);
+      console.log(result);
       if (result.data && typeof result.data === 'string') {
         window.open((result.data as unknown) as string);
-      } else {
-        if (result.data.code) {
-          notification.error({
-            message: '错误',
-            description: result.data.message,
-          });
-        } else {
-          notification.error({
-            message: '错误',
-            description: JSON.stringify(result.data),
-          });
-        }
       }
+      // else {
+      //   if (result.data.code) {
+      //     notification.error({
+      //       message: '错误',
+      //       description: result.data.message,
+      //     });
+      //   } else {
+      //     notification.error({
+      //       message: '错误',
+      //       description: JSON.stringify(result.data),
+      //     });
+      //   }
+      // }
     } catch (error) {}
     // setLoading(true);
     // downloadFile({
@@ -208,7 +210,7 @@ const WorksDownload = () => {
                 </span>
                 <span>
                   下载作品源文件
-                  {markets?.size ? `（${size2Str(markets?.size)}）` : null}
+                  {markets?.size ? `（${changeByte(markets?.size)}）` : null}
                 </span>
               </Button>
             </>
