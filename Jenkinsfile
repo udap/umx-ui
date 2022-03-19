@@ -15,7 +15,7 @@ pipeline {
         PORT = "8085"
         DEV_NODE = "node-hw4"
         TEST_NODE = "node-hw5"
-        PROD_NODE = "node-hw6"
+        PROD_NODE = "node-q1"
     }
 
 
